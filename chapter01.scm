@@ -135,9 +135,50 @@
 
 (define (croot-iter guess x)
   (let ((new-guess (improve-croot guess x)))
-    (if (< (abs (/ (- new-guess guess) guess)) 1.0e-3)
+    (if (< (abs (/ (- new-guess guess) guess)) 1.0e-6)
       guess
       (croot-iter new-guess x))))
 
-(define (improve-croot y x)
-  (/ (+ (/ (/ x y) y) y y) 3)
+(define (improve-croot guess x)
+  (let ((y guess))
+    (/ (+ (/ (/ x y) y) y y) 3)))
+
+(croot 8.0)
+
+(croot (* 5.25 5.25 5.25))
+
+
+;;
+;; Exercise 1.9
+;;
+
+(define (raz+ a b)
+  (if (= a 0) b (+ 1 (raz+ (- a 1) b)))) ;; this one is linear-recursive
+
+(define (dva+ a b)
+  (if (= a 0) b (dva+ (- a 1) (+ b 1)))) ;; this one is tail-recursive
+
+(raz+ 5 6)
+
+(dva+ 5 6)
+
+
+;;
+;; Exercise 1.10
+;;
+
+(define (A x y)
+  (cond ((= y 0) 0)
+        ((= x 0) (* 2 y))
+        ((= y 1) 2)
+        (else (A (- x 1) (A x (- y 1))))))
+
+(A 1 10)
+(A 2 4)
+(A 3 3)
+
+(define (f n) (A 0 n))   ;; f(n) = 2*n
+(define (g n) (A 1 n))   ;; g(n) = 2^n
+(define (h n) (A 2 n))   ;; h(n) = 2*2*2*...*2 (n times)
+(define (k n) (* 5 n n)) ;; k(n) = 5*n^2
+
