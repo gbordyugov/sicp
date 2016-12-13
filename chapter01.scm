@@ -294,7 +294,7 @@
 ;;
 ;; the drawing of exercise 1.14 is skipped
 ;; I assume the order of growth (= branching factor) to be equal to 2
-;; sine on each step we call two recurseve calls
+;; sine on each step we call two recursive calls
 ;;
 
 
