@@ -317,3 +317,46 @@
 ;;
 ;; (b) order of growth is linear - just one recursive call at most
 ;;
+
+
+;;
+;; Exponentiation
+;;
+
+;;
+;; O(n) time, O(n) space (no tail recursion
+;;
+
+(define (expt b n)
+  (if (= n 0)
+    1
+    (* b (expt b (- n 1)))))
+
+(expt 2 3)
+
+;;
+;; tail recursion: O(n) time, O(1) space
+;;
+
+(define (expt b n)
+  (define (go b counter product)
+    (if (= counter 0)
+      product
+      (go b (- counter 1) (* b product))))
+  (go b n 1))
+
+(expt 2 3)
+
+
+;;
+;; O(log(n)) time, O(1) space
+;;
+
+(define (fast-expt b n)
+  (define (square x)
+    (* x x))
+  (cond ((= n 0) 1)
+        ((even? n) (square (fast-expt b (/ n 2))))
+        (else (* b (fast-expt b (- n 1))))))
+
+(fast-expt 2 3)
