@@ -232,3 +232,38 @@
     ((= kinds-of-coins 5) 50)))
 
 (count-change 10)
+
+
+;;
+;; Exercise 1.11
+;;
+
+;;
+;; recursive version
+;;
+
+(define (f n)
+  (if (< n 3)
+      n
+      (+ (* 1 (f (- n 1)))
+         (* 2 (f (- n 2)))
+         (* 3 (f (- n 3))))))
+
+(f 15)
+
+;;
+;; iterative (tail-recursive) version
+;;
+
+(define (g n)
+  (define (go a b c counter)
+    (if (= counter 0)
+      c
+      (go (+ (* 1 a) (* 2 b) (* 3 c))
+          a
+          b
+          (- counter 1))))
+  (go 2 1 0 n))
+
+(g 15)
+
