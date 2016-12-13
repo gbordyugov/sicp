@@ -267,3 +267,53 @@
 
 (g 15)
 
+
+;;
+;; exercise 1.12
+;;
+
+(define (pascal i j) ;; i and j are 0-based
+  (if (= 0 (* i j))
+    1
+    (+ (pascal (- i 1) j)
+       (pascal i (- j 1)))))
+
+(pascal 0 0)
+(pascal 0 2)
+(pascal 2 0)
+(pascal 2 2)
+
+
+;;
+;; exercise 1.13 is a calculus proof, skipped
+;;
+
+
+;;
+;; exercise 1.14
+;;
+;; the drawing of exercise 1.14 is skipped
+;; I assume the order of growth (= branching factor) to be equal to 2
+;; sine on each step we call two recurseve calls
+;;
+
+
+;;
+;; exercise 1.15
+;;
+
+(define (cube x) (* x x x))
+(define (p x) (- (* 3 x) (* 4 (cube x))))
+(define (sine angle)
+  (if (not (> (abs angle) 0.1))
+    angle
+    (p (sine (/ angle 3.0)))))
+
+(sine 12.15)
+
+
+;;
+;; (a) not fewer than log_3 (12.15/0.1) ;-)
+;;
+;; (b) order of growth is linear - just one recursive call at most
+;;
