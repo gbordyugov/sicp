@@ -406,3 +406,56 @@
 
 (mul 3 4)
 (mul 2 2)
+
+
+;;
+;; exercise 1.19
+;;
+;; a_1 = b_0 q + a_0 q + a_0 p = a_0 (q + p) + b_0 q 
+;; b_1 = b_0 p + a_0 q         = a_0 q + b_0 p       
+;; 
+;;   | (q + p)  q |   | a_0 |
+;; = |            | x |     | =: T
+;;   | q        p |   | b_0 |
+;;
+;;
+;;       | (q + p)  q |     | (q + p)  q |   
+;; T^2 = |            |  x  |            |  = 
+;;       | q        p |     | q        p |   
+;;
+;;    | (q + p)^2 + q^2    (q + p) q + p q |
+;; =  |                                    | =
+;;    | q (q + p) + p q       q^2 + p^2    |
+;;
+;;
+;;    | 2q^2 + 2qp + p^2   q^2 + 2pq    |
+;; =  |                                 |
+;;    |    q^2 + 2pq       q^2 + p^2    |
+;;
+;; Summarizing:
+;;
+;; q' = q^2 + 2pq
+;; p' = q^2 + p^2
+
+(define (fib n)
+  (define (go a b p q count)
+    (cond
+      ((= count 0) b)
+      ((even? count)
+       (let ((qp (+ (* q q) (* 2 (* q p))))
+             (pp (+ (* q q) (* p p))))
+         (go a b pp qp (/ count 2))))
+      (else (go (+ (* b q) (* a q) (* a p))
+                (+ (* b p) (* a q))
+                p
+                q
+                (- count 1)))))
+  (go 1 0 0 1 n))
+
+(fib 1)
+(fib 2)
+(fib 3)
+(fib 4)
+(fib 5)
+(fib 6)
+(fib 7)
