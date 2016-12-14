@@ -349,14 +349,60 @@
 
 
 ;;
-;; O(log(n)) time, O(1) space
+;; O(log(n)) time, O(n) space
 ;;
 
 (define (fast-expt b n)
-  (define (square x)
-    (* x x))
+  (define (square x) (* x x))
   (cond ((= n 0) 1)
         ((even? n) (square (fast-expt b (/ n 2))))
         (else (* b (fast-expt b (- n 1))))))
 
 (fast-expt 2 3)
+
+;;
+;; O(log(n)) time, O(1) space
+;;
+;; I had to look up the solution onine, could not figure out it myself
+;;
+
+(define (fast-expt b n)
+  (define (square x) (* x x))
+  (define (go a b n)
+    (cond
+      ((= n 0) a)
+      ((even? n) (go a (square b) (/ n 2)))
+      (else (go (* a b) b (- n 1)))))
+  (go 1 b n))
+
+(fast-expt 2 3)
+(fast-expt 2 4)
+
+
+;;
+;; exercise 1.17
+;;
+(define (mul a b)
+  (define (double x) (+ x x))
+  (define (halve  x) (/ x 2))
+  (cond
+    ((= b 0) 0)
+    ((even? b) (double (mul a (halve b))))
+    (else (+ a (mul a (- b 1))))))
+
+;;
+;; exercise 1.18
+;;
+
+(define (mul a b)
+  (define (double x) (+ x x))
+  (define (halve  x) (/ x 2))
+  (define (go a b n)
+    (cond
+      ((= n 0) a)
+      ((even? n) (go a (double b) (halve n)))
+      (else (go (+ a b) b (- n 1)))))
+  (go 0 a b)) 
+
+(mul 3 4)
+(mul 2 2)
