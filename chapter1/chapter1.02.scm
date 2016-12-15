@@ -309,3 +309,9 @@
 (fib 5)
 (fib 6)
 (fib 7)
+
+
+(define (gcd a b)
+  (if (= b 0)
+    a
+    (gcd b (remainder a b))))
