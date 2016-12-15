@@ -58,7 +58,7 @@
 (define (test x y)
   (if (= x 0) 0 y))
 
-(test 0 (p))
+;; (test 0 (p))
 
 ;; normal (lazy) evaluation wouldn't compute (p) since x = 0
 ;; applicative will
@@ -82,12 +82,12 @@
 (define (good-enough? guess x)
   (< (abs (- (square guess) x)) 0.001))
 
-(define (sqrt x)
+(define (my-sqrt x)
   (sqrt-iter 1.0 x))
 
-(sqrt 9)
+(my-sqrt 9)
 
-(square (sqrt 1000))
+(square (my-sqrt 1000))
 
 (define (new-if predicate then-clause else-clause)
   (cond (predicate then-clause)
@@ -102,7 +102,7 @@
           guess
           (sqrt-iter-a (improve guess x) x)))
 
-(sqrt-iter-a 1.0 100.0)
+;; (sqrt-iter-a 1.0 100.0)  ;; infinite loop
 
 ;; in new-if, both clauses are evaluated no matter the result of the
 ;; predicate, thus computation will not terminate
@@ -112,7 +112,7 @@
 ;; Exercise 1.7
 ;;
 
-(sqrt 1.0e-4) ;; this one is not working
+(my-sqrt 1.0e-4) ;; this one is not working
 
 (define (sqrt-iter-rel guess x)
   (let ((new-guess (improve guess x)))

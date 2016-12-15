@@ -177,25 +177,25 @@
 ;; O(n) time, O(n) space (no tail recursion
 ;;
 
-(define (expt b n)
+(define (my-expt b n)
   (if (= n 0)
     1
-    (* b (expt b (- n 1)))))
+    (* b (my-expt b (- n 1)))))
 
-(expt 2 3)
+(my-expt 2 3)
 
 ;;
 ;; tail recursion: O(n) time, O(1) space
 ;;
 
-(define (expt b n)
+(define (my-expt b n)
   (define (go b counter product)
     (if (= counter 0)
       product
       (go b (- counter 1) (* b product))))
   (go b n 1))
 
-(expt 2 3)
+(my-expt 2 3)
 
 
 ;;
@@ -315,32 +315,32 @@
 ;; exercise 1.20
 ;;
 
-(define (gcd a b)
+(define (my-gcd a b)
   (if (= b 0)
     a
-    (gcd b (remainder a b))))
+    (my-gcd b (remainder a b))))
 
 ;;
 ;; Applicative order:
 ;;
-;; (gcd 206 40)
-;; (gcd 40 (remainder 206 40))
-;; (gcd 40 6)
-;; (gcd 6 (remainder 40 6))
-;; (gcd 6 4)
-;; (gcd 4 (remainder 6 4))
-;; (gcd 4 2)
-;; (gcd 2 (remainder 4 2))
-;; (gcd 2 0)
+;; (my-gcd 206 40)
+;; (my-gcd 40 (remainder 206 40))
+;; (my-gcd 40 6)
+;; (my-gcd 6 (remainder 40 6))
+;; (my-gcd 6 4)
+;; (my-gcd 4 (remainder 6 4))
+;; (my-gcd 4 2)
+;; (my-gcd 2 (remainder 4 2))
+;; (my-gcd 2 0)
 ;; 2
 ;; four calls to remainder
 
 ;;
 ;; Normal (lazy) order
 ;;
-;; (gcd 206 40)
-;; (gcd 40 (remainder 206 40))
+;; (my-gcd 206 40)
+;; (my-gcd 40 (remainder 206 40))
 ;; (if (= (remainder 206 40) 0)
 ;;   40
-;;   (gcd (remainder 206 40) (remainder 40 (remainder 206 40))))
+;;   (my-gcd (remainder 206 40) (remainder 40 (remainder 206 40))))
 ;; one extra evaluation for (remainder 206 40) for the if condition
