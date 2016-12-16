@@ -344,3 +344,28 @@
 ;;   40
 ;;   (my-gcd (remainder 206 40) (remainder 40 (remainder 206 40))))
 ;; one extra evaluation for (remainder 206 40) for the if condition
+
+(define (smallest-divisor n)
+  (define (square x)
+    (* x x))
+  (define (find-divisor n test-divisor)
+    (cond ((> (square test-divisor) n) n)
+          ((divides? test-divisor n) test-divisor)
+          (else (find-divisor n (+ test-divisor  1)))))
+  (define (divides? a b)
+    (= (remainder b a) 0))
+  (find-divisor n 2))
+
+(smallest-divisor 12)
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+
+(prime? 139)
+
+
+;;
+;; Fermat's little theorem:
+;; if n is a prime number and then for any a < n
+;; a^n mod n = a mod n
+;;
