@@ -502,3 +502,13 @@
 
 (expmod-a 3 3 5) ;; looks ok
 
+
+;;
+;; exercise 1.26
+;;
+
+;
+;; this expmod function calls (expmod base (/exp 2 m)) twice
+;; (not once as the original version
+;;
+
