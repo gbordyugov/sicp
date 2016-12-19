@@ -443,3 +443,46 @@
 ;; exercise 1.23
 ;;
 
+(define (smallest-divisor n)
+  (define (square x) (* x x))
+  (define (next devisor) (if (= devisor 2) 3 (+ devisor 2)))
+  (define (find-divisor n test-divisor)
+    (cond ((> (square test-divisor) n) n)
+          ((divides? test-divisor n) test-divisor)
+          (else (find-divisor n (next test-divisor)))))
+  (define (divides? a b)
+    (= (remainder b a) 0))
+  (find-divisor n 2))
+
+(smallest-divisor 1999)
+
+
+;;
+;; exercise 1.24
+;;
+
+(define (timed-prime-test n)
+  ;; (newline)
+  ;; (display n)
+  (start-prime-test n (runtime)))
+
+(define (start-prime-test n start-time)
+  (if (fast-prime? n 15)
+    (report-prime n (- (runtime) start-time))))
+
+(define (report-prime n elapsed-time)
+  (newline)
+  (display n)
+  (display " *** ")
+  (display elapsed-time))
+
+(timed-prime-test 1999)
+
+(define (search-for-prime min max) ;; min <= n < max
+  (if (= min max)
+     '()
+     (begin
+       (timed-prime-test min)
+       (search-for-prime (+ min 1) max))))
+
+(search-for-prime 2 1000000)
