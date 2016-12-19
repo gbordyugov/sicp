@@ -534,3 +534,17 @@
 (carmichael? 2465)
 (carmichael? 2821)
 (carmichael? 6601)
+
+
+;;
+;; exercise 1.28
+;;
+
+(define (expmod-mr base exp m)
+  (define (square x) (* x x))
+  (cond
+    ((= exp 0) 1)
+    ((even? exp)
+     (remainder (square (expmod-mr base (/ exp 2) m)) m))
+    (else (remainder (* base (expmod-mr base (- exp 1) m)) m))))
+
