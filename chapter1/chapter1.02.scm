@@ -486,3 +486,19 @@
        (search-for-prime (+ min 1) max))))
 
 (search-for-prime 2 1000000)
+
+;;
+;; exercise 1.25
+;; 
+
+(define (fast-expt b n)
+  (define (square x) (* x x))
+  (cond ((= n 0) 1)
+        ((even? n) (square (fast-expt b (/ n 2))))
+        (else (* b (fast-expt b (- n 1))))))
+
+(define (expmod-a base exp m)
+  (remainder (fast-expt base exp) m))
+
+(expmod-a 3 3 5) ;; looks ok
+
