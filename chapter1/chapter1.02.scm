@@ -369,3 +369,77 @@
 ;; if n is a prime number and then for any a < n
 ;; a^n mod n = a mod n
 ;;
+;; if n is not prime, then most of a < n would not satisfy
+;; a^n mod n = a mod n
+;; ergo:
+;; check for primality: pick a_i < n i = 1, 2, ..., N and for each
+;; a_i check if a_i^n mod n = a_i mod n
+
+(define (expmod base exp m)
+  (define (square x) (* x x))
+  (cond
+    ((= exp 0) 1)
+    ((even? exp)
+     (remainder (square (expmod base (/ exp 2) m)) m))
+    (else (remainder (* base (expmod base (- exp 1) m)) m))))
+
+(expmod 3 3 5)
+
+(define (fermat-test n)
+  (define (try-it a)
+    (= (expmod a n n) a))
+  (try-it (+ 1 (random (- n 1)))))
+
+
+(fermat-test 33)
+
+(define (fast-prime? n times)
+  (cond
+    ((= times 0) true)
+    ((fermat-test n) (fast-prime? n (- times 1)))
+    (else false)))
+
+(fast-prime? 117 10)
+
+;;
+;; exercise 1.21
+;;
+
+(smallest-divisor 199)
+(smallest-divisor 1999)
+(smallest-divisor 19999)
+
+;;
+;; exercise 1.22
+;;
+
+(define (timed-prime-test n)
+  ;; (newline)
+  ;; (display n)
+  (start-prime-test n (runtime)))
+
+(define (start-prime-test n start-time)
+  (if (prime? n)
+    (report-prime n (- (runtime) start-time))))
+
+(define (report-prime n elapsed-time)
+  (newline)
+  (display n)
+  (display " *** ")
+  (display elapsed-time))
+
+(timed-prime-test 1999)
+
+(define (search-for-prime min max) ;; min <= n < max
+  (if (= min max)
+     '()
+     (begin
+       (timed-prime-test min)
+       (search-for-prime (+ min 1) max))))
+
+(search-for-prime 1 1000000)
+
+;;
+;; exercise 1.23
+;;
+
