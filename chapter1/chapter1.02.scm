@@ -522,7 +522,7 @@
     (if (= a n)
       #t
       (and (= (expmod a n n) (remainder a n))
-          (go (+ a 1) n))))
+           (go (+ a 1) n))))
   (go 2 n))
 
 
