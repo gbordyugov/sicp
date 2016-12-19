@@ -512,3 +512,22 @@
 ;; (not once as the original version
 ;;
 
+
+;;
+;; exercise 1.27
+;;
+
+(define (carmichael? n) ;; still not working
+  (define (go a n)
+    (if (= a n)
+      #f
+      (or (= (expmod a n n) (remainder a n))
+           (go (+ a 1) n))))
+  (go 2 n))
+
+
+(smallest-divisor 561)
+
+(carmichael? 561)
+
+           
