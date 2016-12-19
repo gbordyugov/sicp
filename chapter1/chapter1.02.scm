@@ -520,14 +520,17 @@
 (define (carmichael? n) ;; still not working
   (define (go a n)
     (if (= a n)
-      #f
-      (or (= (expmod a n n) (remainder a n))
-           (go (+ a 1) n))))
+      #t
+      (and (= (expmod a n n) (remainder a n))
+          (go (+ a 1) n))))
   (go 2 n))
 
 
 (smallest-divisor 561)
 
 (carmichael? 561)
-
-           
+(carmichael? 1105)
+(carmichael? 1729)
+(carmichael? 2465)
+(carmichael? 2821)
+(carmichael? 6601)
