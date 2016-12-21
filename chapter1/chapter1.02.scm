@@ -517,7 +517,7 @@
 ;; exercise 1.27
 ;;
 
-(define (carmichael? n) ;; still not working
+(define (carmichael? n) ;; double-check it
   (define (go a n)
     (if (= a n)
       #t
@@ -545,6 +545,18 @@
   (cond
     ((= exp 0) 1)
     ((even? exp)
-     (remainder (square (expmod-mr base (/ exp 2) m)) m))
+     (let* ((sq  (square (expmod-mr base (/ exp 2) m)))
+            (rem (remainder sq m)))
+       (if (and      (= rem 1)
+                (not (= sq 1))
+                (not (= sq (- m 1)))) 0 rem)))
     (else (remainder (* base (expmod-mr base (- exp 1) m)) m))))
+
+(expmod-mr 3 3 2)
+
+(expmod-mr 30 1997 19999)
+
+(define (miller-rabin-prime? n)
+  ....
+  )
 
