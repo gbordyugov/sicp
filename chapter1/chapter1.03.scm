@@ -25,17 +25,23 @@
 (integral cube 0.0 1.0 0.001)
 
 (define (simpson f a b n)
-  (define (summand k)
-    (let ((factor
-            (cond ((or (= k 0) (= k n)) 1.0)
-                  ((even k) 2.0)
-                  (else     4.0)))
-          (fk (f (+ a (* k h)))))
-      (* factor fk)))
   (let* ((l  (- b a))
          (h  (/ l n))
          (h3 (* 3 h)))
-    (* h3 (sum g a in b))))
+    (begin
+      (define (sum-i term a next b)
+        (define (go a result)
+          (if (> a b)
+            result
+            (go (next a)
+                (+ result (term a)))))
+        (go a 0))
+      (define (g k)
+        (let ((x (+ a (* k h))))
+          (g x)))
+      (sum-i g 0 next n))))
+
+(simpson cons 0.0 10.0 10)
 
 ;;
 ;; exercise 1.30
