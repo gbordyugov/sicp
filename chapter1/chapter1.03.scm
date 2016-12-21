@@ -1,5 +1,5 @@
 ;;
-;; exercise 1.19
+;; exercise 1.29
 ;;
 
 (define (inc x) (+ 1 x))
