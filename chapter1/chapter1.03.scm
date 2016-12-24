@@ -110,3 +110,37 @@
   (* 4 (product f 1.0 inc n)))
 
 (approx-pi 1000)
+
+
+;;
+;; exercise 1.32
+;;
+
+;;
+;; tail-recursive (aka iterative) version
+;;
+(define (accumulate combiner null-value term a next b)
+  (define (go a result)
+    (if (> a b)
+      result
+      (go (next a) (combiner (term a) result))))
+  (go a null-value))
+
+;;
+;; linearly recursive (aka iterative) version
+;;
+(define (accumulate combiner null-value term a next b)
+  (if (> a b)
+    null-value
+    (combiner (term a)
+              (accumulate combiner null-value term (next a) next b))))
+
+(define (sum term a next b)
+  (accumulate + 0.0 term a inc b))
+
+(define (product term a next b)
+  (accumulate * 1.0 term a inc b))
+
+(sum id 1 inc 10)
+
+(product id 1 inc 10)
