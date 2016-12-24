@@ -56,10 +56,57 @@
   (define (go a result)
     (if (> a b)
       result
-      (go (next a)
-          (+ result (term a)))))
+      (go (next a) (+ result (term a)))))
   (go a 0))
 
 (sum   cube 1 inc 10)
 
 (sum-i cube 1 inc 10)
+
+
+;;
+;; exercise 1.31
+;;
+
+;;
+;; tail-recursive (aka iterative)
+;;
+(define (product term a next b)
+  (define (go a result)
+    (if (> a b)
+      result
+      (go (next a) (* result (term a)))))
+  (go a 1))
+
+;;
+;; linear recursion
+;;
+(define (product term a next b)
+  (if (> a b)
+    1
+    (* (term a) (product term (next a) next b))))
+
+(define (factorial n)
+  (product id 1 inc n))
+
+(factorial 5)
+
+(define (approx-pi n)
+  (define (numer n)
+    (define (f i)
+      (if (even? i) (+ 2 i) (+ 1 i)))
+    (product f 1.0 inc n))
+  (define (denom n)
+    (define (f i)
+      (if (even? i) (+ i 1) (+ i 2)))
+    (product f 1.0 inc n))
+  (* 4 (/ (numer n) (denom n))))
+
+(define (approx-pi n)
+  (define (f i)
+    (if (even? i)
+      (/ (+ 2 i) (+ i 1))
+      (/ (+ 1 i) (+ 2 i))))
+  (* 4 (product f 1.0 inc n)))
+
+(approx-pi 1000)
