@@ -144,3 +144,48 @@
 (sum id 1 inc 10)
 
 (product id 1 inc 10)
+
+;;
+;; exercise 1.33
+;;
+(define (filtered-accumulate combiner null-value term a next b pred)
+  (define (go a result)
+    (if (> a b)
+      result
+      (go (next a) (if (pred a)
+                     (combiner (term a) result)
+                     result))))
+  (go a null-value))
+
+(define (evens a b)
+  (filtered-accumulate cons '() id a inc b even?))
+
+(evens 1 10)
+
+(define (prime? n)
+  (define (smallest-divisor n)
+    (define (square x)
+      (* x x))
+    (define (find-divisor n test-divisor)
+      (cond ((> (square test-divisor) n) n)
+            ((divides? test-divisor n) test-divisor)
+            (else (find-divisor n (+ test-divisor  1)))))
+    (define (divides? a b)
+      (= (remainder b a) 0))
+    (find-divisor n 2))
+  (= n (smallest-divisor n)))
+
+(prime? 1999)
+
+(define (sum-of-prime-squares a b)
+  (define (square x) (* x x))
+  (filtered-accumulate + 0 square a inc b prime?))
+
+(sum-of-prime-squares 1 10)
+
+(define (sum-rel-primes n)
+  (define (relative-prime? x)
+    (= (gcd n x) 1))
+  (filtered-accumulate * 1 id 1 inc (- n 1) relative-prime?))
+
+(sum-rel-primes 133)
