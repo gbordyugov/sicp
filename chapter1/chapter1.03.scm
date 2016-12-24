@@ -6,7 +6,6 @@
 
 (define (id x) x)
 
-
 (define (sum term a next b)
   (if (> a b)
       0
@@ -21,7 +20,6 @@
 (define (cube x) (* x x x))
 
 (integral cube 0.0 1.0 0.01)
-
 (integral cube 0.0 1.0 0.001)
 
 (define (simpson f a b n)
@@ -29,7 +27,7 @@
          (h  (/ l n))
          (h3 (* 3 h)))
     (begin
-      (define (sum-i term a next b)
+      (define (sum term a next b)
         (define (go a result)
           (if (> a b)
             result
@@ -37,11 +35,18 @@
                 (+ result (term a)))))
         (go a 0))
       (define (g k)
-        (let ((x (+ a (* k h))))
-          (g x)))
-      (sum-i g 0 next n))))
+        (let ((fx (f (+ a (* k h))))
+              (weight (cond ((or (= k 0) (= k n)) 1.0)
+                            ((even? k) 2.0)
+                            (else      4.0))))
+          (* weight fx)))
+      (* h3 (sum g 0 (lambda (n) (+ n 1)) n)))))
 
-(simpson cons 0.0 10.0 10)
+(simpson cube 0.0 1.0 100.0)
+(simpson cube 0.0 1.0 1000.0)
+
+
+
 
 ;;
 ;; exercise 1.30
