@@ -127,7 +127,7 @@
   (go a null-value))
 
 ;;
-;; linearly recursive (aka iterative) version
+;; linearly recursive version
 ;;
 (define (accumulate combiner null-value term a next b)
   (if (> a b)
