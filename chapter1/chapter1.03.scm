@@ -189,3 +189,17 @@
   (filtered-accumulate * 1 id 1 inc (- n 1) relative-prime?))
 
 (sum-rel-primes 133)
+
+
+;;
+;; exercise 1.34
+;;
+
+(define (f g) (g 2))
+
+(f square)
+
+(f (lambda (z) (* z (+ z 1))))
+
+(f f) ;; cannot call 2 on 2
+;;
