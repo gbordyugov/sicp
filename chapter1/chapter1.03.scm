@@ -307,3 +307,15 @@
   (fixed-point (lambda (x)
                  (average x (/ (log 1000) (log x))))
                3.0))
+
+
+;;
+;; exercise 1.37
+;;
+
+(define (cont-frac n d k)
+  (...))
+
+(cont-frac (lambda (i) 1.0)
+           (lambda (i) 1.0)
+           10)
