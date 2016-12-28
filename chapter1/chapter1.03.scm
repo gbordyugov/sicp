@@ -319,7 +319,7 @@
 
 (define (cont-frac n d k)
   (define (go i acc)
-    (if (= i 1)
+    (if (= i 0)
       acc
       (go (- i 1) (/ (n i) (+ (d i) acc)))))
   (go k (/ (n k) (d k))))
@@ -364,3 +364,32 @@
     1))
 
 (define e (+ 2 (cont-frac ne de 10)))
+
+
+
+;;
+;; exercise 1.39
+;;
+
+    
+(define (tan-cf x k)
+  (define (n i)
+    (if (= i 1) x (- (* x x))))
+  (define (d i)
+    (if (= i 1) 0 (- (* 2 i) 3)))
+  (define (go i acc)
+    (if (= i 0)
+      acc
+      (go (- i 1) (/ (n i) (+ (d i) acc)))))
+  (go k (/ (n k) (d k))))
+
+  ;; recursive version
+  ;; (define (go i)
+  ;;   (if (= i k)
+  ;;     (/ (n i) (d i))
+  ;;     (/ (n i) (+ (d i) (go (+ 1 i))))))
+  ;; (go 1))
+
+
+(tan-cf (/ 3.1415926 2.0) 10)
+(tan-cf (/ 3.1415926 4.0) 10)
