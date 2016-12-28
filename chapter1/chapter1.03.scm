@@ -313,9 +313,28 @@
 ;; exercise 1.37
 ;;
 
-(define (cont-frac n d k)
-  (...))
+;;
+;; tail recursion
+;;
 
-(cont-frac (lambda (i) 1.0)
-           (lambda (i) 1.0)
-           10)
+(define (cont-frac n d k)
+  (define (go i acc)
+    (if (= i 1)
+      acc
+      (go (- i 1) (/ (n i) (+ (d i) acc)))))
+  (go k (/ (n k) (d k))))
+
+;;
+;; linear recursion
+;;
+
+(define (cont-frac n d k)
+  (define (go i)
+    (if (= i k)
+      (/ (n i) (d i))
+      (/ (n i) (+ (d i) (go (+ 1 i))))))
+  (go 1))
+
+(/ 1.0 (cont-frac (lambda (i) 1.0)
+                  (lambda (i) 1.0)
+                  10))
