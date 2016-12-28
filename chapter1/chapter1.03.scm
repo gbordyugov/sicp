@@ -322,7 +322,7 @@
     (if (= i 0)
       acc
       (go (- i 1) (/ (n i) (+ (d i) acc)))))
-  (go k (/ (n k) (d k))))
+  (go k 0))
 
 ;;
 ;; linear recursion
@@ -343,18 +343,6 @@
 ;;
 ;; exercise 1.38
 ;;
-;;  1 1
-;;  2 2
-;;  3 1
-;;  4 1
-;;  5 4
-;;  6 1
-;;  7 1
-;;  8 6
-;;  9 1
-;; 10 1
-;; 11 8
-;; ...
 
 (define (ne i) 1.0)
 
@@ -381,7 +369,7 @@
     (if (= i 0)
       acc
       (go (- i 1) (/ (n i) (+ (d i) acc)))))
-  (go k (/ (n k) (d k))))
+  (go k 0))
 
   ;; recursive version
   ;; (define (go i)
@@ -392,4 +380,5 @@
 
 
 (tan-cf (/ 3.1415926 2.0) 10)
+
 (tan-cf (/ 3.1415926 4.0) 10)
