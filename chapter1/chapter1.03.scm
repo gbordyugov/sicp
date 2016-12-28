@@ -338,3 +338,29 @@
 (/ 1.0 (cont-frac (lambda (i) 1.0)
                   (lambda (i) 1.0)
                   10))
+
+
+;;
+;; exercise 1.38
+;;
+;;  1 1
+;;  2 2
+;;  3 1
+;;  4 1
+;;  5 4
+;;  6 1
+;;  7 1
+;;  8 6
+;;  9 1
+;; 10 1
+;; 11 8
+;; ...
+
+(define (ne i) 1.0)
+
+(define (de i)
+  (if (= (remainder i 3) 2)
+    (* (+ (integer-floor i 3) 1) 2)
+    1))
+
+(define e (+ 2 (cont-frac ne de 10)))
