@@ -382,3 +382,82 @@
 (tan-cf (/ 3.1415926 2.0) 10)
 
 (tan-cf (/ 3.1415926 4.0) 10)
+
+
+
+;;
+;; Newton solver
+;;
+
+(define (deriv g)
+  (lambda (x) (/ (- (g (+ x (/ dx 2))) (g (- x (/ dx 2)))) dx)))
+
+(define dx 0.00001)
+
+(define (cube x) (* x x x))
+((deriv cube) 5)
+
+(define (newton-transform g)
+  (lambda (x) (- x (/ (g x) ((deriv g) x)))))
+
+(define (newtons-method g guess)
+  (fixed-point (newton-transform g) guess))
+
+(newtons-method (lambda (x) (- (* x x) 25)) 1.0)
+
+(define (n-sqrt x)
+  (newtons-method (lambda (y) (- (square y) x )) 1.0))
+
+(n-sqrt 25.0)
+
+
+;;
+;; exericse 1.40
+;;
+
+(define (cubic a b c)
+  (lambda (x) (+ (* x x x) (* a x x) (* b x) c)))
+
+
+;;
+;; exercise 1.41
+;;
+
+(define (double g)
+  (lambda (x) (g (g x))))
+
+(define (inc x) (+ 1 x))
+
+(((double (double double)) inc) 5)
+
+;;
+;; exercise 1.42
+;;
+
+(define (compose f g)
+  (lambda (x) (f (g x ))))
+
+((compose square inc) 6)
+
+;;
+;; exercise 1.43
+;;
+
+(define (repeated g n)
+  (if (= n 1)
+    g
+    (compose g (repeated g (- n 1)))))
+
+((repeated square 2) 5)
+
+
+;;
+;; exericse 1.44
+;;
+
+(define (smooth f)
+  (define dx 1.0e-4)
+  (lambda (x) (/ (+ (f x) (f (+ x dx)) (f (- x dx))) 3)))
+
+;; still not working
+(define (smooth-n f n) (repeated smooth n))
