@@ -452,12 +452,26 @@
 
 
 ;;
-;; exericse 1.44
+;; exercise 1.44
 ;;
 
 (define (smooth f)
   (define dx 1.0e-4)
   (lambda (x) (/ (+ (f x) (f (+ x dx)) (f (- x dx))) 3)))
 
-;; still not working
-(define (smooth-n f n) (repeated smooth n))
+;; turned out very neat
+(define (smooth-n f n)
+  (repeated smooth n) f)
+
+((smooth-n sin 4) (/ 3.1415926 2))
+
+((smooth-n cos 2) (/ 3.1415926 2))
+
+
+
+;;
+;; exercise  1.45
+;;
+
+(define (average-damp f)
+  (lambda (x) (average x (f x))))
