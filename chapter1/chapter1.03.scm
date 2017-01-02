@@ -470,8 +470,53 @@
 
 
 ;;
-;; exercise  1.45
+;; prelude to exercise  1.45
 ;;
 
 (define (average-damp f)
+  (define (average x1 x2) (/ (+ x1 x2) 2))
   (lambda (x) (average x (f x))))
+
+(define (fixed-point-of-transform g transform guess)
+  (fixed-point (transform g) guess))
+
+(define (sqrt1 x)
+  (fixed-point-of-transform (lambda (y) (/ x y)) average-damp 1.0))
+
+(define (sqrt2 x)
+  (fixed-point-of-transform
+    (lambda (y) (- (square y) x)) newton-transform 1.0))
+
+(sqrt1 9.0)
+(sqrt2 9.0)
+
+;;
+;; to exercise  1.45
+;;
+
+
+(define (croot x)
+  (fixed-point-of-transform
+    (lambda (y) (/ x (* y y)))
+    average-damp 1.0))
+
+(croot 27.0)
+
+(define (froot x)
+  (fixed-point-of-transform
+    (lambda (y) (/ x (* y y y)))
+    (repeated average-damp 2) 1.0))
+
+(froot 81.0)
+
+(define (nroot x n)
+  (define (repeated g n)
+    (if (= n 1.0)
+      g
+      (compose g (repeated g (- n 1)))))
+  (define (log2 x) (/ (log x) (log 2.0)))
+  (fixed-point-of-transform
+    (lambda (y) (/ x (expt y (- n 1))))
+    (repeated average-damp (ceiling (log2 n))) 1.0))
+
+(nroot (expt 16.666 88) 88)
