@@ -520,3 +520,39 @@
     (repeated average-damp (ceiling (log2 n))) 1.0))
 
 (nroot (expt 16.666 88) 88)
+
+;;
+;; answer: log2 averagings are needed
+;;
+
+
+;;
+;; exercise 1.46
+;;
+
+(define (iterative-improve good-enough? improve)
+  (define (go guess)
+    (if (good-enough? guess)
+      guess
+      (go (improve guess))))
+  go)
+
+(define (sqrt3 x)
+  (define (average x1 x2) (/ (+ x1 x2) 2))
+  (define (improve guess)
+    (average guess (/ x guess)))
+  (define (good-enough? guess)
+    (< (abs (- (square guess) x)) 0.001))
+  ((iterative-improve good-enough? improve) 1.0))
+
+(sqrt3 16.0)
+
+(define (fixed-point-2 f first-guess)
+  (define (good-enough? guess)
+    (< (abs (- guess (f guess))) 0.00001))
+  (define (improve guess)
+    (f guess))
+  ((iterative-improve good-enough? improve) first-guess))
+
+(fixed-point-2 cos 1.0)
+(fixed-point-2 (lambda (y) (+ (sin y) (cos y))) 1.0)
