@@ -92,3 +92,41 @@
 (define p1 (make-point 1.0 2.0))
 (define p2 (make-point 2.0 1.0))
 (print-point (midpoint-segment (make-segment p1 p2)))
+
+
+
+;;
+;; exercise 2.3
+;;
+
+(define (make-rect p1 p2)
+  (cons p1 p2)) ;; to be expanded later
+(define rect-ul   car) ;; upper-left corner
+(define rect-lr   cdr) ;; lower-r corner
+
+(define (rect-dx r)
+  (let* ((ul (rect-ul r))
+         (lr (rect-lr r))
+         (x1 (x-point ul))
+         (x2 (x-point lr)))
+    (abs (- (x1 x2)))))
+
+(define (rect-dy r)
+  (let* ((ul (rect-ul r))
+         (lr (rect-lr r))
+         (y1 (y-point ul))
+         (y2 (y-point lr)))
+    (abs (- (y1 y2)))))
+
+(define (rect-perimeter r)
+  (+ (rect-dx r) (rect-dx r)
+     (rect-dy r) (rect-dy r)))
+
+(define (rect-area r)
+  (* (rect-dx r) (rect-dy r)))
+
+(define r1 (make-rect (make-point 1.0 2.0) (make-point 2.0 1.0)))
+
+(rect-area r1)
+
+(rect-perimeter r1)
