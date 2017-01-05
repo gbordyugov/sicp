@@ -241,8 +241,17 @@
 
 (define c-one
   (lambda (f)
-    (lambda (x) (f x))))
+    (lambda (x)
+      (f x))))
 
 (define c-two
   (lambda (f)
-    (lambda (x) (f (f x)))))
+    (lambda (x)
+      (f (f x)))))
+
+(define (c-plus a b)
+  (lambda (f)
+    (lambda (x)
+      ((a f) ((b f) x)))))
+
+
