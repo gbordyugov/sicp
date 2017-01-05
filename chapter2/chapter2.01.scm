@@ -285,3 +285,24 @@
 (define (sub-interval x y)
   (mul-interval x (make-interval (- (upper-bound y))
                                  (- (lower-bound y)))))
+
+;;
+;; exercise 2.8
+;;
+
+;; a simple arithmetics problem
+
+
+;;
+;; exercise 2.9
+;;
+
+(define (div-interval x y)
+  (let ((span-y (- (upper-bound y)
+                   (lower-bound y))))
+    (if (or (= 0 span-y)
+            (= 0 (upper-bound y))
+            (= 0 (lower-bound y)))
+      (error "division by zero in (div-interval x y)")
+      (mul-interval x (make-interval (/ 1.0 (upper-bound y))
+                                     (/ 1.0 (lower-bound y)))))))
