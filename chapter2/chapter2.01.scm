@@ -223,7 +223,6 @@
   (go z 0))
 
 (icar (icons 5 6))
-
 (icdr (icons 5 6))
 
 
@@ -231,11 +230,19 @@
 ;; exercise 2.6
 ;;
 
-(define (zero)
+(define c-zero
   (lambda (f)
     (lambda (x) x)))
 
-(define (add-1 n)
+(define (c-add-1 n)
   (lambda (f)
     (lambda (x)
       (f ((n f) x)))))
+
+(define c-one
+  (lambda (f)
+    (lambda (x) (f x))))
+
+(define c-two
+  (lambda (f)
+    (lambda (x) (f (f x)))))
