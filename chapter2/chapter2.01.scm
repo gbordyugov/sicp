@@ -171,3 +171,33 @@
 (rect-perimeter r)
 
 (rect-area r)
+
+;;
+;; a cool representation for cons
+;;
+
+(define (mcons x y)
+  (define (dispatch m)
+    (cond ((= m 0) x)
+          ((= m 1) y)
+          (else (error "wrong argument of dispatch of MCONS"))))
+  dispatch)
+(define (mcar z) (z 0))
+(define (mcdr z) (z 1))
+
+(mcar (mcons 1 2))
+(mcdr (mcons 1 2))
+
+
+;;
+;; exercise 2.4
+
+(define (gcons x y)
+  (lambda (m) (m x y)))
+(define (gcar z)
+  (z (lambda (p q) p)))
+(define (gcdr z)
+  (z (lambda (p q) q)))
+
+(gcar (gcons 1 2))
+(gcdr (gcons 1 2))
