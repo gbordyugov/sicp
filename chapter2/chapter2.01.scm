@@ -298,11 +298,9 @@
 ;;
 
 (define (div-interval x y)
-  (let ((span-y (- (upper-bound y)
-                   (lower-bound y))))
-    (if (or (= 0 span-y)
-            (= 0 (upper-bound y))
-            (= 0 (lower-bound y)))
+  (let* ((ub (upper-bound y))
+         (lb (lower-bound y))
+         (span-y (- ub lb)))
+    (if (or (= 0 span-y) (= 0 ub) (= 0 lb))
       (error "division by zero in (div-interval x y)")
-      (mul-interval x (make-interval (/ 1.0 (upper-bound y))
-                                     (/ 1.0 (lower-bound y)))))))
+      (mul-interval x (make-interval (/ 1.0 ub) (/ 1.0 lb))))))
