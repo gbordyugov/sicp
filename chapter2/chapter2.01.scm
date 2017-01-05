@@ -225,3 +225,17 @@
 (icar (icons 5 6))
 
 (icdr (icons 5 6))
+
+
+;;
+;; exercise 2.6
+;;
+
+(define (zero)
+  (lambda (f)
+    (lambda (x) x)))
+
+(define (add-1 n)
+  (lambda (f)
+    (lambda (x)
+      (f ((n f) x)))))
