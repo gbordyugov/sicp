@@ -201,3 +201,27 @@
 
 (gcar (gcons 1 2))
 (gcdr (gcons 1 2))
+
+
+;;
+;; exercise 2.5
+;;
+
+(define (icons a b)
+  (* (expt 2 a) (expt 3 b)))
+(define (icar z)
+  (define (go z n)
+    (if (> (remainder z 2) 0)
+      n
+      (go (/ z 2) (+ n 1))))
+  (go z 0))
+(define (icdr z)
+  (define (go z n)
+    (if (> (remainder z 3) 0)
+      n
+      (go (/ z 3) (+ n 1))))
+  (go z 0))
+
+(icar (icons 5 6))
+
+(icdr (icons 5 6))
