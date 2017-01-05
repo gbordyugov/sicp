@@ -130,3 +130,44 @@
 (rect-area r1)
 
 (rect-perimeter r1)
+
+
+;;
+;; another implementation
+;;
+
+(define (make-rect p1 p2)
+  (let* ((x1 (x-point p1))
+         (y1 (y-point p1))
+         (x2 (x-point p2))
+         (y2 (y-point p2))
+         (dx (- x2 x1))
+         (dy (- y2 y1))
+         (d (cons dx dy))
+         (p (cons x1 y1)))
+    (cons p d)))
+
+(define rect-ul car) ;; upper-left
+(define (rect-lr r) ;; lower-r corner
+  (let* ((ul (rect-ul r))
+         (x0 (x-point ul))
+         (y0 (y-point ul))
+         (dx (car (cdr r)))
+         (dy (cdr (cdr r))))
+    (make-point (+ x0 dx) (+ y0 dy))))
+
+(define (rect-dx r) (abs (car (cdr r))))
+(define (rect-dy r) (abs (cdr (cdr r))))
+
+(define r (make-rect (make-point 1.0 2.0) (make-point 2.0 1.0)))
+
+(define (rect-perimeter r)
+  (+ (rect-dx r) (rect-dx r)
+     (rect-dy r) (rect-dy r)))
+
+(define (rect-area r)
+  (* (rect-dx r) (rect-dy r)))
+
+(rect-perimeter r)
+
+(rect-area r)
