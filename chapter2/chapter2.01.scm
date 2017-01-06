@@ -360,25 +360,58 @@
 (negative-interval? mix-i)
 (mixed-interval?    mix-i)
 
-;;
-;; just two cases out of nine are hopefully not wring ;-)
-;;
-(define (mul-interval i1 i2)
+(define (mul-interval-ben i1 i2)
   (let ((l1 (lower-bound i1)) (u1 (upper-bound i1))
         (l2 (upper-bound i2)) (u2 (upper-bound i2)))
     (cond
       ((positive-interval? i1)
        (cond
-         ((positive-interval? i2) (make-interval (* l1 l2) (* u1 u2))) ;; ok
-         ((mixed-interval     i2) (make-interval (* l1 l2) (* u1 u2)))
-         ((negative-interval? i2) (make-interval (* l1 l2) (* u1 u2)))))
+         ;;
+         ;; --- 0 --- l2 --- u2 --- l1 --- u1 --- >
+         ;;
+         ((positive-interval? i2) (make-interval (* l1 l2) (* u1 u2)))
+         ;;
+         ;; --- l2 --- u2 --- 0 --- l1 --- u1 --- >
+         ;;
+         ((negative-interval? i2) (make-interval (* u1 l2) (* l1 u2)))
+         ;;
+         ;; --- l2 --- 0 --- u2 --- l1 --- u1 --- >
+         ;;
+         (else                    (make-interval (* u1 l2) (* u1 u2)))))
       ((negative-interval? i1)
        (cond
-         ((positive-interval? i2) (make-interval (* l1 l2) (* u1 u2)))
-         ((mixed-interval     i2) (make-interval (* l1 l2) (* u1 u2)))
-         ((negative-interval? i2) (make-interval (* u1 u2) (* l1 l2))))) ;; ok
+         ;;
+         ;; --- l1 --- u1 --- 0 --- l2 --- u2 --- >
+         ;;
+         ((positive-interval? i2) (make-interval (* l1 u2) (* u1 l2)))
+         ;;
+         ;; --- l1 --- u1 --- l2 --- u2 --- 0 --- >
+         ;;
+         ((negative-interval? i2) (make-interval (* l1 l2) (* u1 u2)))
+         ;;
+         ;; --- l1 --- u1 --- l2 --- 0 --- u2 --- >
+         ;;
+         (else                    (make-interval (* l1 u2) (* u1 u2)))))
       (else ;; (mixed-interval? i1)
         (cond
-          ((positive-interval? i2) (make-interval (* l1 l2) (* u1 u2)))
-          ((mixed-interval     i2) (make-interval (* l1 l2) (* u1 u2)))
-          ((negative-interval? i2) (make-interval (* l1 l2) (* u1 u2))))))))
+          ;;
+          ;; --- l1 --- 0 --- u1 --- l2 --- u2 --- >
+          ;;
+          ((positive-interval? i2) (make-interval (* l1 u2) (* u1 u2)))
+          ;;
+          ;; --- l1 --- 0 --- u1 ----
+          ;;
+          ((negative-interval? i2) (make-interval (* u1 l2) (* u1 u2)))
+          ;;
+          ;; --- l1 --- 0 --- u1 ----
+          ;;
+          (else                     (make-interval (* l1 l2) (* u1 u2))))))))
+
+(define (make-intervals n)
+  (define rnd (- (random 2.0) 1.0))
+  (define (go n acc)
+    (if (= 0 n)
+      acc
+      (let ((upper (- (random 2.0) 1.0))
+            (lower (- (random 2.0) 1.0))
+      (go (- n 1) (cons 
