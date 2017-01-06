@@ -278,7 +278,11 @@
 ;; exercise 2.7
 ;;
 
-(define (make-interval a b) (cons a b))
+(define (make-interval lower upper)
+  (if (> upper lower) ;; enforce that upper > 0
+    (cons lower upper)
+    (cons upper lower)))
+
 (define (upper-bound i) (cdr i))
 (define (lower-bound i) (car i))
 
@@ -321,3 +325,60 @@
         (p3 (* (upper-bound x) (lower-bound y)))
         (p4 (* (upper-bound x) (upper-bound y))))
     (make-interval (min p1 p2 p3 p4) (max p1 p2 p3 p4))))
+
+;;
+;; each interval can be either
+;; 1) positive with both bounds > 0
+;; 2) mixed    with a negative lower bound and a positive upper one
+;; 3) negative with both bounds < 0
+;;
+
+(define (positive-interval? i)
+  (> (lower-bound i) 0))
+(define (negative-interval? i)
+  (< (upper-bound i) 0))
+(define (mixed-interval? i)
+  (and (not (negative-interval? i)) (not (positive-interval? i))))
+
+;;
+;; run some tests
+;;
+
+(define pos-i (make-interval  1.0  2.0))
+(define neg-i (make-interval -1.0 -2.0))
+(define mix-i (make-interval -1.0  1.0))
+
+(positive-interval? pos-i)
+(negative-interval? pos-i)
+(mixed-interval?    pos-i)
+
+(positive-interval? neg-i)
+(negative-interval? neg-i)
+(mixed-interval?    neg-i)
+
+(positive-interval? mix-i)
+(negative-interval? mix-i)
+(mixed-interval?    mix-i)
+
+;;
+;; just two cases out of nine are hopefully not wring ;-)
+;;
+(define (mul-interval i1 i2)
+  (let ((l1 (lower-bound i1)) (u1 (upper-bound i1))
+        (l2 (upper-bound i2)) (u2 (upper-bound i2)))
+    (cond
+      ((positive-interval? i1)
+       (cond
+         ((positive-interval? i2) (make-interval (* l1 l2) (* u1 u2))) ;; ok
+         ((mixed-interval     i2) (make-interval (* l1 l2) (* u1 u2)))
+         ((negative-interval? i2) (make-interval (* l1 l2) (* u1 u2)))))
+      ((negative-interval? i1)
+       (cond
+         ((positive-interval? i2) (make-interval (* l1 l2) (* u1 u2)))
+         ((mixed-interval     i2) (make-interval (* l1 l2) (* u1 u2)))
+         ((negative-interval? i2) (make-interval (* u1 u2) (* l1 l2))))) ;; ok
+      (else ;; (mixed-interval? i1)
+        (cond
+          ((positive-interval? i2) (make-interval (* l1 l2) (* u1 u2)))
+          ((mixed-interval     i2) (make-interval (* l1 l2) (* u1 u2)))
+          ((negative-interval? i2) (make-interval (* l1 l2) (* u1 u2))))))))
