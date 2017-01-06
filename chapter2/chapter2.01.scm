@@ -282,19 +282,23 @@
 (define (upper-bound i) (cdr i))
 (define (lower-bound i) (car i))
 
+;;
+;; exercise 2.8
+;;
+
 (define (sub-interval x y)
   (mul-interval x (make-interval (- (upper-bound y))
                                  (- (lower-bound y)))))
 
 ;;
-;; exercise 2.8
+;; exercise 2.9
 ;;
 
 ;; a simple arithmetics problem
 
 
 ;;
-;; exercise 2.9
+;; exercise 2.10
 ;;
 
 (define (div-interval x y)
