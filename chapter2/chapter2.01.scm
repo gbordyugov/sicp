@@ -308,3 +308,16 @@
     (if (or (= 0 span-y) (= 0 ub) (= 0 lb))
       (error "division by zero in (div-interval x y)")
       (mul-interval x (make-interval (/ 1.0 ub) (/ 1.0 lb))))))
+
+
+;;
+;; exercise 2.11
+;;
+
+;; the original version
+(define (mul-interval x y)
+  (let ((p1 (* (lower-bound x) (lower-bound y)))
+        (p2 (* (lower-bound x) (upper-bound y)))
+        (p3 (* (upper-bound x) (lower-bound y)))
+        (p4 (* (upper-bound x) (upper-bound y))))
+    (make-interval (min p1 p2 p3 p4) (max p1 p2 p3 p4))))
