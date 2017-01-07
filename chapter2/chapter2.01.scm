@@ -283,6 +283,13 @@
     (cons lower upper)
     (cons upper lower)))
 
+(define (interval-eq? i1 i2)
+  (and (= (upper-bound i1) (upper-bound i2))
+       (= (lower-bound i1) (lower-bound i2))))
+
+(interval-eq? (make-interval 1.0 2.0) (make-interval 1.0 2.0))
+(interval-eq? (make-interval 1.0 2.0) (make-interval 1.0 2.5))
+
 (define (upper-bound i) (cdr i))
 (define (lower-bound i) (car i))
 
@@ -317,14 +324,6 @@
 ;;
 ;; exercise 2.11
 ;;
-
-;; the original version
-(define (mul-interval x y)
-  (let ((p1 (* (lower-bound x) (lower-bound y)))
-        (p2 (* (lower-bound x) (upper-bound y)))
-        (p3 (* (upper-bound x) (lower-bound y)))
-        (p4 (* (upper-bound x) (upper-bound y))))
-    (make-interval (min p1 p2 p3 p4) (max p1 p2 p3 p4))))
 
 ;;
 ;; each interval can be either
@@ -362,56 +361,63 @@
 
 (define (mul-interval-ben i1 i2)
   (let ((l1 (lower-bound i1)) (u1 (upper-bound i1))
-        (l2 (upper-bound i2)) (u2 (upper-bound i2)))
+        (l2 (lower-bound i2)) (u2 (upper-bound i2)))
     (cond
       ((positive-interval? i1)
        (cond
-         ;;
-         ;; --- 0 --- l2 --- u2 --- l1 --- u1 --- >
-         ;;
          ((positive-interval? i2) (make-interval (* l1 l2) (* u1 u2)))
-         ;;
-         ;; --- l2 --- u2 --- 0 --- l1 --- u1 --- >
-         ;;
          ((negative-interval? i2) (make-interval (* u1 l2) (* l1 u2)))
-         ;;
-         ;; --- l2 --- 0 --- u2 --- l1 --- u1 --- >
-         ;;
          (else                    (make-interval (* u1 l2) (* u1 u2)))))
       ((negative-interval? i1)
        (cond
-         ;;
-         ;; --- l1 --- u1 --- 0 --- l2 --- u2 --- >
-         ;;
          ((positive-interval? i2) (make-interval (* l1 u2) (* u1 l2)))
-         ;;
-         ;; --- l1 --- u1 --- l2 --- u2 --- 0 --- >
-         ;;
          ((negative-interval? i2) (make-interval (* l1 l2) (* u1 u2)))
-         ;;
-         ;; --- l1 --- u1 --- l2 --- 0 --- u2 --- >
-         ;;
-         (else                    (make-interval (* l1 u2) (* u1 u2)))))
-      (else ;; (mixed-interval? i1)
-        (cond
-          ;;
-          ;; --- l1 --- 0 --- u1 --- l2 --- u2 --- >
-          ;;
-          ((positive-interval? i2) (make-interval (* l1 u2) (* u1 u2)))
-          ;;
-          ;; --- l1 --- 0 --- u1 ----
-          ;;
-          ((negative-interval? i2) (make-interval (* u1 l2) (* u1 u2)))
-          ;;
-          ;; --- l1 --- 0 --- u1 ----
-          ;;
-          (else                     (make-interval (* l1 l2) (* u1 u2))))))))
+         (else                    (make-interval (* l1 u2) (* l1 l2)))))
+      (else
+       (cond
+         ((positive-interval? i2) (make-interval (* l1 u2) (* u1 u2)))
+         ((negative-interval? i2) (make-interval (* u1 l2) (* l1 l2)))
+         (else                    (make-interval (min (* l1 u2)
+                                                      (* u1 l2))
+                                                 (max (* l1 l2)
+                                                      (* u1 u2)))))))))
+
+;;
+;; some functions for testing
+;;
 
 (define (make-intervals n)
-  (define rnd (- (random 2.0) 1.0))
   (define (go n acc)
     (if (= 0 n)
       acc
       (let ((upper (- (random 2.0) 1.0))
-            (lower (- (random 2.0) 1.0))
-      (go (- n 1) (cons 
+            (lower (- (random 2.0) 1.0)))
+      (go (- n 1) (cons (make-interval lower upper) acc)))))
+  (go n '()))
+
+(make-intervals 3)
+
+(define (test-ben-mul n)
+  (define (go i1 i2)
+    (define (print-wrong i1 i2 r1 r2)
+      (newline)
+      (display "something went wrong with:")
+      (newline)
+      (display i1) (display ", ")
+      (display i2) (display ", result: ")
+      (display r1) (display ", ")
+      (display r2) (display ", "))
+    (let ((r1 (mul-interval     i1 i2))
+          (r2 (mul-interval-ben i1 i2)))
+      (if (not (interval-eq? r1 r2))
+        (begin
+          (print-wrong i1 i2 r1 r2)
+          #f)
+        #t)))
+  (let* ((data (zip (make-intervals n) (make-intervals n)))
+         (results (map (lambda (x) (go (car x) (car (cdr x)))) data)))
+    results))
+
+(zip (make-intervals 3) (make-intervals 3))
+
+(test-ben-mul 33333)
