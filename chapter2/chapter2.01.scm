@@ -77,7 +77,8 @@
   (display (x-point p))
   (display ",")
   (display (y-point p))
-  (display ")"))
+  (display ")")
+  (newline))
 
 (define (midpoint-segment s)
   (define (avg a b) (/ (+ a b) 2))
@@ -417,8 +418,8 @@
         #t)))
   (let* ((data (zip (make-intervals n) (make-intervals n)))
          (results (map (lambda (x) (go (car x) (car (cdr x)))) data)))
-    results))
-
-(zip (make-intervals 3) (make-intervals 3))
+    (if (every (lambda (x) x) results)
+      (display "all tests passed")
+      (display "not all tests passed"))))
 
 (test-ben-mul 3333)
