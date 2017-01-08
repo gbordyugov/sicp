@@ -446,3 +446,34 @@
   (* (/ (width i) (center i)) 100))
 
 (percent (make-center-percent 100 1))
+
+
+;;
+;; exercise 2.13
+;;
+
+;; assume that width1 times width2 negligably small 
+
+;;
+;; a problem with two representations
+;;
+
+(define (par1 r1 r2)
+  (div-interval (mul-interval r1 r2)
+                (add-interval r1 r2)))
+
+(define (par2 r1 r2)
+  (let ((one (make-interval 1 1)))
+   (div-interval one (add-interval (div-interval one r1)
+                                   (div-interval one r1)))))
+
+;;
+;; exercie 2.14
+;;
+
+(define A (make-interval 45 55))
+(define B (make-interval 95 105))
+
+(percent (par1 A B))
+
+(percent (par2 A B))
