@@ -43,3 +43,16 @@
 
 (last-pair squares)
 (last-pair odds)
+
+;;
+;; exercise 2.18
+;;
+
+(define (greverse l)
+  (define (go l acc)
+    (if (null? l)
+      acc
+      (go (cdr l) (cons (car l) acc))))
+  (go l '()))
+
+(greverse (list 1 2 3))
