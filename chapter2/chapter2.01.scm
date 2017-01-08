@@ -422,4 +422,27 @@
       (display "all tests passed")
       (display "not all tests passed"))))
 
-(test-ben-mul 3333)
+(test-ben-mul 99)
+
+
+;;
+;; centered intervals
+;;
+
+(define (make-center-interval c w)
+  (make-interval (- c w) (+ c w)))
+(define (center i)
+  (/ (+ (lower-bound i) (upper-bound i)) 2))
+(define (width i)
+  (/ (- (upper-bound i) (lower-bound i)) 2))
+
+;;
+;; exercise 2.12
+;;
+
+(define (make-center-percent c pw)
+  (make-center-interval c (* c (/ pw 100))))
+(define (percent i)
+  (* (/ (width i) (center i)) 100))
+
+(percent (make-center-percent 100 1))
