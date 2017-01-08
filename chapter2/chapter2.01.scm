@@ -109,14 +109,14 @@
          (lr (rect-lr r))
          (x1 (x-point ul))
          (x2 (x-point lr)))
-    (abs (- (x1 x2)))))
+    (abs (- x1 x2))))
 
 (define (rect-dy r)
   (let* ((ul (rect-ul r))
          (lr (rect-lr r))
          (y1 (y-point ul))
          (y2 (y-point lr)))
-    (abs (- (y1 y2)))))
+    (abs (- y1 y2))))
 
 (define (rect-perimeter r)
   (+ (rect-dx r) (rect-dx r)
@@ -287,11 +287,12 @@
   (and (= (upper-bound i1) (upper-bound i2))
        (= (lower-bound i1) (lower-bound i2))))
 
+(define (upper-bound i) (cdr i))
+(define (lower-bound i) (car i))
+
 (interval-eq? (make-interval 1.0 2.0) (make-interval 1.0 2.0))
 (interval-eq? (make-interval 1.0 2.0) (make-interval 1.0 2.5))
 
-(define (upper-bound i) (cdr i))
-(define (lower-bound i) (car i))
 
 ;;
 ;; exercise 2.8
@@ -420,4 +421,4 @@
 
 (zip (make-intervals 3) (make-intervals 3))
 
-(test-ben-mul 33333)
+(test-ben-mul 3333)
