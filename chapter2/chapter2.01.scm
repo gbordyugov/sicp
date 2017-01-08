@@ -477,3 +477,16 @@
 (percent (par1 A B))
 
 (percent (par2 A B))
+
+
+;;
+;; exercise 2.15
+;;
+
+;; I think that par1 is more conservative (passimistic since it
+;; provides large spread of values
+;; par2 is more optimistic
+
+;;
+;; exercise 2.16 is skipped
+;;
