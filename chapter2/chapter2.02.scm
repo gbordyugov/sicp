@@ -96,3 +96,49 @@
 
 (same-parity 1 2 3 4 5 6 7)
 (same-parity 2 3 4 5 6 7 8)
+
+
+;;
+;; exercise 2.21
+;;
+
+(define (square-list-1 items)
+  (if (null? items)
+    '()
+    (cons (* (car items) (car items))
+          (square-list-1 (cdr items)))))
+
+(define (square-list-2 items)
+  (map (lambda (x) (* x x)) items))
+
+(square-list-1 (list 1 2 3 4 5 6))
+(square-list-2 (list 1 2 3 4 5 6))
+
+;;
+;; exercise 2.22
+;;
+
+(define (square-list-3 items)
+  (define (iter things answer)
+    (if (null? things)
+      answer
+      (iter (cdr things)
+            (cons (square (car things)) answer))))
+  (iter items '()))
+
+;; of course it would reverse the list!
+
+(square-list-3 (list 1 2 3 4 5 6))
+
+(define (square-list-4 items)
+  (define (iter things answer)
+    (if (null? things)
+      answer
+      (iter (cdr things)
+            (cons answer (square (car things))))))
+  (iter items '()))
+
+;; this results in an anti-list, i.e. list made of conses with cars
+;; pointing at the rest of the list
+
+(square-list-4 (list 1 2 3 4 5 6))
