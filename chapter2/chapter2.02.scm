@@ -152,3 +152,27 @@
   #t)
 
 (for-each (lambda (x) (newline) (display x)) (list 1 2 3))
+
+
+;;
+;; count-leaves
+;;
+
+(define (count-leaves x)
+  (cond ((null? x) 0)
+        ((not (pair? x)) 1)
+        (else (+ (count-leaves (car x))
+                 (count-leaves (cdr x))))))
+
+;;
+;; exercise 2.24
+;;
+
+;; just a sketch
+
+;;
+;; exercise 2.25
+;;
+
+(car (cdr (car (cdr (cdr (list 1 3 (list 5 7) 9))))))
+(car (car '((7))))
