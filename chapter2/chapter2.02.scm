@@ -76,9 +76,8 @@
       (+ (cc amount (except-first-denomination coin-values))
          (cc (- amount (first-denomination coin-values)) coin-values)))))
         
-(cc 100 us-coins)
-
-(cc 100 uk-coins)
+(cc 10 us-coins)
+(cc 10 uk-coins)
 
 
 ;;
@@ -189,3 +188,20 @@
 (append x y)
 (cons x y)
 (list x y)
+
+;;
+;; exercise 2.27
+;;
+
+(define (deep-reverse l)
+  (define (go l acc)
+    (cond ((null? l) acc)
+          ((not (pair? l)) (cons l acc))
+          (go (cdr l) (go (car l) acc)))) ;; not working
+  (go l '()))
+
+(greverse '((1 2) (3 4)))
+
+(deep-reverse '(1))
+
+(deep-reverse '((1 2) (3 4)))
