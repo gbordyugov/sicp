@@ -85,14 +85,14 @@
 ;; exercise 2.20
 ;;
 
-(define (same-parity . nums)
+(define (same-parity first . rest)
   (define (go rest acc) ;; tail-recursive yeah!
     (cond
       ((null? rest) acc)
       ((= (remainder (+ (car rest) (car acc)) 2) 0)
        (go (cdr rest)(cons (car rest) acc)))
       (else (go (cdr rest) acc))))
-  (reverse (go (cdr nums) (list (car nums)))))
+  (reverse (go rest (list first))))
 
 (same-parity 1 2 3 4 5 6 7)
 (same-parity 2 3 4 5 6 7 8)
