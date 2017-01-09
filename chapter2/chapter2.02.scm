@@ -140,5 +140,15 @@
 
 ;; this results in an anti-list, i.e. list made of conses with cars
 ;; pointing at the rest of the list
-
 (square-list-4 (list 1 2 3 4 5 6))
+
+
+;;
+;; exercise 2.23
+;;
+
+(define (for-each f list)
+  (map f list)
+  #t)
+
+(for-each (lambda (x) (newline) (display x)) (list 1 2 3))
