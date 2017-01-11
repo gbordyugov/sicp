@@ -203,3 +203,19 @@
 
 (deep-reverse '(1 2 3 (4 5)))
 (deep-reverse '((1 2) (3 4)))
+
+;;
+;; exercise 2.28
+;;
+
+(define (fringe l)
+  (define (go l acc)
+    (cond
+      ((null? l) acc)
+      ((not (pair? (car l))) (go (cdr l) (+ 1 acc)))
+      (else (go (car l) (go (cdr l) acc)))))
+  (go l 0))
+
+(fringe '((1 2 (3 4)) (1 2) (3 4) 5))
+
+
