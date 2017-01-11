@@ -212,9 +212,9 @@
   (define (go l acc)
     (cond
       ((null? l) acc)
-      ((not (pair? (car l))) (go (cdr l) (+ 1 acc)))
+      ((not (pair? (car l))) (go (cdr l) (cons (car l) acc)))
       (else (go (car l) (go (cdr l) acc)))))
-  (go l 0))
+  (go l '()))
 
 (fringe '((1 2 (3 4)) (1 2) (3 4) 5))
 
