@@ -207,14 +207,15 @@
 ;;
 ;; exercise 2.28
 ;;
+;; that's basically the function ``flatten'' from ``On Lisp''
+;;
 
 (define (fringe l)
   (define (go l acc)
     (cond
-      ((null? l) acc)
-      ((not (pair? (car l))) (go (cdr l) (cons (car l) acc)))
-      (else (go (car l) (go (cdr l) acc)))))
   (go l '()))
+
+(fringe '(1 2 3 4 5))
 
 (fringe '((1 2 (3 4)) (1 2) (3 4) 5))
 
