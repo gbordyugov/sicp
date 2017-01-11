@@ -218,4 +218,42 @@
 
 (fringe '((1 2 (3 4)) (1 2) (3 4) 5))
 
+;;
+;; exercise 2.29
+;;
 
+(define (make-mobile left-branch right-branch)
+  (list left-branch right-branch))
+
+(define (make-branch length structure)
+  (list length structure))
+
+;; a.
+(define ( left-branch mobile) (car      mobile))
+(define (right-branch mobile) (car (cdr mobile)))
+
+(define (branch-length    branch) (car      branch))
+(define (branch-structure branch) (car (cdr branch)))
+
+;; b.
+(define (branch-weight branch)
+  (let ((s (branch-structure branch)))
+   (if (number? s) s (mobile-weight s))))
+    
+(define (mobile-weight mobile)
+  (+ (branch-length (left-branch mobile))
+     (branch-length (right-branch mobile))))
+  
+(define (total-weight mobile)
+  (mobile-weight mobile))
+
+(define leaf1 (make-branch 1.0 2.0))
+(define leaf2 (make-branch 3.0 4.0))
+(define leaf3 (make-branch 5.0 6.0))
+(define leaf4 (make-branch 7.0 8.0))
+
+(define mobile1 (make-mobile leaf1 leaf2))
+(define branch1 (make-mobile mobile1 leaf3))
+(define mobile (make-mobile branch1 leaf4))
+
+(total-weight mobile)
