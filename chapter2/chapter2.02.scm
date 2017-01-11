@@ -195,13 +195,11 @@
 
 (define (deep-reverse l)
   (define (go l acc)
-    (cond ((null? l) acc)
-          ((not (pair? l)) (cons l acc))
-          (go (cdr l) (go (car l) acc)))) ;; not working
+    (cond
+      ((null? l) acc)
+      ((not (pair? (car l))) (go (cdr l) (cons (car l) acc)))
+      (else (go (cdr l) (cons (go (car l) '()) acc)))))
   (go l '()))
 
-(greverse '((1 2) (3 4)))
-
-(deep-reverse '(1))
-
+(deep-reverse '(1 2 3 (4 5)))
 (deep-reverse '((1 2) (3 4)))
