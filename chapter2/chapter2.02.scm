@@ -213,6 +213,9 @@
 (define (fringe l)
   (define (go l acc)
     (cond
+      ((null? l) acc)
+      ((not (pair? l)) (cons l acc))
+      (else (go (car l) (go (cdr l) acc)))))
   (go l '()))
 
 (fringe '(1 2 3 4 5))
