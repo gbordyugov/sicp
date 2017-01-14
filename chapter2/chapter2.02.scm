@@ -347,3 +347,16 @@
 
 (square-tree-3 '((1 2) (3 4) 5))
 (square-tree-4 '((1 2) (3 4) 5))
+
+
+;;
+;; exercise 2.32
+;;
+
+(define (subsets s)
+  (if (null? s)
+    (list '())
+    (let ((rest (subsets (cdr s))))
+     (append rest (map (lambda (x) (cons (car s) x)) rest)))))
+
+(subsets '(1 2 3 4 5 6 7))
