@@ -302,3 +302,25 @@
 
 (define (branch-length    branch) (car branch))
 (define (branch-structure branch) (cdr branch)))
+
+
+;;
+;; exercise 2.30
+;;
+
+(define (square-tree-1 tree)
+  (cond ((null? tree) '())
+        ((not (pair? tree)) (* tree tree))
+        (else (cons (square-tree-1 (car tree))
+                    (square-tree-1 (cdr tree))))))
+
+(define (square-tree-2 tree)
+  (map (lambda (x)
+         (if (pair? x)
+           (square-tree-2 x)
+           (* x x)))
+       tree))
+
+(square-tree-1 '((1 2) (3 4) 5))
+
+(square-tree-2 '((1 2) (3 4) 5))
