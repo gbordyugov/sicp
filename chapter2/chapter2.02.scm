@@ -232,12 +232,14 @@
 (define (make-branch length structure)
   (list length structure))
 
-;; a.
+;; b.
 (define ( left-branch mobile) (car      mobile))
 (define (right-branch mobile) (car (cdr mobile)))
 
 (define (branch-length    branch) (car      branch))
 (define (branch-structure branch) (car (cdr branch)))
+
+
 
 ;; b.
 (define (branch-weight branch)
@@ -245,8 +247,8 @@
    (if (number? s) s (mobile-weight s))))
     
 (define (mobile-weight mobile)
-  (+ (branch-length (left-branch mobile))
-     (branch-length (right-branch mobile))))
+  (+ (branch-weight (left-branch mobile))
+     (branch-weight (right-branch mobile))))
   
 (define (total-weight mobile)
   (mobile-weight mobile))
@@ -254,10 +256,49 @@
 (define leaf1 (make-branch 1.0 2.0))
 (define leaf2 (make-branch 3.0 4.0))
 (define leaf3 (make-branch 5.0 6.0))
-(define leaf4 (make-branch 7.0 8.0))
 
-(define mobile1 (make-mobile leaf1 leaf2))
-(define branch1 (make-mobile mobile1 leaf3))
-(define mobile (make-mobile branch1 leaf4))
+(define mobile1 (make-mobile leaf1   leaf2))
+(define branch1 (make-branch 3.0     mobile1))
+(define mobile  (make-mobile branch1 leaf3))
+
+(left-branch  mobile)
+(right-branch mobile)
 
 (total-weight mobile)
+
+;; c.
+(define (branch-torgue b)
+  (let ((s (branch-structure b))
+        (l (branch-length    b)))
+   (if (number? s) (* l s) (* l (mobile-weight s)))))
+    
+(define (branch-balanced? b)
+  (let ((s (branch-structure b)))
+   (if (number? s) #t (mobile-balanced? s))))
+
+(branch-balanced? (make-branch 1.0 3.0))
+
+(define (mobile-balanced? m)
+  (let* ((lb ( left-branch m))
+         (rb (right-branch m))
+         (tt (= (branch-torgue lb) (branch-torgue rb))))
+    (and tt (branch-balanced? lb) (branch-balanced? rb))))
+
+(mobile-balanced? (make-mobile leaf1 leaf1))
+(mobile-balanced? (make-mobile leaf1 leaf2))
+(define mobile2 (make-mobile leaf1 leaf1))
+(define branch2 (make-branch 3.0   mobile2))
+(mobile-balanced? (make-mobile branch2 branch2))
+
+;; d.
+(define (make-mobile left-branch right-branch)
+  (cons left-branch right-branch))
+
+(define (make-branch length structure)
+  (cons length structure))
+
+(define ( left-branch mobile) (car mobile))
+(define (right-branch mobile) (cdr mobile))
+
+(define (branch-length    branch) (car branch))
+(define (branch-structure branch) (cdr branch)))
