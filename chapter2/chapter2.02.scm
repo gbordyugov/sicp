@@ -324,3 +324,26 @@
 (square-tree-1 '((1 2) (3 4) 5))
 
 (square-tree-2 '((1 2) (3 4) 5))
+
+;;
+;; exercise 2.30
+;;
+
+(define (tree-map-1 f tree)
+  (map (lambda (x)
+         (if (pair? x)
+           (tree-map-1 f x)
+           (f x)))
+       tree))
+
+(define (tree-map-2 f tree)
+  (cond ((null? tree) '())
+        ((not (pair? tree)) (f tree))
+        (else (cons (tree-map-2 f (car tree))
+                    (tree-map-2 f (cdr tree))))))
+
+(define (square-tree-3 tree) (tree-map-1 (lambda (x) (* x x)) tree))
+(define (square-tree-4 tree) (tree-map-2 (lambda (x) (* x x)) tree))
+
+(square-tree-3 '((1 2) (3 4) 5))
+(square-tree-4 '((1 2) (3 4) 5))
