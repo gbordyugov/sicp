@@ -390,3 +390,15 @@
 (g-length '())
 (g-length '(1 2 3))
 
+
+;;
+;; exercise 2.34
+;;
+
+(define (horner-eval x coefficient-sequence)
+  (accumulate (lambda (this-coeff higher-terms)
+                (+ this-coeff (* x higher-terms)))
+              0
+              coefficient-sequence))
+
+(horner-eval 1 '(1 2 3))
