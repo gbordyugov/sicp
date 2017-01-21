@@ -402,3 +402,28 @@
               coefficient-sequence))
 
 (horner-eval 1 '(1 2 3))
+
+
+;;
+;; exercise 2.34
+;;
+
+(define (count-leaves x)
+  (cond ((null? x) 0)
+        ((not (pair? x)) 1)
+        (else (+ (count-leaves (car x))
+                 (count-leaves (cdr x))))))
+
+(count-leaves '((1 2) 3 (4 5)))
+
+
+(define (new-count-leaves t)
+  (accumulate + 0 (map (lambda (x)
+                         (if (pair? x)
+                           (new-count-leaves x)
+                           1))
+                       t)))
+
+(new-count-leaves '(1))
+
+(new-count-leaves '((1 2) 3 ((3 4 (5 6)) 4 5)))
