@@ -360,3 +360,33 @@
      (append rest (map (lambda (x) (cons (car s) x)) rest)))))
 
 (subsets '(1 2 3 4 5 6 7))
+
+
+;;
+;; exercise 2.23
+;;
+
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+    initial
+    (op (car sequence) (accumulate op initial (cdr sequence)))))
+
+(accumulate cons '() '(1 2 3))
+(accumulate + 0 '(1 2 3))
+
+(define (g-map p sequence)
+  (accumulate (lambda (x y) (cons (p x) y)) '() sequence))
+
+(g-map (lambda (x) (+ 3 x)) '(1 2 3))
+
+(define (g-append seq1 seq2) (accumulate cons seq1 seq2))
+
+(g-append '() '())
+(g-append '(1 2 3) '(1 2 3))
+
+(define (g-length sequence)
+  (accumulate (lambda (x y) (+ 1 y)) 0 sequence))
+
+(g-length '())
+(g-length '(1 2 3))
+
