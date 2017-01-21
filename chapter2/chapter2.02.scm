@@ -490,3 +490,19 @@
 (fold-l list '() '(1 2 3))
 
 ;; (op x y) = (op y x)
+
+
+;;
+;; exercise 2.39
+;;
+
+(define (g-reverse-r sequence)
+  (fold-right (lambda (x y) (append y (list x))) '() sequence))
+
+(g-reverse-r '(1 2 3))
+
+
+(define (g-reverse-l sequence)
+  (fold-left (lambda (x y) (cons y x)) '() sequence))
+
+(g-reverse-l '(1 2 3))
