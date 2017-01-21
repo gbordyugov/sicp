@@ -440,3 +440,27 @@
           (accumulate-n op init (map cdr seqs)))))
 
 (accumulate-n + 0 '((1 2 3) (4 5 6) (7 8 9) (10 11 12)))
+
+
+;;
+;; exercise 2.37
+;;
+
+(define (dot-product v w)
+  (accumulate + 0 (map * v w)))
+
+(define (matrix-*-vector m column)
+  (map (lambda (row) (dot-product row column)) m))
+
+(matrix-*-vector '((1 2) (3 4)) '(1 1))
+
+(define (transpose mat)
+  (accumulate-n cons '() mat))
+
+(transpose '((1 2) (3 4)))
+
+(define (matrix-*-matrix m n)
+  (let ((cols (transpose n)))
+   (map (lambda (column) (matrix-*-vector m column)) m)))
+
+(matrix-*-matrix '((1 1) (1 1)) '((1 1) (1 1)))
