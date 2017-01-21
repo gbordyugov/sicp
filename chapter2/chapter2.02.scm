@@ -464,3 +464,29 @@
    (map (lambda (column) (matrix-*-vector m column)) m)))
 
 (matrix-*-matrix '((1 1) (1 1)) '((1 1) (1 1)))
+
+
+;;
+;; exercise 2.38
+;;
+
+(define fold-r accumulate)
+
+(define (fold-l op initial sequence)
+  (define (iter result rest)
+    (if (null? rest)
+      result
+      (iter (op result (car rest))
+            (cdr rest))))
+      (iter initial sequence))
+
+
+(fold-r / 1 '(1 2 3))
+
+(fold-l / 1 '(1 2 3))
+
+(fold-r list '() '(1 2 3))
+
+(fold-l list '() '(1 2 3))
+
+;; (op x y) = (op y x)
