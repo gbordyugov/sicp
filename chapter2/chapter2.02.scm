@@ -301,7 +301,7 @@
 (define (right-branch mobile) (cdr mobile))
 
 (define (branch-length    branch) (car branch))
-(define (branch-structure branch) (cdr branch)))
+(define (branch-structure branch) (cdr branch))
 
 
 ;;
@@ -506,3 +506,67 @@
   (fold-left (lambda (x y) (cons y x)) '() sequence))
 
 (g-reverse-l '(1 2 3))
+
+
+;;
+;; preparation to exercise 2.40
+;;
+
+(define (enumerate-interval low high)
+  (if (> low high)
+    '()
+    (cons low (enumerate-interval (+ low 1) high))))
+
+(enumerate-interval 2 7)
+
+(define (what n)
+  (accumulate append '()
+              (map (lambda (i)
+                     (map (lambda (j) (list i j))
+                          (enumerate-interval 1 (- i 1))))
+                   (enumerate-interval 1 n))))
+
+(what 4)
+
+(define (flatmap proc seq)
+  (accumulate append '() (map proc seq)))
+
+(define (prime-sum? pair)
+  (prime? (+ (car pair) (cadr pair))))
+
+(prime-sum? '(1 4))
+
+(define (make-pair-sum pair)
+  (let ((a (car pair))
+        (b (cadr pair)))
+    (list a b (+ a b))))
+
+(make-pair-sum '(1 4))
+
+(define (prime-sum-pairs n)
+  (map make-pair-sum
+       (filter prime-sum? (flatmap
+                            (lambda (i)
+                              (map (lambda (j) (list i j))
+                                   (enumerate-interval 1 (- i 1))))
+                            (enumerate-interval 1 n)))))
+
+(prime-sum-pairs 13)
+
+(define (permutations s)
+  (if (null? s)
+    (list '())
+    (flatmap (lambda (x)
+               (let ((s-x (remove- x s)))
+                (map (lambda (p) (cons x p))
+                     (permutations s-x))))
+             s)))
+
+(define (remove- item sequence)
+  (filter (lambda (x) (not (= x item))) sequence))
+
+(permutations '(1 2 3 4))
+
+;;
+;; exercise 2.40
+;;

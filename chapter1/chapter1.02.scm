@@ -437,7 +437,7 @@
        (timed-prime-test min)
        (search-for-prime (+ min 1) max))))
 
-(search-for-prime 1 1000000)
+;; (search-for-prime 1 1000000)
 
 ;;
 ;; exercise 1.23
@@ -485,7 +485,7 @@
        (timed-prime-test min)
        (search-for-prime (+ min 1) max))))
 
-(search-for-prime 2 1000000)
+;; (search-for-prime 2 1000000)
 
 ;;
 ;; exercise 1.25
