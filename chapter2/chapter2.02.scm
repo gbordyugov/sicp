@@ -583,3 +583,27 @@
   (map make-pair-sum (filter prime-sum? (unique-pairs n))))
 
 (prime-sum-pairs 13)
+
+
+;;
+;; exercise 2.41
+;;
+
+(define (unique-triples n)
+  (flatmap (lambda (i)
+             (map (lambda (pair) (cons i pair))
+                    (unique-pairs (- i 1))))
+           (enumerate-interval 1 n)))
+
+(unique-triples 4)
+             
+  
+(define (sum-triples n s)
+  (filter (lambda (triple)
+            (= (+ (car   triple)
+                  (cadr  triple)
+                  (caddr triple))
+               s))
+          (unique-triples n)))
+
+(sum-triples 5 6)
