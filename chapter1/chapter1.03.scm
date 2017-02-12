@@ -201,7 +201,7 @@
 
 (f (lambda (z) (* z (+ z 1))))
 
-(f f) ;; cannot call 2 on 2
+;; (f f) ;; cannot call 2 on 2
 
 
 
@@ -261,7 +261,7 @@
 (define (ff-sqrt x)
   (fixed-point (lambda (y) (/ x y)) 1.0))
 
-(ff-sqrt 625.0) ;; this doesn't converge
+;; (ff-sqrt 625.0) ;; this doesn't converge
 
 (define (average x1 x2) (/ (+ x1 x2) 2))
 
