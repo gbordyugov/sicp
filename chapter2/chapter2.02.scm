@@ -629,14 +629,39 @@
   (queen-cols board-size))
 
 ;;
-;; how to represent the first k columns of a board:
-;; (a b c d ...) - a list of k numbers, representing the heights of k
-;; queens 
+;; I represent positions (the first k columns of a board): (a b c d
+;; ...) as a list of k numbers, representing the rows of k queens
+;; (in the reverse order, i.e. a for the k-th queen, b for the
+;; k-1st queen, etc.)
 ;;
 
 ;;
-;; representing an empty board
+;; represent an empty board
 ;;
 (define empty-board '())
-          
 
+(define (adjoin-position new-row k rest-of-queens)
+  (cons new-queen rest-of-queens))
+          
+;;
+;; check if queen in q-th row is not in the same row with any queens
+;; from the rest
+;;
+(define (safe-horizontal? q rest)
+  (not (member q rest)))
+
+;;
+;; check if queen in q-th row is not on the same diagonal with any
+;; queens from the rest
+;;
+(define (safe-diagonal? k q rest)
+  ;; todo
+  #t)
+
+(define (safe? k positions)
+  (let ((queen (car positions))
+        (rest  (cdr positions)))
+  (if (null? positions)
+    #t
+    (and (safe-horizontal? k queen rest)
+         (  safe-diagonal? k queen rest)))))
