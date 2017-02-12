@@ -647,7 +647,7 @@
 ;; check if queen in q-th row is not in the same row with any queens
 ;; from the rest
 ;;
-(define (safe-horizontal? k q rest)
+(define (safe-horizontal? q rest)
   (not (member q rest)))
 
 ;;
