@@ -641,27 +641,50 @@
 (define empty-board '())
 
 (define (adjoin-position new-row k rest-of-queens)
-  (cons new-queen rest-of-queens))
+  (cons new-row rest-of-queens))
           
 ;;
 ;; check if queen in q-th row is not in the same row with any queens
 ;; from the rest
 ;;
-(define (safe-horizontal? q rest)
+(define (safe-horizontal? k q rest)
   (not (member q rest)))
 
 ;;
 ;; check if queen in q-th row is not on the same diagonal with any
 ;; queens from the rest
 ;;
-(define (safe-diagonal? k q rest)
-  ;; todo
-  #t)
+(define (safe-diagonal? q rest)
+  (define (go q counter rest)
+    (if (null? rest)
+      #t
+      (and (not (= (abs (- q (car rest)))
+                   counter))
+           (go q (+ 1 counter) (cdr rest)))))
+  (go q 1 rest))
+
+(safe-diagonal? 3 '())
+
+(safe-diagonal? 3 '(3))
+
+(safe-diagonal? 3 '(4))
 
 (define (safe? k positions)
-  (let ((queen (car positions))
-        (rest  (cdr positions)))
   (if (null? positions)
     #t
-    (and (safe-horizontal? k queen rest)
-         (  safe-diagonal? k queen rest)))))
+    (let ((queen (car positions))
+          (rest  (cdr positions)))
+      (and (safe-horizontal? queen rest)
+           (  safe-diagonal? queen rest)))))
+
+(safe? 8 '())
+
+(safe? 8 '(1))
+
+(safe? 8 '(1 2))
+
+(safe? 8 '(1 3))
+
+(safe? 8 '(1 1))
+
+(queens 8)
