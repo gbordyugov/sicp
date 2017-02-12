@@ -627,5 +627,16 @@
                  (enumerate-interval 1 board-size)))
           (queen-cols (- k 1))))))
   (queen-cols board-size))
+
+;;
+;; how to represent the first k columns of a board:
+;; (a b c d ...) - a list of k numbers, representing the heights of k
+;; queens 
+;;
+
+;;
+;; representing an empty board
+;;
+(define empty-board '())
           
 
