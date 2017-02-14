@@ -718,7 +718,7 @@
 ;; thus unnecessary keeping producing the same result for each new
 ;; position of the additional queen
 ;;
-;; how long will it take the slow version to save the eight-queens
+;; how long will it take the slow version to solve the eight-queens
 ;; puzzle, if the fast version solves the puzzle in time T?
 ;;
 ;; I still don't know ;-)
