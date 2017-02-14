@@ -711,6 +711,15 @@
 (queens-slow 6)
 
 ;;
-;; todo: explanation why the code is slow
-;;       time estimation
+;; why the above code is slow?
+;;
+;; the above code is slow because the recursive call (queen-cols (- k
+;; 1)) is within the outer loop over the position of the new queen,
+;; thus unnecessary keeping producing the same result for each new
+;; position of the additional queen
+;;
+;; how long will it take the slow version to save the eight-queens
+;; puzzle, if the fast version solves the puzzle in time T?
+;;
+;; I still don't know ;-)
 ;;
