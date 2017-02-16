@@ -730,6 +730,9 @@
 ;;
 
 
+;; (define (beside left  right) (..))
+;; (define (below  lower upper) (..))
+
 (define wave2 (beside wave (flip-vert wave)))
 (define wave4 (below wave2 wave2))
 
@@ -772,3 +775,55 @@
     (let ((smaller (up-split painter (- n 1))))
       (below painter (beside smaller smaller)))))
 
+
+;;
+;; continuing with combinators
+;;
+(define (square-of-four tl tr bl br)
+  (lambda (painter)
+    (let ((top    (beside (tl painter) (tr painter)))
+          (bottom (beside (bl painter) (br painter))))
+      (below bottom top))))
+
+(define (flipped-pairs painter)
+  (let ((combine4 (square-of-four identity flip-vert
+                                  identity flip-vert)))
+    (combine4 painter)))
+
+(define (square-limit painter n)
+  (let ((combine4 (square-of-four flip-horiz identity
+                                  rotate180 flip-vert)))
+    (combine4 (corner-split painter n))))
+
+;;
+;; exercise 2.45
+;;
+
+;;
+;; the old definitions...
+;;
+
+(define (right-split painter n)
+  (if (= n 0)
+    painter
+    (let ((smaller (right-split painter (- n 1))))
+      (beside painter (below smaller smaller)))))
+
+(define (up-split painter n)
+  (if (= n 0)
+    painter
+    (let ((smaller (up-split painter (- n 1))))
+      (below painter (beside smaller smaller)))))
+
+;; ...should be expressed as...
+(define right-split (split beside below ))
+(define up-split    (split below  beside))
+
+;; ...by using...
+(define (split a b)
+  (lambda (painter n)
+    (if (= 0 n)
+      painter
+      (let ((smaller ((split a b) painter (- n 1))))
+        (a painter (b smaller smaller))))))
+;; that seems to be a valid solution to exercise 2.45!
