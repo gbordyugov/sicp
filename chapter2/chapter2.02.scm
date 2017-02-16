@@ -853,3 +853,49 @@
       (let ((smaller ((split a b) painter (- n 1))))
         (a painter (b smaller smaller))))))
 ;; that seems to be a valid solution to exercise 2.45!
+
+;;
+;; Frames
+;;
+
+;;
+;; frame coordinate map is an affine transformation
+;; [0, 1] x [0, 1] -> R^2
+;; type FrameCoordinateMap = Vector -> Vector
+
+;; frame-coord-map :: Frame -> FrameCoordinateMap
+(define (frame-coord-map frame)
+  (lambda (v)
+    (add-vect
+      (origin-frame frame)
+      (add-vect (scale-vect (xcor-vect v) (edge1-frame frame))
+                (scale-vect (ycor-vect v) (edge2-frame frame))))))
+
+
+;;
+;; exercise 2.46
+;;
+
+;; make-vect :: Double -> Double -> Vector
+(define make-vect cons)
+
+;; xcor-vect :: Vector -> Double
+(define xcor-vect car)
+
+;; ycor-vect :: Vector -> Double
+(define ycor-vect cdr)
+
+;; add-vect :: Vector -> Vector -> Vector
+(define (add-vect a b)
+  (make-vect (+ (xcor-vect a) (xcor-vect b)
+                (ycor-vect a) (ycor-vect b))))
+
+;; sub-vect :: Vector -> Vector -> Vector
+(define (sub-vect a b)
+  (make-vect (- (xcor-vect a) (xcor-vect b)
+                (ycor-vect a) (ycor-vect b))))
+
+;; scale-vect :: Vector -> Double -> Vector
+(define (scale-vect v s)
+  (make-vect (* s (xcor-vect v))
+             (* s (ycor-vect v))))
