@@ -730,24 +730,35 @@
 ;;
 
 
-;; (define (beside left  right) (..))
-;; (define (below  lower upper) (..))
+;; beside :: Painter -> Painter -> Painter
+(define (beside left  right) undefined)
 
+;; below :: Painter -> Painter -> Painter
+(define (below  lower upper) undefined)
+
+;; wave :: Painter
+
+;; wave2 :: Painter
 (define wave2 (beside wave (flip-vert wave)))
+;; wave4 :: Painter
 (define wave4 (below wave2 wave2))
 
+;; flipped-pairs :: Painter -> Painter
 (define (flipped-pairs painter)
   (let ((painter2 (beside painter (flip-vert painter))))
     (below painter2 painter2)))
 
+;; wave4 :: Painter
 (define wave4 (flipped-pairs wave))
 
+;; right-split :: Painter -> Int -> Painter
 (define (right-split painter n)
   (if (= n 0)
     painter
     (let ((smaller (right-split painter (- n 1))))
       (beside painter (below smaller smaller)))))
 
+;; corner-split :: Painter -> Int -> Painter
 (define (corner-split painter n)
   (if (= n 0)
     painter
@@ -759,6 +770,7 @@
         (beside (below painter top-left)
                 (below bottom-right corner))))))
 
+;; square-limit :: Painter -> Int -> Painter
 (define (square-limit painter n)
   (let ((quarter (corner-split painter n)))
     (let ((half (beside (flip-horiz quarter) quarter)))
@@ -769,6 +781,7 @@
 ;; Exercise 2.44
 ;;
 
+;; up-split :: Painter -> Int -> Painter
 (define (up-split painter n)
   (if (= n 0)
     painter
@@ -779,17 +792,25 @@
 ;;
 ;; continuing with combinators
 ;;
+
+;; square-of-four :: (Painter -> Painter) -- tl
+;;                -> (Painter -> Painter) -- tr
+;;                -> (Painter -> Painter) -- bl
+;;                -> (Painter -> Painter) -- br
+;;                -> (Painter -> Painter) -- resulting map
 (define (square-of-four tl tr bl br)
-  (lambda (painter)
+  (lambda (painter) ;; :: Painter -> Painter
     (let ((top    (beside (tl painter) (tr painter)))
           (bottom (beside (bl painter) (br painter))))
       (below bottom top))))
 
+;; flipped-pairs :: Painter -> Painter
 (define (flipped-pairs painter)
   (let ((combine4 (square-of-four identity flip-vert
                                   identity flip-vert)))
     (combine4 painter)))
 
+;; square-limit :: Painter -> Painter
 (define (square-limit painter n)
   (let ((combine4 (square-of-four flip-horiz identity
                                   rotate180 flip-vert)))
@@ -803,12 +824,14 @@
 ;; the old definitions...
 ;;
 
+;; right-split :: Painter -> Int -> Painter
 (define (right-split painter n)
   (if (= n 0)
     painter
     (let ((smaller (right-split painter (- n 1))))
       (beside painter (below smaller smaller)))))
 
+;; up-split :: Painter -> Int -> Painter
 (define (up-split painter n)
   (if (= n 0)
     painter
@@ -820,8 +843,11 @@
 (define up-split    (split below  beside))
 
 ;; ...by using...
+;; split :: (Painter -> Painter)
+;;       -> (Painter -> Painter)
+;;       -> (Painter -> Int -> Painter)
 (define (split a b)
-  (lambda (painter n)
+  (lambda (painter n) ;; :: Painter -> Int -> Painter
     (if (= 0 n)
       painter
       (let ((smaller ((split a b) painter (- n 1))))
