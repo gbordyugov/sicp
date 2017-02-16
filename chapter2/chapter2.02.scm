@@ -899,3 +899,55 @@
 (define (scale-vect v s)
   (make-vect (* s (xcor-vect v))
              (* s (ycor-vect v))))
+
+;;
+;; exercise 2.47
+;;
+
+;;
+;; first representation
+;;
+
+;; make-frame :: Vector -- origin
+;;            -> Vector -- edge1
+;;            -> Vector -- edge2
+;;            -> Frame
+(define (make-frame o e1 e2)
+  (list o e1 e2))
+
+;; origin-frame :: Frame -> Vector
+(define (origin-frame f)
+  (car f))
+
+;;  edge1-frame :: Frame -> Vector
+(define (edge1-frame f)
+  (car (cdr f)))
+
+;;  edge2-frame :: Frame -> Vector
+(define (edge2-frame f)
+  (car (cdr (cdr f))))
+
+
+
+;;
+;; second representation
+;;
+
+;; make-frame :: Vector -- origin
+;;            -> Vector -- edge1
+;;            -> Vector -- edge2
+;;            -> Frame
+(define (make-frame o e1 e2)
+  (cons o (cons e1 e2)))
+
+;; origin-frame :: Frame -> Vector
+(define (origin-frame f)
+  (car f))
+
+;;  edge1-frame :: Frame -> Vector
+(define (edge1-frame f)
+  (car (cdr f)))
+
+;;  edge2-frame :: Frame -> Vector
+(define (edge2-frame f)
+  (cdr (cdr f)))
