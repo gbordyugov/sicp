@@ -951,3 +951,35 @@
 ;;  edge2-frame :: Frame -> Vector
 (define (edge2-frame f)
   (cdr (cdr f)))
+
+
+;;
+;; Painters
+;;
+
+;; type Painter = Frame -> Image (whatever Image is, might be IO as
+;; well)
+
+;; segments->painter :: [Segment] -> Painter
+(define (segments->painter segment-list)
+  (lambda (frame)
+    (for-each
+      (lambda (segment)
+        (draw-line ((frame-coord-map frame) (start-segment segment))
+                   ((frame-coord-map frame) (  end-segment segment))))
+      sigment-list)))
+
+
+;;
+;; exercise 2.48
+;;
+
+;; make-segment :: Vector -> Vector -> Segment
+(define (make-segment start end)
+  (cons start end))
+
+;; start-segment : Segment -> Vector
+(define start-segment car)
+
+;; end-segment : Segment -> Vector
+(define end-segment cdr)
