@@ -7,3 +7,4 @@ Open/skipped exercises
  - comparison of time complexitity of the fast and the slow
    eight-queens puzzle in exercise 2.43
  - d) of 2.49 (the `wave` painter)
+ - 2.52
