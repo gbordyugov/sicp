@@ -1044,3 +1044,63 @@
 
 ;; d) skipped
 
+
+;;
+;; transformation of painters
+;;
+
+;; transform-painter :: Painter
+;;                   -> Vector -> Vector -> Vector
+;;                   -> Painter (= Frame -> Draw)
+(define (transform-painter painter origin corner1 corner2)
+  (lambda (frame) ;; the new painter is a function of Frame
+    (let ((m (frame-coord-map frame)))
+      (let ((new-origin (m origin)))
+        (painter (make-frame new-origin
+                             (sub-vect (m corner 1) new-origin)
+                             (sub-vect (m corner 2) new-origin)))))))
+
+;; flip-vect :: Painter -> Painter
+(define (flip-vect painter)
+  (transform-painter painter
+                     (make-vect 0.0 1.0)
+                     (make-vect 1.0 1.0)
+                     (make-vect 0.0 0.0)))
+
+;; shrink-to-upper-right :: Painter -> Painter
+(define (shrink-to-upper-right painter)
+  (trainsform-painter painter
+                      (make-vect 0.5 0.5)
+                      (make-vect 1.0 0.5)
+                      (make-vect 0.5 1.0)))
+
+;; rotate90 :: Painter -> Painter
+(define (rotate90 painter)
+  (trainsform-painter painter
+                      (make-vect 1.0 0.0)
+                      (make-vect 1.0 1.0)
+                      (make-vect 0.5 0.0)))
+
+;; squash-inwards :: Painter -> Painter
+(define (squash-inwards painter)
+  (trainsform-painter painter
+                      (make-vect 0.0  0.0)
+                      (make-vect 0.65 0.35)
+                      (make-vect 0.35 0.65)))
+
+;; beside :: Painter -> Painter -> Painter
+(define (beside painter1 painter2)
+  (let ((split-point (make-vect 0.5 0.0)))
+    (let ((paint-left ;; :: Painter
+            (transform-painter painter1
+                               (make-vect 0.0 0.0)
+                               split-point
+                               (make-vect 0.0 1.0)))
+          (paint-right ;; :: Painter
+            (transform-painter painter2
+                               (make-vect 1.0 0.0)
+                               split-point
+                               (make-vect 0.5 1.0))))
+      (lambda (frame) ;; :: Frame -> Draw ( = Painter)
+        (paint-left frame)
+        (paint-right frame)))))
