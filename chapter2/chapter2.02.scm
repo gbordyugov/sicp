@@ -1104,3 +1104,32 @@
       (lambda (frame) ;; :: Frame -> Draw ( = Painter)
         (paint-left frame)
         (paint-right frame)))))
+
+;;
+;; exercise 2.50
+;;
+
+;; a)
+;; flip-horiz :: Painter -> Painter
+(define (flip-horiz painter)
+  (transform-painter painter
+                     (make-vect 1.0 0.0)
+                     (make-vect 0.0 0.0)
+                     (make-vect 1.0 1.0)))
+
+;; b)
+;; rotate180 :: Painter -> Painter
+(define (rotate180 painter)
+  (transform-painter painter
+                     (make-vect 1.0 1.0)
+                     (make-vect 0.0 1.0)
+                     (make-vect 1.0 0.0)))
+
+;; c)
+;; rotate270 :: Painter -> Painter
+(define (rotate270 painter)
+  (transform-painter painter
+                     (make-vect 0.0 1.0)
+                     (make-vect 0.0 0.0)
+                     (make-vect 1.0 1.0)))
+
