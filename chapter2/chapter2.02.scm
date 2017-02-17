@@ -1162,5 +1162,6 @@
   (let ((s1 (rotate90 painter1))
         (s2 (rotate90 painter2)))
     (let ((stacked (below s1 s2)))
-      (lambda (frame)
-        (rotate270 frame)))))
+      (let ((rotated (rotate270 stacked)))
+        (lambda (frame)
+          (rotated frame))))))
