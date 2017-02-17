@@ -1165,3 +1165,8 @@
       (let ((rotated (rotate270 stacked)))
         (lambda (frame)
           (rotated frame))))))
+
+
+;;
+;; exercise 2.52 skipped
+;;
