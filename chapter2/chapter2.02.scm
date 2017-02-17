@@ -983,3 +983,64 @@
 
 ;; end-segment : Segment -> Vector
 (define end-segment cdr)
+
+
+;;
+;; exercise 2.49
+;;
+
+;; a)
+;; frame-outline :: Frame -> Painter
+(define (frame-outline f)
+  (let ((p1 (origin-frame f))
+        (p2 (edge1-frame f))
+        (p3 (add-vect (edge1-frame f)
+                      (edge2-frame f)))
+        (p4 (edge2-frame f)))
+    (let ((s1 (make-segment p1 p2))
+          (s2 (make-segment p2 p3))
+          (s3 (make-segment p3 p4))
+          (s4 (make-segment p4 p1)))
+      (segments->painter (list s1 s2 s3 s4)))))
+
+;; b)
+;; frame-x :: Frame -> Painter
+(define (frame-x f)
+  (let ((p1 (origin-frame f))
+        (p2 (edge1-frame f))
+        (p3 (add-vect (edge1-frame f)
+                      (edge2-frame f)))
+        (p4 (edge2-frame f)))
+    (let ((s1 (make-segment p1 p3))
+          (s2 (make-segment p2 p4)))
+      (segments->painter (list s1 s2)))))
+
+;; c)
+;; frame-outline :: Frame -> Painter
+(define (frame-outline f)
+  ;; midpoint :: Segment -> Vector
+  (define (midpoint s)
+    (let ((v1 (start-segment s))
+          (v2 (  end-segment s)))
+      (scale-vect (add-vect v1 v1) 0.5)))
+  (let ((p1 (origin-frame f))
+        (p2 (edge1-frame f))
+        (p3 (add-vect (edge1-frame f)
+                      (edge2-frame f)))
+        (p4 (edge2-frame f)))
+    (let ((s1 (make-segment p1 p2))
+          (s2 (make-segment p2 p3))
+          (s3 (make-segment p3 p4))
+          (s4 (make-segment p4 p1)))
+      (let ((m1 (midpoint s1))
+            (m2 (midpoint s2))
+            (m3 (midpoint s3))
+            (m4 (midpoint s4)))
+        (let ((s1 (make-segment m1 m2))
+              (s2 (make-segment m2 m3))
+              (s3 (make-segment m3 m4))
+              (s4 (make-segment m4 m1)))
+      (segments->painter (list s1 s2 s3 s4)))))))
+
+;; d) skipped
+
