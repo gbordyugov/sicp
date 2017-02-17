@@ -1133,3 +1133,34 @@
                      (make-vect 0.0 0.0)
                      (make-vect 1.0 1.0)))
 
+;;
+;; exercise 2.51
+;;
+;; a)
+;; solution analogous to below above
+;; below :: Painter -> Painter -> Painter
+(define (beside painter1 painter2)
+  (let ((split-point (make-vect 0.0 0.5)))
+    (let ((paint-upper ;; :: Painter
+            (transform-painter painter1
+                               split-point
+                               (make-vect 1.0 0.0)
+                               (make-vect 0.0 1.0)))
+          (paint-lower ;; :: Painter
+            (transform-painter painter2
+                               (make-vect 0.0 0.0)
+                               (make-vect 1.0 0.0)
+                               split-point)))
+      (lambda (frame) ;; :: Frame -> Draw ( = Painter)
+        (paint-upper frame)
+        (paint-lower frame)))))
+
+;; b)
+;; solution by rotations
+;; below :: Painter -> Painter -> Painter
+(define (beside p1 p2)
+  (let ((s1 (rotate90 painter1))
+        (s2 (rotate90 painter2)))
+    (let ((stacked (below s1 s2)))
+      (lambda (frame)
+        (rotate270 frame)))))
