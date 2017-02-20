@@ -20,3 +20,22 @@
 (memq 'red '((red shoes) (blue socks)))
 
 (memq 'red '(red shoes blue socks))
+
+;;
+;; exercise 2.54
+;;
+
+(define (gequal? a b)
+  (cond ((and (pair? a) (pair? b))
+         (and (eq? (car a) (car b))
+              (gequal? (cdr a) (cdr b))))
+        ((or (pair? a) (pair? b)) #f)
+        (else (eq? a b))))
+
+(gequal? 'a 'a)
+
+(gequal? 'a 'b)
+
+(gequal? 'a '(a b))
+
+(gequal? '(a b) '(a b))
