@@ -39,3 +39,11 @@
 (gequal? 'a '(a b))
 
 (gequal? '(a b) '(a b))
+
+;;
+;; exercise 2.55
+;;
+
+(car ''abracadabra)
+;; = (car '(quote abracadabra)))
+;; = quote
