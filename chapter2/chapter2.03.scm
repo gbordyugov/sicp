@@ -132,3 +132,11 @@
         ((and (number? base) (number? exp))
          (expt base exp))
         (else (list '** base exp))))
+
+;;
+;; exercise 2.57
+;;
+(define (make-sum . summands) (cons '+ summands))
+
+;; will take long... ;-)
+
