@@ -136,7 +136,107 @@
 ;;
 ;; exercise 2.57
 ;;
-(define (make-sum . summands) (cons '+ summands))
 
-;; will take long... ;-)
+;;
+;; old version
+;;
+(define (make-sum a1 a2)
+  (cond ((=number? a1 0) a2)
+        ((=number? a2 0) a1)
+        ((and (number? a1) (number? a2))
+         (+ a1 a2))
+        (else (list '+ a1 a2))))
+;;
+;; new version
+;;
 
+;;
+;; a small helper funciton
+;;
+(define (collect-numbers-and-symbols l)
+  (list (filter number? l) (filter symbol? l)))
+
+(collect-numbers-and-symbols '(x 1 y 2 z 3))
+
+(define (make-sum . summands)
+  (define (make-sum-symbols l)
+    (cond ((null? l) '())
+          ((= 1 (length l)) (car l))
+          ((= 2 (length l)) (list '+ (car l) (cadr l)))
+          (else (list '+ (car l) (make-sum-symbols (cdr l))))))
+  (let* ((ns (collect-numbers-and-symbols summands))
+         (number  (apply + (car  ns)))
+         (symbols (cadr ns)))
+    (cond ((null? symbols) number)
+          ((= 0 number) (make-sum-symbols symbols))
+          ((= 1 (length symbols)) (list '+ number (car symbols)))
+          (else (list '+ number (make-sum-symbols symbols))))))
+
+;; todo
+(define (addend s) (cadr s))
+;; todo
+(define (augend s) (cddr s))
+
+(make-sum '())
+
+(make-sum 0)
+
+(make-sum 0 1 2 3)
+
+(make-sum 1 'x)
+
+(make-sum 0 'x)
+
+(make-sum 0 1 'z 2)
+
+(make-sum 0 1 'x 3 'y 5 6)
+
+(make-sum 0 1 'x 3 'y 5 'z 6)
+
+
+(define (make-product . factors)
+  (define (make-prod-symbols l)
+    (cond ((null? l) '())
+          ((= 1 (length l)) (car l))
+          ((= 2 (length l)) (list '* (car l) (cadr l)))
+          (else (list '* (car l) (make-prod-symbols (cdr l))))))
+  (let* ((ns (collect-numbers-and-symbols factors))
+         (number  (apply * (car  ns)))
+         (symbols (cadr ns)))
+    (cond ((null? symbols) number)
+          ((= 0 number) 0)
+          ((= 1 number) (make-prod-symbols symbols))
+          ((= 1 (length symbols)) (list '* number (car symbols)))
+          (else (list '* number (make-prod-symbols symbols))))))
+
+;; todo
+(define (multiplier   s) (cadr s))
+
+;; todo
+(define (multiplicand s) (cddr s))
+
+(make-product '())
+
+(make-product 1)
+
+(make-product 1 2 3)
+
+(make-product 0 1 2 3)
+
+(make-product 1 2 0 3)
+
+(make-product 0 'x)
+
+(make-product 1 'x)
+
+(make-product 2 'x)
+
+(make-product 1 1 'z 2)
+
+(make-product 1 1 'x 3 'y 5 6)
+
+(make-product 1 1 'x 3 'y 5 'z 6)
+
+(make-product 1 1 'x 3 0 'y 5 'z 6)
+
+(make-product 1 'x)
