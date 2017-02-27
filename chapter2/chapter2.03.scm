@@ -171,9 +171,9 @@
           (else (list '+ number (make-sum-symbols symbols))))))
 
 ;; todo
-(define (addend s) (cadr s))
+(define (addend s) ( cadr s))
 ;; todo
-(define (augend s) (cddr s))
+(define (augend s) (caddr s))
 
 (make-sum '())
 
@@ -206,10 +206,10 @@
           (else (list '* number (make-prod-symbols symbols))))))
 
 ;; todo
-(define (multiplier   s) (cadr s))
+(define (multiplier   s) ( cadr s))
 
 ;; todo
-(define (multiplicand s) (cddr s))
+(define (multiplicand s) (caddr s))
 
 (make-product '())
 
