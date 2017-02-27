@@ -149,6 +149,7 @@
 ;;
 ;; new version
 ;;
+;; THIS HAS TO BE COMPLETELY THOUGHT OVER AND REWRITTEN!
 
 ;;
 ;; a small helper funciton
