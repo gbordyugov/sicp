@@ -162,14 +162,12 @@
   (define (make-sum-symbols l)
     (cond ((null? l) '())
           ((= 1 (length l)) (car l))
-          ((= 2 (length l)) (list '+ (car l) (cadr l)))
           (else (list '+ (car l) (make-sum-symbols (cdr l))))))
   (let* ((ns (collect-numbers-and-symbols summands))
          (number  (apply + (car  ns)))
          (symbols (cadr ns)))
     (cond ((null? symbols) number)
           ((= 0 number) (make-sum-symbols symbols))
-          ((= 1 (length symbols)) (list '+ number (car symbols)))
           (else (list '+ number (make-sum-symbols symbols))))))
 
 ;; todo
@@ -198,7 +196,6 @@
   (define (make-prod-symbols l)
     (cond ((null? l) '())
           ((= 1 (length l)) (car l))
-          ((= 2 (length l)) (list '* (car l) (cadr l)))
           (else (list '* (car l) (make-prod-symbols (cdr l))))))
   (let* ((ns (collect-numbers-and-symbols factors))
          (number  (apply * (car  ns)))
@@ -206,7 +203,6 @@
     (cond ((null? symbols) number)
           ((= 0 number) 0)
           ((= 1 number) (make-prod-symbols symbols))
-          ((= 1 (length symbols)) (list '* number (car symbols)))
           (else (list '* number (make-prod-symbols symbols))))))
 
 ;; todo
@@ -238,5 +234,3 @@
 (make-product 1 1 'x 3 'y 5 'z 6)
 
 (make-product 1 1 'x 3 0 'y 5 'z 6)
-
-(make-product 1 'x)
