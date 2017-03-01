@@ -221,7 +221,7 @@
 (augend (make-sum 'x 2 '(* a b)))
 
 
-;; make-sum :: [NumberOrSymbol] -> Expression
+;; make-sum :: [NumberOrExpression] -> Expression
 ;; the output can be an Expression, not always a sum
 (define (make-product . factors)
   (let* ((ns (collect-numbers-and-exprs factors *))
