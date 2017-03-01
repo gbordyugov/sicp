@@ -153,8 +153,8 @@
 ;;
 ;; a small helper funciton
 ;;
-;; collect-numbers-and-symbols :: [NumberOrSymbol]
-;;                             -> ([Number], [Symbol])
+;; collect-numbers-and-symbols :: [NumberOrExpression]
+;;                             -> ([Number], [Expression])
 (define (collect-numbers-and-exprs l op)
   (list (apply op (filter number? l))
         (filter (lambda (x) (not (number? x))) l)))
@@ -163,7 +163,7 @@
 
 (collect-numbers-and-exprs '(x 1 (* x 3) 2 z 3) +)
 
-;; make-sum :: [NumberOrSymbol] -> Expression
+;; make-sum :: [NumberOrExpression] -> Expression
 ;; the output can be an Expression, not always a sum
 (define (make-sum . summands)
   (let* ((ns (collect-numbers-and-exprs summands +))
