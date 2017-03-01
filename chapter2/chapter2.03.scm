@@ -149,38 +149,42 @@
 ;;
 ;; new version
 ;;
-;; THIS HAS TO BE COMPLETELY THOUGHT OVER AND REWRITTEN!
 
 ;;
 ;; a small helper funciton
 ;;
-(define (collect-numbers-and-symbols l)
-  (list (filter number? l) (filter symbol? l)))
+;; collect-numbers-and-symbols :: [NumberOrSymbol]
+;;                             -> ([Number], [Symbol])
+(define (collect-numbers-and-exprs l op)
+  (list (apply op (filter number? l))
+        (filter (lambda (x) (not (number? x))) l)))
 
-(collect-numbers-and-symbols '(x 1 y 2 z 3))
+(collect-numbers-and-exprs '(x 1 y 2 z 3) +)
 
+(collect-numbers-and-exprs '(x 1 (* x 3) 2 z 3) +)
+
+;; make-sum :: [NumberOrSymbol] -> Expression
+;; the output can be an Expression, not always a sum
 (define (make-sum . summands)
-  (define (make-sum-symbols l)
-    (cond ((null? l) '())
-          ((= 1 (length l)) (car l))
-          (else (list '+ (car l) (make-sum-symbols (cdr l))))))
-  (let* ((ns (collect-numbers-and-symbols summands))
-         (number  (apply + (car  ns)))
-         (symbols (cadr ns)))
-    (cond ((null? symbols) number)
-          ((= 0 number) (make-sum-symbols symbols))
-          (else (list '+ number (make-sum-symbols symbols))))))
-
-;; todo
-(define (addend s) ( cadr s))
-;; todo
-(define (augend s) (caddr s))
+  (let* ((ns (collect-numbers-and-exprs summands +))
+         (number  (car  ns))
+         (exprs (cadr ns)))
+    (cond ((null? exprs) number)
+          ((and (= 0 number) (null? (cdr exprs))) (car exprs))
+          ((= 0 number) (cons '+ exprs))
+          (else (cons '+ (cons number exprs))))))
 
 (make-sum '())
 
 (make-sum 0)
 
 (make-sum 0 1 2 3)
+
+(make-sum 'x 'y 'z)
+
+(make-sum 'x 'y 'z '(+ a b))
+
+(make-sum '(+ a b))
 
 (make-sum 1 'x)
 
@@ -192,25 +196,42 @@
 
 (make-sum 0 1 'x 3 'y 5 'z 6)
 
+;; addend :: Sum -> Expression
+(define (addend s) ( cadr s))
 
+(make-sum 'x 2 'y 3)
+
+(addend (make-sum 'x 2 3))
+
+(addend (make-sum 'x 2 'y 3))
+
+;; augend :: Sum -> Expression
+(define (augend s)
+  (let ((ttail (cddr s)))
+    (if (null? (cdr ttail))
+      (car ttail)
+      (apply make-sum ttail))))
+
+(augend (make-sum 'x 2 3))
+
+(augend (make-sum 'x 2 'y 3))
+
+(augend (make-sum 'x 2 3))
+
+(augend (make-sum 'x 2 '(* a b)))
+
+
+;; make-sum :: [NumberOrSymbol] -> Expression
+;; the output can be an Expression, not always a sum
 (define (make-product . factors)
-  (define (make-prod-symbols l)
-    (cond ((null? l) '())
-          ((= 1 (length l)) (car l))
-          (else (list '* (car l) (make-prod-symbols (cdr l))))))
-  (let* ((ns (collect-numbers-and-symbols factors))
-         (number  (apply * (car  ns)))
-         (symbols (cadr ns)))
-    (cond ((null? symbols) number)
-          ((= 0 number) 0)
-          ((= 1 number) (make-prod-symbols symbols))
-          (else (list '* number (make-prod-symbols symbols))))))
-
-;; todo
-(define (multiplier   s) ( cadr s))
-
-;; todo
-(define (multiplicand s) (caddr s))
+  (let* ((ns (collect-numbers-and-exprs factors *))
+         (number  (car  ns))
+         (exprs (cadr ns)))
+    (cond ((= 0 number) 0)
+          ((null? exprs) number)
+          ((and (= 1 number) (null? (cdr exprs))) (car exprs))
+          ((= 1 number) (cons '* exprs))
+          (else (cons '* (cons number exprs))))))
 
 (make-product '())
 
@@ -224,6 +245,10 @@
 
 (make-product 0 'x)
 
+(make-product 0 'x '(+ a b))
+
+(make-product 1 'x '(+ a b))
+
 (make-product 1 'x)
 
 (make-product 2 'x)
@@ -235,3 +260,32 @@
 (make-product 1 1 'x 3 'y 5 'z 6)
 
 (make-product 1 1 'x 3 0 'y 5 'z 6)
+
+;; multiplier :: Sum -> Expression
+(define (multiplier s)
+  (cadr s))
+
+(make-product 'x 2 'y 3)
+
+(multiplier (make-product 'x 2 3))
+
+(multiplier (make-product 'x 2 'y 3))
+
+(multiplier (make-product 'x 'y))
+
+(multiplier (make-product 'x 'y 'z))
+
+;; augend :: Sum -> Expression
+(define (multiplicand s)
+  (let ((ttail (cddr s)))
+    (if (null? (cdr ttail))
+      (car ttail)
+      (apply make-product ttail))))
+
+(multiplicand (make-sum 'x 2 3))
+
+(multiplicand (make-product 'x 2 'y 3 '(* a b)))
+
+(multiplicand (make-product 'x 2 3))
+
+(multiplicand (make-product 'x 'y 'z '(- 3 4)))
