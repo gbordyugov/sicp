@@ -299,6 +299,7 @@
 (define (augend s) (caddr s))
 (define (sum? x) (and (pair? x)
                       (pair? (cdr x))
+                      (pair? (cddr x))
                       (eq? (cadr x) '+)))
 
 (define (make-product a b) (list a '* b))
@@ -306,4 +307,23 @@
 (define (multiplicand s) (caddr s))
 (define (product? x) (and (pair? x)
                           (pair? (cdr x))
+                          (pair? (cddr x))
+                          (eq? (cadr x) '*)))
+
+;;
+;; exercise 2.58 (b)
+;;
+;; seems to be a bit tougher than the previous one
+;;
+
+(define (make-sum a b) (list a '+ b))
+(define (sum? x) (and (pair? x)
+                      (pair? (cdr x))
+                      (pair? (cddr x))
+                      (eq? (cadr x) '+)))
+
+(define (make-product a b) (list a '* b))
+(define (product? x) (and (pair? x)
+                          (pair? (cdr x))
+                          (pair? (cddr x))
                           (eq? (cadr x) '*)))
