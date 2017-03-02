@@ -289,3 +289,21 @@
 (multiplicand (make-product 'x 2 3))
 
 (multiplicand (make-product 'x 'y 'z '(- 3 4)))
+
+
+;;
+;; exercise 2.58 (a)
+;;
+(define (make-sum a b) (list a '+ b))
+(define (addend s) (  car s))
+(define (augend s) (caddr s))
+(define (sum? x) (and (pair? x)
+                      (pair? (cdr x))
+                      (eq? (cadr x) '+)))
+
+(define (make-product a b) (list a '* b))
+(define (multiplier s)   (  car s))
+(define (multiplicand s) (caddr s))
+(define (product? x) (and (pair? x)
+                          (pair? (cdr x))
+                          (eq? (cadr x) '*)))
