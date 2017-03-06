@@ -294,6 +294,9 @@
 ;;
 ;; exercise 2.58 (a)
 ;;
+;;
+;; sum
+;;
 (define (make-sum a1 a2)
   (cond ((=number? a1 0) a2)
         ((=number? a2 0) a1)
@@ -308,6 +311,9 @@
                       (pair? (cddr x))
                       (eq? (cadr x) '+)))
 
+;;
+;; product
+;;
 (define (make-product m1 m2)
   (cond ((or (=number? m1 0) (=number? m2 0)) 0)
         ((=number? m1 1) m2)
