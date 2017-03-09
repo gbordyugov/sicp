@@ -343,7 +343,7 @@
 ;; Sets as unordered lists
 ;;
 (define (element-of-set? x set)
-  (cond ((null? set) #f)
+  (cond ((null? set) false)
         ((equal? x (car set)) true)
         (else (element-of-set? x (cdr set)))))
 
@@ -371,4 +371,36 @@
                   (cons (car set1) set3))))))
 
 (union-set '(4 5 1 2 3) '(1 4 5 2 6))
+
+;;
+;; exercise 2.60
+;;
+;; sets as lists with duplicates
+;;
+
+(define (element-of-set? x set)
+  (cond ((null? set) false)
+        ((equal? x (car set)) true)
+        (else (element-of-set? x (cdr set)))))
+
+(element-of-set? 1 '(1 2 3))
+
+(element-of-set? 'a '(1 2 3))
+
+;;
+;; that one is fast
+;;
+(define adjoin-set cons)
+
+
+;; that one is fast too
+;;
+(define union-set append)
+
+;; this is just a repetition
+(define (intersection-set set1 set2)
+  (cond ((or (null? set1) (null? set2)) '())
+        ((element-of-set? (car set1) set2)
+         (cons (car set1) (intersection-set (cdr set1) set2)))
+        (else (intersection-set (cdr set1) (set2)))))
 
