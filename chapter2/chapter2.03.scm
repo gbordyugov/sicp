@@ -332,34 +332,43 @@
 ;;
 ;; seems to be a bit tougher than the previous one
 ;;
+;; skipped for time being
+;;
 
 ;;
-;; sum
+;; Example: Representing Sets
 ;;
-(define (make-sum a1 a2)
-  (cond ((=number? a1 0) a2)
-        ((=number? a2 0) a1)
-        ((and (number? a1) (number? a2))
-         (+ a1 a2))
-        (else (list a1 '+ a2))))
-
-(define (sum? x) (and (pair? x)
-                      (pair? (cdr x))
-                      (pair? (cddr x))
-                      (eq? (cadr x) '+)))
-
 
 ;;
-;; product
+;; Sets as unordered lists
 ;;
-(define (make-product m1 m2)
-  (cond ((or (=number? m1 0) (=number? m2 0)) 0)
-        ((=number? m1 1) m2)
-        ((=number? m2 1) m1)
-        ((and (number? m1) (number? m2)) (* m1 m2))
-        (else (list m1 '* m1))))
+(define (element-of-set? x set)
+  (cond ((null? set) #f)
+        ((equal? x (car set)) true)
+        (else (element-of-set? x (cdr set)))))
 
-(define (product? x) (and (pair? x)
-                          (pair? (cdr x))
-                          (pair? (cddr x))
-                          (eq? (cadr x) '*)))
+(define (adjoin-set x set)
+  (if (element-of-set? x set)
+    set
+    (cons x set)))
+
+(define (intersection-set set1 set2)
+  (cond ((or (null? set1) (null? set2)) '())
+        ((element-of-set? (car set1) set2)
+         (cons (car set1) (intersection-set (cdr set1) set2)))
+        (else (intersection-set (cdr set1) set2))))
+
+;;
+;; exercise 2.59
+;;
+
+(define (union-set set1 set2)
+  (cond ((null? set1) set2)
+        ((null? set2) set1)
+        (else (let ((set3 (union-set (cdr set1) set2)))
+                (if (element-of-set? (car set1) set3)
+                  set3
+                  (cons (car set1) set3))))))
+
+(union-set '(4 5 1 2 3) '(1 4 5 2 6))
+
