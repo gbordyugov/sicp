@@ -426,6 +426,8 @@
             ((< x2 x1) ;; x2 is not in set1
              (intersection-set set1 (cdr (set2))))))))
 
+(intersection-set '(1 2 3) '(2 3 4))
+
 ;;
 ;; exercise 2.61
 ;;
@@ -455,7 +457,15 @@
 (define (union-set set1 set2)
   (cond ((null? set1) set2)
         ((null? set2) set1)
-        (let ((x1 (car set1))
-              (x2 (car set2)))
-          (cond ((= x1 x2) (cons x1 (union (cdr set1) (cdr set2))))
-                ((< x1 x2) 
+        (else (let ((x  (car set1))
+                    (xs (cdr set1))
+                    (y  (car set2))
+                    (ys (cdr set2)))
+                (cond ((= x y)
+                       (cons x (union-set xs ys)))
+                      ((< x y)
+                       (cons x (union-set xs set2)))
+                      ((< y x)
+                       (cons y (union-set set1 ys))))))))
+
+(union-set '(1 2 3) '(3 4 5))
