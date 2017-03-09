@@ -425,3 +425,13 @@
              (intersection-set (cdr set1) set2))
             ((< x2 x1)
              (intersection-set set1 (cdr (set2))))))))
+
+;;
+;; exercise 2.61
+;;
+
+(define (adjoin-set x set)
+  (define (go tail x set)
+    (if (or (null? set) (< x (car set)))
+      (append tail (cons x set))
+      (go 
