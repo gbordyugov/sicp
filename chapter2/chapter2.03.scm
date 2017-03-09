@@ -431,7 +431,15 @@
 ;;
 
 (define (adjoin-set x set)
-  (define (go tail x set)
-    (if (or (null? set) (< x (car set)))
-      (append tail (cons x set))
-      (go 
+  (if (or (null? set) (< x (car set)))
+    (cons x set)
+    (cons (car set) (adjoin-set x (cdr set)))))
+
+(adjoin-set 3 '(1 2 4 5))
+
+(adjoin-set 3 '(1 2 3 4 5))
+
+(adjoin-set 0 '(1 2 3 4 5))
+
+(adjoin-set 6 '(1 2 3 4 5))
+
