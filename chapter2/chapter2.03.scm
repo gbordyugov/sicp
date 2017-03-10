@@ -624,6 +624,14 @@
 ;;
 ;; (b)
 ;;
-;; the number of recursive calls is logarithmic, since it splits the
-;; incoming array in two
+;; the number of recursive calls is logarithmic in the length of
+;; input list since each call splits the input list in two parts
+;; 
+;; the above answer is wrong, of course, since we need to touch each
+;; element of the list at least once, hence O(n) complexity
+;;
+
+
+;;
+;; exercise 2.65
 ;;
