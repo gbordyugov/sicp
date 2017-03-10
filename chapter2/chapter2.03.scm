@@ -635,3 +635,13 @@
 ;;
 ;; exercise 2.65
 ;;
+
+;;
+;; we have already have O(n) code for ordered lists, use it!
+;;
+
+(define (union-tree-set set1 set2)
+  (list->tree (union-set (tree->list-2 set1) (tree->list-2 set2))))
+
+(define (intersection-tree-set set1 set2)
+  (list->tree (intersection-set (tree->list-2 set1) (tree->list-2 set2))))
