@@ -584,3 +584,46 @@
 ;; a) yes, they produce the same results
 ;;
 ;; b) no, one is tail recursive, and the other is just recursive
+
+;;
+;; exercise 2.64
+;;
+
+(define (list->tree elements)
+  (car (partial-tree elements (length elements))))
+
+(define (partial-tree elts n)
+  (if (= n 0)
+    (cons '() elts)
+    (let ((left-size (quotient (- n 1) 2)))
+      (let ((left-result (partial-tree elts left-size)))
+        (let ((left-tree (car left-result))
+              (non-left-elts (cdr left-result))
+              (right-size (- n (+ left-size 1))))
+          (let ((this-entry (car non-left-elts))
+                (right-result (partial-tree (cdr non-left-elts)
+                                            right-size)))
+                (let ((right-tree (car right-result))
+                      (remaining-elts (cdr right-result)))
+                  (cons (make-tree this-entry
+                                   left-tree
+                                   right-tree)
+                        remaining-elts))))))))
+
+;;
+;; (a)
+;;
+(list->tree '(1 3 5 7 9 11))
+
+;;
+;; the above function picks a central pivot element, constructs two
+;; subtrees with elements to the left and to the right of it and
+;; makes all three (the pivot element, the left and the right subtree)
+;; into a new tree.
+
+;;
+;; (b)
+;;
+;; the number of recursive calls is logarithmic, since it splits the
+;; incoming array in two
+;;
