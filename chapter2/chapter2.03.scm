@@ -645,3 +645,13 @@
 
 (define (intersection-tree-set set1 set2)
   (list->tree (intersection-set (tree->list-2 set1) (tree->list-2 set2))))
+
+;;
+;; exercise 2.66
+;;
+
+(define (lookup tree key-)
+  (cond ((null? tree) false)
+        ((= key- (key (entry tree))) (entry tree))
+        ((< key- (key (entry tree))) (lookup ( left-branch tree) key))
+        ((> key- (key (entry tree))) (lookup (right-branch tree) key))))
