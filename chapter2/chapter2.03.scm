@@ -750,4 +750,28 @@
             (encode (cdr message) tree))))
 
 (define (encode-symbol sym tree)
-  (...)
+  (cond ((null? tree)
+         (error "error: empty tree" sym))
+        ((leaf? tree) 
+         (if (memq sym (symbols tree))
+         '()
+         (error "symbol mismatch in a leaf" sym tree)))
+        (else
+          (let ((lbranch ( left-branch tree))
+                (rbranch (right-branch tree)))
+            (cond ((memq sym (symbols lbranch))
+                   (cons 0 (encode-symbol sym lbranch)))
+                  ((memq sym (symbols rbranch))
+                   (cons 1 (encode-symbol sym rbranch)))
+                  (else
+                    (error "symbol mismatch in a node" sym tree)))))))
+            
+(encode-symbol 'a sample-tree)
+
+(encode-symbol 'b sample-tree)
+
+(encode-symbol 'c sample-tree)
+
+(encode-symbol 'd sample-tree)
+
+(equal? sample-message (encode '(a d a b b c a) sample-tree))
