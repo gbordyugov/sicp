@@ -714,6 +714,9 @@
         ((< (weight x) (weight (car set))) (cons x set))
         (else (cons (car set) (adjoin-set x (cdr set))))))
 
+;;
+;; this creates a set of pairs (sym, freq) ordered by freq
+;;
 (define (make-leaf-set pairs)
   (if (null? pairs)
     '()
@@ -721,6 +724,8 @@
      (adjoin-set (make-leaf (car  pair)    ; symbol
                             (cadr pair))   ; frequency
                  (make-leaf-set (cdr pairs))))))
+
+(make-leaf-set '((c 3) (b 4) (a 1) (d 3)))
 
 ;;
 ;; exericse 2.67
@@ -775,3 +780,16 @@
 (encode-symbol 'd sample-tree)
 
 (equal? sample-message (encode '(a d a b b c a) sample-tree))
+
+
+;;
+;; exercise 2.69
+;;
+
+(define (generate-huffman-tree pairs)
+  (successive-merge (make-leaf-set pairs)))
+
+(define (successive-merge pairs)
+  (cond ((null? pairs) '())
+        ((null? (cdr pairs)) pairs)
+        (else (cons
