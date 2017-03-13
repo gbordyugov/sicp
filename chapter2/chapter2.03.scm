@@ -837,3 +837,26 @@
         sha boom))
 
 (encode rock-song rock-tree)
+
+;;
+;; exericse 2.71
+;;
+
+;;
+;; it's going to be a very skewed tree with each node having a single
+;; leaf as one subtree, with an extremely low branching factor.
+;;
+;; one bit is needed for the most frequent, n bits for the least
+;; frequent symbol
+;;
+
+
+;;
+;; exercise 2.72
+;;
+
+;;
+;; in a balanced tree, the depth is a log function of the number of
+;; symbols
+;; at each step we have to search for the symbol in both branches,
+;; which decreases log-ly too
