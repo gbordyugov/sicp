@@ -779,6 +779,8 @@
 
 (encode-symbol 'd sample-tree)
 
+(encode '(a d a b b c a) sample-tree)
+
 (equal? sample-message (encode '(a d a b b c a) sample-tree))
 
 
@@ -791,5 +793,22 @@
 
 (define (successive-merge pairs)
   (cond ((null? pairs) '())
-        ((null? (cdr pairs)) pairs)
-        (else (cons
+        ((null? (cdr pairs)) (car pairs))
+        (else
+          (let* ((fst ( car pairs))
+                 (snd (cadr pairs))
+                 (tree (make-code-tree fst snd)))
+            (successive-merge (adjoin-set tree (cdr (cdr pairs))))))))
+
+            ;; (make-code-tree tree (successive-merge (cdr (cdr pairs))))))))
+
+
+(generate-huffman-tree '((a 1)))
+
+(generate-huffman-tree '((a 1) (b 2)))
+
+(generate-huffman-tree '((a 1) (b 2) (c 3)))
+
+(generate-huffman-tree '((c 4) (a 1) (b 2)))
+
+(generate-huffman-tree '((c 4) (a 1) (b 2) (d 5)))
