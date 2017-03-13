@@ -8,4 +8,4 @@ Open/skipped exercises
    eight-queens puzzle in exercise 2.43
  - d) of 2.49 (the `wave` painter)
  - 2.52
- - 2.58 (b) (must do it later, a nice one!)
+ - 2.58 (b) (a beautiful one, must do it later!)
