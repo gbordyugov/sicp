@@ -812,3 +812,28 @@
 (generate-huffman-tree '((c 4) (a 1) (b 2)))
 
 (generate-huffman-tree '((c 4) (a 1) (b 2) (d 5)))
+
+;;
+;; exercise 2.70
+;;
+
+(define rock-pairs '((a    2)
+                     (boom 1)
+                     (get  2)
+                     (job  2)
+                     (sha  3)
+                     (na   16)
+                     (wah  1)
+                     (yip  9)))
+
+(define rock-tree (generate-huffman-tree rock-pairs))
+
+(define rock-song
+  '(get a job
+        sha na na na na na na na na 
+        get a job
+        sha na na na na na na na na 
+        wah yip yip yip yip yip yip yip yip yip
+        sha boom))
+
+(encode rock-song rock-tree)
