@@ -226,3 +226,47 @@
 
 (define (make-from-mag-ang r a)
   ((get 'make-from-mag-ang 'polar) r a))
+
+
+;;
+;; exericse 2.73
+;;
+
+;;
+;; old version
+;;
+(define (deriv exp var)
+  (cond ((number?   exp) 0)
+        ((variable? exp)
+         (if (same-variable? exp var) 1 0))
+        ((sum? exp)
+         (make-sum (deriv (addend exp) var)
+                   (deriv (augned exp) var)))
+        ((product? exp)
+         (make-sum (make-product (multiplier exp)
+                                 (deriv (multiplicand exp) var))
+                   (make-product (deriv (multiplier   exp) var)
+                                 (multiplicand exp))))
+        (else (error "unknown expression type: DERIV" exp))))
+
+;;
+;; new version
+;;
+
+(define (deriv exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp) (if (same-variable? exp var) 1 0))
+        (else ((get 'deriv (operator exp))
+               (operands exp) var))))
+
+(define (operator exp) (car exp))
+(define (operands exp) (cdr exp))
+
+;;
+;; exercise 2.73 (a)
+;;
+;; we dispatch on the operator type
+;;
+;; cannot assimilate the predicates number? and variable since they
+;; are a single number/symbol and don't have an operator to dispatch
+;; on
