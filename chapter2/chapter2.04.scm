@@ -153,6 +153,7 @@
 ;; Ben's package
 ;;
 (define (install-rectangular-package)
+  ;; note that within package, we operate on untagged data
   (define (real-part z)
     (car z))
   (define (imag-part z)
@@ -166,12 +167,16 @@
     (atan (imag-part z) (real-part z)))
   (define (make-from-mag-ang r a)
     (cons (* r (cos a)) (* r (sin a))))
+  ;; here the internal representation ends
+
+  ;; interface to the rest of the system
   (define (tag x)
     (attach-tag 'rectangular x))
   (put 'real-part '(rectangular) real-part)
   (put 'imag-part '(rectangular) imag-part)
   (put 'magnitude '(rectangular) magnitude)
   (put 'angle     '(rectangular) angle)
+  ;; we tag data for export though
   (put 'make-from-real-imag 'rectangular
        (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'rectangular
@@ -182,6 +187,7 @@
 ;; Alyssa's package
 ;;
 (define (install-polar-package)
+  ;; note that within package, we operate on untagged data
   (define (magnitude z)
     (car z))
   (define (angle z)
@@ -195,13 +201,16 @@
   (define (make-from-real-imag x y)
     (cons (sqrt (+ (square x) (square y)))
           (atan y x)))
+  ;; here the internal representation ends
 
+  ;; interface to the rest of the system
   (define (tag x)
     (attach-tag 'polar x))
   (put 'real-part '(polar) real-part)
   (put 'imag-part '(polar) imag-part)
   (put 'magnitude '(polar) magnitude)
   (put 'angle     '(polar) angle)
+  ;; we tag data for export though
   (put 'make-from-real-imag 'polar
        (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'polar
