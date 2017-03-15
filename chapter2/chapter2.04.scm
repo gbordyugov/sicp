@@ -333,3 +333,12 @@
   (put 'deriv '*  deriv-product)
   (put 'deriv '** deriv-exponentiation)
   'done)
+
+;;
+;; exercise 2.73 (d)
+;;
+
+;; here, we dispatch on 'deriv for different operators, such as +, *,
+;; **, etc., we'll have to change the order of the first two arguments
+;; to the put/get functions
+
