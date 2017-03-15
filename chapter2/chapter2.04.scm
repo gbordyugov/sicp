@@ -302,3 +302,47 @@
   (put 'deriv '* deriv-product)
 
   'done)
+
+
+;;
+;; exercise 2.73 (c)
+;;
+
+(define (install-deriv-package)
+
+  ;; sum
+  (define (make-sum x y) (list '+ x y))
+  (define (addend s) (car  s)) ;; the op code is stripped by operands()
+  (define (augend s) (cadr s))
+
+  ;; product
+  (define (make-product x y) (list '* x y))
+  (define (multiplier   s) (car  s)) ;; the op code is stripped by operands()
+  (define (multiplicand s) (cadr s))
+
+  ;; exponentiation
+  (define (make-exponentiation x y) (list '** x y))
+  (define (base exp)  ( car exp)) ;; the op code is stripped by operands()
+  (define (poser exp) (cadr exp)) ;; the op code is stripped by operands()
+
+  ;; derivative calculation
+  (define (deriv-sum exp var)
+    (make-sum (deriv (addend exp) var)
+              (deriv (augned exp) var)))
+
+  (define (deriv-product exp var)
+    (make-sum (make-product (multiplier exp)
+                            (deriv (multiplicand exp) var))
+              (make-product (deriv (multiplier   exp) var)
+                            (multiplicand exp))))
+
+  (define (deriv-exponentiation exp var)
+    (make-product (make-product (power exp)
+                                (make-exponentiation (base exp)
+                                                     (- (power exp) 1)))
+                  (deriv (base exp) var)))
+  (put 'deriv '+  deriv-sum)
+  (put 'deriv '*  deriv-product)
+  (put 'deriv '** deriv-exponentiation)
+
+  'done)
