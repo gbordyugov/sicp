@@ -270,3 +270,35 @@
 ;; cannot assimilate the predicates number? and variable since they
 ;; are a single number/symbol and don't have an operator to dispatch
 ;; on
+
+;;
+;; exercise 2.73 (b)
+;;
+
+(define (install-deriv-package)
+
+  ;; sum
+  (define (make-sum x y) (list '+ x y))
+  (define (addend s) (car  s)) ;; the op code is stripped by operands()
+  (define (augend s) (cadr s))
+
+  ;; product
+  (define (make-product x y) (list '* x y))
+  (define (multiplier   s) (car  s)) ;; the op code is stripped by operands()
+  (define (multiplicand s) (cadr s))
+
+  ;; derivative calculation
+  (define (deriv-sum exp var)
+    (make-sum (deriv (addend exp) var)
+              (deriv (augned exp) var)))
+
+  (define (deriv-product exp var)
+    (make-sum (make-product (multiplier exp)
+                            (deriv (multiplicand exp) var))
+              (make-product (deriv (multiplier   exp) var)
+                            (multiplicand exp))))
+
+  (put 'deriv '+ deriv-sum)
+  (put 'deriv '* deriv-product)
+
+  'done)
