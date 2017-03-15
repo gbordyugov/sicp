@@ -252,7 +252,7 @@
       ((= n 0) a)
       ((even? n) (go a (double b) (halve n)))
       (else (go (+ a b) b (- n 1)))))
-  (go 0 a b)) 
+  (go 0 a b))
 
 (mul 3 4)
 (mul 2 2)
@@ -489,7 +489,7 @@
 
 ;;
 ;; exercise 1.25
-;; 
+;;
 
 (define (fast-expt b n)
   (define (square x) (* x x))

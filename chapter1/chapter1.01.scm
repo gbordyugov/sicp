@@ -41,7 +41,7 @@
 (define (foo x y z)
   (- (+ (square x) (square y) (square z))
      (square (min x y z))))
-  
+
 ;;
 ;; Exercise 1.4
 ;;

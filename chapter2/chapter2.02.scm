@@ -75,7 +75,7 @@
     (else
       (+ (cc amount (except-first-denomination coin-values))
          (cc (- amount (first-denomination coin-values)) coin-values)))))
-        
+
 (cc 10 us-coins)
 (cc 10 uk-coins)
 
@@ -245,11 +245,11 @@
 (define (branch-weight branch)
   (let ((s (branch-structure branch)))
    (if (number? s) s (mobile-weight s))))
-    
+
 (define (mobile-weight mobile)
   (+ (branch-weight (left-branch mobile))
      (branch-weight (right-branch mobile))))
-  
+
 (define (total-weight mobile)
   (mobile-weight mobile))
 
@@ -271,7 +271,7 @@
   (let ((s (branch-structure b))
         (l (branch-length    b)))
    (if (number? s) (* l s) (* l (mobile-weight s)))))
-    
+
 (define (branch-balanced? b)
   (let ((s (branch-structure b)))
    (if (number? s) #t (mobile-balanced? s))))
@@ -596,8 +596,8 @@
            (enumerate-interval 1 n)))
 
 (unique-triples 4)
-             
-  
+
+
 (define (sum-triples n s)
   (filter (lambda (triple)
             (= (+ (car   triple)
@@ -642,7 +642,7 @@
 
 (define (adjoin-position new-row k rest-of-queens)
   (cons new-row rest-of-queens))
-          
+
 ;;
 ;; check if queen in q-th row is not in the same row with any queens
 ;; from the rest

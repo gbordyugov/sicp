@@ -452,7 +452,7 @@
 ;; exercise 2.13
 ;;
 
-;; assume that width1 times width2 negligably small 
+;; assume that width1 times width2 negligably small
 
 ;;
 ;; a problem with two representations

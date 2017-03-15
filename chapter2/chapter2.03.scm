@@ -528,8 +528,8 @@
 
 (define tree-a (make-tree 7
                            (make-tree 3
-                                      (make-tree 1 
-                                                 () 
+                                      (make-tree 1
+                                                 ()
                                                  ())
                                       (make-tree 5
                                                  '()
@@ -626,7 +626,7 @@
 ;;
 ;; the number of recursive calls is logarithmic in the length of
 ;; input list since each call splits the input list in two parts
-;; 
+;;
 ;; the above answer is wrong, of course, since we need to touch each
 ;; element of the list at least once, hence O(n) complexity
 ;;
@@ -757,7 +757,7 @@
 (define (encode-symbol sym tree)
   (cond ((null? tree)
          (error "error: empty tree" sym))
-        ((leaf? tree) 
+        ((leaf? tree)
          (if (memq sym (symbols tree))
          '()
          (error "symbol mismatch in a leaf" sym tree)))
@@ -770,7 +770,7 @@
                    (cons 1 (encode-symbol sym rbranch)))
                   (else
                     (error "symbol mismatch in a node" sym tree)))))))
-            
+
 (encode-symbol 'a sample-tree)
 
 (encode-symbol 'b sample-tree)
@@ -830,9 +830,9 @@
 
 (define rock-song
   '(get a job
-        sha na na na na na na na na 
+        sha na na na na na na na na
         get a job
-        sha na na na na na na na na 
+        sha na na na na na na na na
         wah yip yip yip yip yip yip yip yip yip
         sha boom))
 
