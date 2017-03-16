@@ -172,10 +172,17 @@
   ;; interface to the rest of the system
   (define (tag x)
     (attach-tag 'rectangular x))
+  ;; why are those lookup keys are lists of single elements?
+  ;; because why: those lists will be built by apply-generic below
+  ;; which pulls the tags of all arguments of a generic function into
+  ;; one list with the number of elements equal to the arity of the
+  ;; function
   (put 'real-part '(rectangular) real-part)
   (put 'imag-part '(rectangular) imag-part)
   (put 'magnitude '(rectangular) magnitude)
   (put 'angle     '(rectangular) angle)
+  ;; constructors are tagged by mere symbols, since they are not
+  ;; looked up by apply-generic, but rather by another piece of code
   ;; we tag data for export though
   (put 'make-from-real-imag 'rectangular
        (lambda (x y) (tag (make-from-real-imag x y))))
@@ -206,10 +213,17 @@
   ;; interface to the rest of the system
   (define (tag x)
     (attach-tag 'polar x))
+  ;; why are those lookup keys are lists of single elements?
+  ;; because why: those lists will be built by apply-generic below
+  ;; which pulls the tags of all arguments of a generic function into
+  ;; one list with the number of elements equal to the arity of the
+  ;; function
   (put 'real-part '(polar) real-part)
   (put 'imag-part '(polar) imag-part)
   (put 'magnitude '(polar) magnitude)
   (put 'angle     '(polar) angle)
+  ;; constructors are tagged by mere symbols, since they are not
+  ;; looked up by apply-generic, but rather by another piece of code
   ;; we tag data for export though
   (put 'make-from-real-imag 'polar
        (lambda (x y) (tag (make-from-real-imag x y))))
@@ -218,6 +232,11 @@
   'done)
 
 (define (apply-generic op . args)
+  ;; what happens here is that type tags of all arguments are pulled
+  ;; into one list
+  ;; and this list becomes the lookup key for the ops table
+  ;; this explains why the code above was installed with keys being
+  ;; lists of single elements, since ops were unitary
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
       (if proc
