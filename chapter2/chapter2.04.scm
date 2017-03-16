@@ -351,3 +351,7 @@
 ;; **, etc., we'll have to change the order of the first two arguments
 ;; to the put/get functions
 
+;;
+;; wrote an email to Sussman and Bendersky about type tag dispatching
+;; which I still don't quite understand
+;;
