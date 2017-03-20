@@ -388,3 +388,13 @@
          (getter (get 'get-record tag)))
     (getter employer-id data)))
 ;; file = (cons type contents)
+
+;;
+;; exericse 2.74 (b)
+;;
+(define (get-salary employer-id file)
+  (let ((record (get-record employer-id file))
+        (tag (type-tag record))
+        (contentes (contents record))
+        (salary-getter (get 'get-salary tag)))
+    (salary-getter employer-id contents)))
