@@ -374,3 +374,17 @@
 ;; wrote an email to Sussman and Bendersky about type tag dispatching
 ;; which I still don't quite understand
 ;;
+
+;;
+;; exericse 2.74 (a)
+;;
+
+;; as a reminder
+(define (real-part z) (apply-generic 'real-part z))
+
+(define (get-record employer-id file)
+  (let* ((tag (type-tag file))
+         (data (contents file))
+         (getter (get 'get-record tag)))
+    (getter employer-id data)))
+;; file = (cons type contents)
