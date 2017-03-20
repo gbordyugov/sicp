@@ -413,3 +413,13 @@
         (find-employee-record employer-id (cdr list-of-files))))))
 
 
+;;
+;; exercise 2.74 (d)
+;;
+
+;;
+;; when Insatiable takes over a new company, the lookup table should
+;; be updated with the corresponding new data tags and methods
+;;
+
+
