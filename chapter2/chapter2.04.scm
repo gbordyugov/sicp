@@ -398,3 +398,18 @@
         (contentes (contents record))
         (salary-getter (get 'get-salary tag)))
     (salary-getter employer-id contents)))
+
+;;
+;; exercise 2.74 (c)
+;;
+
+(define (find-employee-record employer-id list-of-files)
+  (if (null? list-of-files)
+    '()
+    (let ((file (car list-of-files))
+          (found? (get-record employer-id file)))
+      (if found?
+        found?
+        (find-employee-record employer-id (cdr list-of-files))))))
+
+
