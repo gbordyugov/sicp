@@ -432,9 +432,21 @@
     (cond ((eq? op 'real-part) x)
           ((eq? op 'imag-part) y)
           ((eq? op 'magnitude) (sqrt (+ (square x) (square y))))
-          ((eq? op 'angle) (atan y x))
+          ((eq? op 'angle)     (atan y x))
           (else (error "Unknown op: make-from-real-imag" op))))
   dispatch)
 
 ;; permits only unitary generic ops
 (define (apply-generic op arg) (arg op))
+
+;;
+;; exercise 2.75
+;;
+
+(define (make-from-mag-ang r a)
+  (lambda (op)
+    (cond ((eq? op 'real-part) (* r (cos a)))
+          ((eq? op 'imag-part) (* r (sin a)))
+          ((eq? op 'magnitude) r)
+          ((eq? op 'angle)     a)
+          (else (error "Unknown op: make-from-mag-ang" op)))))
