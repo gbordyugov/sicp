@@ -423,3 +423,18 @@
 ;;
 
 
+;;
+;; Message passing
+;;
+
+(define (make-from-real-imag x y)
+  (define (dispatch op)
+    (cond ((eq? op 'real-part) x)
+          ((eq? op 'imag-part) y)
+          ((eq? op 'magnitude) (sqrt (+ (square x) (square y))))
+          ((eq? op 'angle) (atan y x))
+          (else (error "Unknown op: make-from-real-imag" op))))
+  dispatch)
+
+;; permits only unitary generic ops
+(define (apply-generic op arg) (arg op))
