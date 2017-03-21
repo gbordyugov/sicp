@@ -450,3 +450,16 @@
           ((eq? op 'magnitude) r)
           ((eq? op 'angle)     a)
           (else (error "Unknown op: make-from-mag-ang" op)))))
+
+;;
+;; exercise 2.76
+;;
+;; explicit dispatch: expanding generic functions with new type tags
+;; lookup table-based dispatch on type tags: updating the dispatch
+;; lookup table
+;; message-passing style: writing new message consuming functions and
+;; expanding them with new messages
+
+;; the lookup-table-based solution seems more flexible to me where it
+;; comes to adding new types
+;; message-passing style can accomodate new ops more easily
