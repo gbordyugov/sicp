@@ -168,3 +168,19 @@
   'done)
 
 (define (equ? x y) (apply-generic 'equ? x y))
+
+;;
+;; exercise 2.80
+;;
+
+(define (install-zero)
+  (define (zero-sn a)           (= 0 a))
+  (define (zero-rat a)          (= 0 (numer a)))
+  (define (zero-complex a) (and (= 0 (real-part a))
+                                (= 0 (imag-part a))
+  (put '=zero? '(scheme-number) zero-sn)
+  (put '=zero? '(rational     ) zero-rat)
+  (put '=zero? '(complex      ) zero-complex)
+  'done)
+
+(define (=zero? x) (apply-generic '=zero? x y))
