@@ -217,3 +217,16 @@
 ;;
 ;; Hierarchies of types
 ;;
+
+
+;;
+;; exercise 2.81 (a)
+;;
+
+;;
+;; since the lookup would fail, apply-generic would try to coerce them
+;; both (it cannot recognize the exact reason lookup failed)
+;; and call apply-generic once again exactly with the same type
+;; signature
+;; thus blowing up the stack
+;;
