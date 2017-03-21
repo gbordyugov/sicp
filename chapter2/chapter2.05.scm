@@ -124,3 +124,26 @@
 ;; calling angle dispatches on 'rectangular tag and calls the
 ;; complex-number package internal angle function
 ;; i.e. two apply-generic calls
+
+
+;;
+;; exercise 2.78
+;;
+
+(define (type-tag x)
+  (if (number? x)
+    'scheme-number
+    (car x)))
+
+(define (contents x)
+  (if (number? x)
+    x
+    (cdr x)))
+
+(define (attache-tag tag contents)
+  (if (eq? 'scheme-number tag)
+    (if (number? contents)
+      number
+      (error "trying to attach 'scheme-number tag to a non-number"
+             tag contents))
+    (cons tag contents)))
