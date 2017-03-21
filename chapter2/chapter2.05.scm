@@ -100,6 +100,13 @@
        (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'complex
        (lambda (r a) (tag (make-from-mag-ang r a))))
+  ;;
+  ;; extension by Alyssa
+  ;;
+  (put 'real-part '(complex) real-part)
+  (put 'imag-part '(complex) imag-part)
+  (put 'magnitude '(complex) magnitude)
+  (put 'angle     '(complex) angle)
   'done)
 
 (define (make-complex-from-real-imag x y)
@@ -107,3 +114,13 @@
 (define (make-complex-from-mag-ang r a)
   ((get 'make-from-mag-ang 'complex) r a))
 
+
+;;
+;; exercise 2.77
+;;
+;; see code above in the complex package
+;;
+;; first we dispatch on 'complex tag, calling angle
+;; calling angle dispatches on 'rectangular tag and calls the
+;; complex-number package internal angle function
+;; i.e. two apply-generic calls
