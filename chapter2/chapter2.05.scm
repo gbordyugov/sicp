@@ -230,3 +230,16 @@
 ;; signature
 ;; thus blowing up the stack
 ;;
+
+;;
+;; exercise 2.81 (b)
+;;
+
+;;
+;; Louis seems to be wrong, apply-generic works fine as it is
+;;
+
+;;
+;; exercise 2.81 (c)
+;;
+
