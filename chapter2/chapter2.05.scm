@@ -147,3 +147,24 @@
       (error "trying to attach 'scheme-number tag to a non-number"
              tag contents))
     (cons tag contents)))
+
+
+;;
+;; exercise 2.79
+;;
+
+(define (install-equ?)
+  (define (eq-sn a b)
+    (= a b))
+  (define (eq-rat a b)
+    (= (* (denom a) (numer b))
+       (* (numer a) (denom b))))
+  (define (eq-complex a b)
+    (and (= (real-part a) (real-part b))
+         (= (imag-part a) (imag-part b))))
+  (put 'equ? '(scheme-number scheme-number) eq-sn)
+  (put 'equ? '(rational      rational)      eq-rat)
+  (put 'equ? '(complex       complex)       eq-complex)
+  'done)
+
+(define (equ? x y) (apply-generic 'equ? x y))
