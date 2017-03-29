@@ -268,9 +268,35 @@
 ;; exercise 2.82
 ;;
 
-(define (can-be-coerced to-type from-types)
-  (or (map (lambda (from-type) (get-coercion from-type to-type))
-           from-types)))
-           
+(define (can-be-coerced? types to-type)
+  " checks whether all from-types can be coerced to to-type "
+  (define (will-coerce? type)
+    (if (equal? type to-type)
+      #t
+      (get-coercion type to-type)))
+  (every will-coerce? types))
 
 
+(define (find-common-types types)
+  " returns a list of types such that the all the given one can be
+  coerced into "
+  (define (notnull? x) (not (null? x)))
+  (define (common? type) (can-be-coerced? type types))
+  (filter notnull?
+          (map (lambda (type)
+                 (can-be-coerced? type types))
+               types)))
+
+(define (apply-generic op . args)
+  (let* ((types (map type-tag args))
+         (common-types (find-common-type types))) 
+    (if (null? common-types)
+      (error "could not find a common type" (list op args))
+      '())))
+
+    (map (lambda (common-type)
+           (let ((coerced-args (map (lambda (arg)
+                                      ((get-coercion (type-tag arg)
+                                                     common-type)
+                                       (contents arg)))
+                               args)))
