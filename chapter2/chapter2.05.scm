@@ -263,3 +263,14 @@
                                    (list op type-tags)))))))
           (error "No method for these types"
                  (list op type-tags)))))))
+
+;;
+;; exercise 2.82
+;;
+
+(define (can-be-coerced to-type from-types)
+  (or (map (lambda (from-type) (get-coercion from-type to-type))
+           from-types)))
+           
+
+
