@@ -1,4 +1,18 @@
 ;;
+;; op hash table
+;;
+
+(define make-hash make-equal-hash-table)
+(define hash-set! hash-table/put!)
+(define hash-get  hash-table/get)
+
+(define *op-table* (make-hash))
+(define (put op type proc)
+  (hash-set! *op-table* (list op type) proc))
+(define (get op type)
+  (hash-ref *op-table* (list op type) '()))
+
+;;
 ;; Systems with Generic Operations
 ;;
 
@@ -177,7 +191,7 @@
   (define (zero-sn a)           (= 0 a))
   (define (zero-rat a)          (= 0 (numer a)))
   (define (zero-complex a) (and (= 0 (real-part a))
-                                (= 0 (imag-part a))
+                                (= 0 (imag-part a))))
   (put '=zero? '(scheme-number) zero-sn)
   (put '=zero? '(rational     ) zero-rat)
   (put '=zero? '(complex      ) zero-complex)
@@ -188,6 +202,12 @@
 ;;
 ;; Coercion
 ;;
+
+(define *coercion-table* (make-hash))
+(define (put-coercion type1 type2 proc)
+  (hash-set! *coercion-table* (list type1 type2) proc))
+(define (get-coercion type1 type2)
+  (hash-ref *coercion-table* (list type1 type2) '()))
 
 (define (scheme-number->complex n)
   (make-complex-from-real-imag (contents n) 0))
@@ -268,8 +288,15 @@
 ;; exercise 2.82
 ;;
 
+(define *coercion-table* (make-hash))
+(define (put-coercion list-of-types proc)
+  (hash-set! *coercion-table* list-of-types proc))
+(define (get-coercion list-of-types)
+  (hash-ref *coercion-table* list-of-types '()))
+
+
 (define (can-be-coerced? types to-type)
-  " checks whether all from-types can be coerced to to-type "
+  " check whether all from-types can be coerced to to-type "
   (define (will-coerce? type)
     (if (equal? type to-type)
       #t
@@ -278,8 +305,8 @@
 
 
 (define (find-common-types types)
-  " returns a list of types such that the all the given one can be
-  coerced into "
+  " return list of types such that the all the given ones can be
+  coerced to "
   (define (notnull? x) (not (null? x)))
   (define (common? type) (can-be-coerced? type types))
   (filter notnull?
@@ -287,16 +314,16 @@
                  (can-be-coerced? type types))
                types)))
 
-(define (apply-generic op . args)
-  (let* ((types (map type-tag args))
-         (common-types (find-common-type types))) 
-    (if (null? common-types)
-      (error "could not find a common type" (list op args))
-      '())))
-
-    (map (lambda (common-type)
-           (let ((coerced-args (map (lambda (arg)
-                                      ((get-coercion (type-tag arg)
-                                                     common-type)
-                                       (contents arg)))
-                               args)))
+;; (define (apply-generic op . args)
+;;   (let* ((types (map type-tag args))
+;;          (common-types (find-common-type types)))
+;;     (if (null? common-types)
+;;       (error "could not find a common type" (list op args))
+;;       '())))
+;;
+;;     (map (lambda (common-type)
+;;            (let ((coerced-args (map (lambda (arg)
+;;                                       ((get-coercion (type-tag arg)
+;;                                                      common-type)
+;;                                        (contents arg)))
+;;                                args)))
