@@ -296,7 +296,7 @@
 
 
 (define (can-be-coerced? types to-type)
-  " check whether all from-types can be coerced to to-type "
+  """ check whether all from-types can be coerced to to-type """
   (define (will-coerce? type)
     (if (equal? type to-type)
       #t
@@ -305,8 +305,8 @@
 
 
 (define (find-common-types types)
-  " return list of types such that the all the given ones can be
-  coerced to "
+  """ return list of types such that the all the given ones can be
+  coerced to """
   (define (notnull? x) (not (null? x)))
   (define (common? type) (can-be-coerced? type types))
   (filter notnull?
