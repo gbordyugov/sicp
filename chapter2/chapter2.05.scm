@@ -307,12 +307,8 @@
 (define (find-common-types types)
   """ return list of types such that the all the given ones can be
   coerced to """
-  (define (notnull? x) (not (null? x)))
-  (define (common? type) (can-be-coerced? type types))
-  (filter notnull?
-          (map (lambda (type)
-                 (can-be-coerced? type types))
-               types)))
+  (define (common-type? type) (can-be-coerced? type types))
+  (filter common-type? types))
 
 ;; (define (apply-generic op . args)
 ;;   (let* ((types (map type-tag args))
