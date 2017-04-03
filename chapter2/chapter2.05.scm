@@ -219,7 +219,7 @@
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
       (if proc
-        (apply proc (map contentes args))
+        (apply proc (map contents args))
         (if (= (length args) 2)
           (let ((type1 ( car type-tags))
                 (type2 (cadr type-tags))
@@ -267,7 +267,7 @@
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
       (if proc
-        (apply proc (map contentes args))
+        (apply proc (map contents args))
         (if (= (length args) 2)
           (let ((type1 ( car type-tags))
                 (type2 (cadr type-tags))
@@ -329,9 +329,9 @@
                                                  types data)
           (apply func (map (lambda (type-value)
                              (let ((type  (car  type-value))
-                                   (value (cadr type-value))))
+                                   (value (cadr type-value)))
                              ((get-coercion type common-type) value))
-                           (zip (types data)))))))))
+                           (zip (types data))))))))))
 
 
 (define (apply-generic op . args)
@@ -339,3 +339,28 @@
          (data         (map contents args))
          (common-types (find-common-type types)))
     (apply-generic-with-known-common-types op common-types types data)))
+
+
+;;
+;; exercise 2.83
+;;
+
+(define (install-raise-package)
+  (define (integer->rational a)
+    (make-rat a 1))
+  ;;
+  (define (rational->real a)
+    (make-real (/ (numer a) (denom a))))
+  ;;
+  (define (real->complex a)
+    (make-from-real-imag  0))
+  ;;
+  (put 'raise 'integer  integer->rational)
+  ;;
+  (put 'raise 'rational rational->real)
+  ;;
+  (put 'raise 'real     real->complex)
+  'done)
+
+(define (raise a)
+  ((get 'raise (type-tag a)) (contents a)))
