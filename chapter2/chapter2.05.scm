@@ -364,3 +364,7 @@
 
 (define (raise a)
   ((get 'raise (type-tag a)) (contents a)))
+
+;; alternative
+(define (raise a)
+  (apply-generic 'raise x))
