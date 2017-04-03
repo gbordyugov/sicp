@@ -310,16 +310,32 @@
   (define (common-type? type) (can-be-coerced? type types))
   (filter common-type? types))
 
-;; (define (apply-generic op . args)
-;;   (let* ((types (map type-tag args))
-;;          (common-types (find-common-type types)))
-;;     (if (null? common-types)
-;;       (error "could not find a common type" (list op args))
-;;       '())))
-;;
-;;     (map (lambda (common-type)
-;;            (let ((coerced-args (map (lambda (arg)
-;;                                       ((get-coercion (type-tag arg)
-;;                                                      common-type)
-;;                                        (contents arg)))
-;;                                args)))
+
+(define (get-op op common-type types)
+  """ replaces all types in types by common-types and uses the generated
+  type list to get method """
+  (define (const x) (lambda (y) x))
+  (let ((type-signature (map (const common-types) types)))
+    (get op type-signature)))
+
+
+(define (apply-generic-with-known-common-types op common-types types data)
+  (if (null? common-types)
+    (error "common-types exhausted")
+    (let ((type (car common-types)))
+      (let ((func (get-op op type types)))
+        (if (null? func)
+          (apply-generic-with-known-common-types op (cdr common-types)
+                                                 types data)
+          (apply func (map (lambda (type-value)
+                             (let ((type (car  type-value))
+                                   (valu (cadr type-value))))
+                             ((get-coercion type common-type) value))
+                           (zip (types data)))))))))
+
+
+(define (apply-generic op . args)
+  (let* ((types        (map type-tag args))
+         (data         (map contents args))
+         (common-types (find-common-type types)))
+    (apply-generic-with-known-common-types op common-types types data)))
