@@ -328,8 +328,8 @@
           (apply-generic-with-known-common-types op (cdr common-types)
                                                  types data)
           (apply func (map (lambda (type-value)
-                             (let ((type (car  type-value))
-                                   (valu (cadr type-value))))
+                             (let ((type  (car  type-value))
+                                   (value (cadr type-value))))
                              ((get-coercion type common-type) value))
                            (zip (types data)))))))))
 
