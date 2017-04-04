@@ -365,6 +365,11 @@
 (define (raise a)
   ((get 'raise (type-tag a)) (contents a)))
 
-;; alternative
+;;
+;; an alternative solution
+;;
+;; for this one, the type signature above must be lists
+;; like '(integer)
+;;
 (define (raise a)
   (apply-generic 'raise x))
