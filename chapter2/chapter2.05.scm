@@ -355,21 +355,12 @@
   (define (real->complex a)
     (make-from-real-imag  0))
   ;;
-  (put 'raise 'integer  integer->rational)
+  (put 'raise '(integer)  integer->rational)
   ;;
-  (put 'raise 'rational rational->real)
+  (put 'raise '(rational) rational->real)
   ;;
-  (put 'raise 'real     real->complex)
+  (put 'raise '(real)     real->complex)
   'done)
 
-(define (raise a)
-  ((get 'raise (type-tag a)) (contents a)))
-
-;;
-;; an alternative solution
-;;
-;; for this one, the type signature above must be lists
-;; like '(integer)
-;;
 (define (raise a)
   (apply-generic 'raise x))
