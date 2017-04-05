@@ -364,3 +364,17 @@
 
 (define (raise a)
   (apply-generic 'raise x))
+
+
+;;
+;; exercise 2.84
+;;
+
+(define (higher? type1 type2)
+  """ assumes that both types belong to the same type tower
+  and one of them is higher than the other one, i.e. the other one
+  can be raised to the type of the first one """
+  (let ((raised-type2 (raise type2)))
+    (and raised-type2
+         (or (equal? type1 raised-type2)
+             (higher? type1 raised-type2)))))
