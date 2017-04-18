@@ -307,7 +307,8 @@
 (define (find-common-types types)
   """ return list of types such that the all the given ones can be
   coerced to """
-  (define (common-type? type) (can-be-coerced? type types))
+  (define (common-type? type)
+    (can-be-coerced? type types))
   (filter common-type? types))
 
 
@@ -371,7 +372,7 @@
 ;;
 
 (define (higher? type1 type2)
-  """ assumes that both types belong to the same type tower
+  """ assume that both types belong to the same type tower
   and one of them is higher than the other one, i.e. the other one
   can be raised to the type of the first one """
   (let ((raised-type2 (raise type2)))
@@ -379,6 +380,32 @@
          (or (equal? type1 raised-type2)
              (higher? type1 raised-type2)))))
 
+
+(define (raisable? types to-type)
+  """ check whether all of types can be raised to type """
+  (define (will-raise? t)
+    (higher? to-type t))
+  (every will-raise? types))
+
+
+(define (find-supertypes types)
+  (define (supertype? t)
+    (raisable? types t))
+  (filter supertype? types))
+
+(define (raise-to to-type x)
+  (cond ((equal? to-type (type-tag x)) x)
+
+(define (apply-typed-op-with-supertypes op types args supertypes)
+  (cond ((null? supertypes)
+         (error "could not find a supertype" types))
+        (let* ((st        (car supertypes))
+               (new-types (map (lambda (t)
+                                 (raise
+
+
+
 (define (apply-generic op . args)
-  (let* ((types (map type-tag args))
-         (data  (map contents args)))
+  (let* ((types      (map             type-tag args))
+         (data       (map             contents args))
+         (supertypes (find-supertypes types)))
