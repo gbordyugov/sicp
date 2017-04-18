@@ -378,3 +378,7 @@
     (and raised-type2
          (or (equal? type1 raised-type2)
              (higher? type1 raised-type2)))))
+
+(define (apply-generic op . args)
+  (let* ((types (map type-tag args))
+         (data  (map contents args)))
