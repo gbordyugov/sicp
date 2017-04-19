@@ -312,34 +312,27 @@
   (filter common-type? types))
 
 
-(define (get-op op common-type types)
-  """ replaces all types in types by common-types and uses the generated
-  type list to get method """
-  (define (const x) (lambda (y) x))
-  (let ((type-signature (map (const common-types) types)))
-    (get op type-signature)))
-
-
-(define (apply-generic-with-known-common-types op common-types types data)
+(define (apply-generic-with-known-common-types op common-types types args
+                                               typed-args)
   (if (null? common-types)
-    (error "common-types exhausted")
-    (let ((type (car common-types)))
-      (let ((func (get-op op type types)))
-        (if (null? func)
-          (apply-generic-with-known-common-types op (cdr common-types)
-                                                 types data)
-          (apply func (map (lambda (type-value)
-                             (let ((type  (car  type-value))
-                                   (value (cadr type-value)))
-                             ((get-coercion type common-type) value))
-                           (zip (types data))))))))))
+    (error "common types exhausted")
+    (let* ((common-type (car common-types))
+           (func        (get op (map (lambda (x) common-type) types))))
+      (if (null? func)
+        (apply-generic-with-known-common-types op (cdr common-types)
+                                               types args)
+        (let* ((coercer (lambda (ta)
+                          ((get-coercion (type-tag ta) common-type) ta)))
+               (new-typed-args (map coercer typed-args)))
+          (apply func args))))))
 
 
-(define (apply-generic op . args)
-  (let* ((types        (map type-tag args))
-         (data         (map contents args))
+(define (apply-generic op . typed-args)
+  (let* ((types        (map type-tag typed-args))
+         (args         (map contents typed-args))
          (common-types (find-common-type types)))
-    (apply-generic-with-known-common-types op common-types types data)))
+    (apply-generic-with-known-common-types op common-types types args
+                                           typed-args)))
 
 
 ;;
@@ -364,7 +357,7 @@
   'done)
 
 (define (raise a)
-  (apply-generic 'raise x))
+  (apply-generic 'raise a))
 
 
 ;;
@@ -377,35 +370,43 @@
   can be raised to the type of the first one """
   (let ((raised-type2 (raise type2)))
     (and raised-type2
-         (or (equal? type1 raised-type2)
+         (or (equal?  type1 raised-type2)
              (higher? type1 raised-type2)))))
 
 
-(define (raisable? types to-type)
-  """ check whether all of types can be raised to type """
+(define (types-raisable? types to-type)
+  """ check whether all of types can be raised to to-type """
   (define (will-raise? t)
     (higher? to-type t))
   (every will-raise? types))
 
 
 (define (find-supertypes types)
+  """ find a common supertype, might return a list of several, but all
+  elements would be the same supertype """
   (define (supertype? t)
-    (raisable? types t))
+    (types-raisable? types t))
   (filter supertype? types))
 
 (define (raise-to to-type x)
-  (cond ((equal? to-type (type-tag x)) x)
+  """ raise x to to-type, possibly applying raise several times """
+  (if (equal? to-type (type-tag x))
+    x
+    (raise-to to-type (raise x))))
 
-(define (apply-typed-op-with-supertypes op types args supertypes)
-  (cond ((null? supertypes)
-         (error "could not find a supertype" types))
-        (let* ((st        (car supertypes))
-               (new-types (map (lambda (t)
-                                 (raise
-
-
-
-(define (apply-generic op . args)
-  (let* ((types      (map             type-tag args))
-         (data       (map             contents args))
-         (supertypes (find-supertypes types)))
+(define (apply-generic op . typed-args)
+  """ apply op to typed-args by finding a common supertype and raising
+  typed-args to that common supertype """
+  (let* ((types      (map type-tag typed-args))
+         (supertypes (find-supertypes type)))
+    (if (null? supertypes)
+      (error "no supertype found")
+      (let* ((supertype         (car supertypes))
+             (raised-types      (map (lambda (t) supertype) types))
+             (raised-typed-args (map (lambda (x) (raise-to supertype x))
+                                     typed-args))
+             (raised-args       (map contents raised-typed-args))
+             (typed-op          (get op raised-types)))
+        (if (null? typed-op)
+          (error "no op found")
+          (apply typed-op raised-args))))))
