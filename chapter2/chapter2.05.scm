@@ -401,3 +401,24 @@
         (if (null? typed-op)
           (error "no op found")
           (apply typed-op raised-args))))))
+
+
+;;
+;; exercise 2.85
+;;
+
+(define (install-drop-package)
+  (define (drop-complex->real a)
+    (make-real (real-part a)))
+
+  (define (drop-real->rational a)
+    (let ((r (rationalize (inexact->exact a) 1/100)))
+      (make-rat (numerator r) (denominator r))))
+
+  (define (drop-rational->integer a)
+    (make-int (floor (/ (numer a) (denom a)))))
+
+  (put 'drop '(complex) drop-complex->real)
+  (put 'drop '(real)    drop-real->rational)
+  (put 'drop '(rat)     drop-rational->integer)
+  'done)
