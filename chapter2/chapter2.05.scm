@@ -65,16 +65,11 @@
               (* (denom x) (numer y))))
   ;; interface to rest of the system
   (define (tag x) (attach-tag 'rational x))
-  (put 'add ('rational rational)
-       (lambda (x y) (tag (add-rat x y))))
-  (put 'sub ('rational rational)
-       (lambda (x y) (tag (sub-rat x y))))
-  (put 'mul ('rational rational)
-       (lambda (x y) (tag (mul-rat x y))))
-  (put 'div ('rational rational)
-       (lambda (x y) (tag (div-rat x y))))
-  (put 'make 'rational
-       (lambda (n d) (tag (make-rat n d))))
+  (put 'add '(rational rational) (lambda (x y) (tag (add-rat  x y))))
+  (put 'sub '(rational rational) (lambda (x y) (tag (sub-rat  x y))))
+  (put 'mul '(rational rational) (lambda (x y) (tag (mul-rat  x y))))
+  (put 'div '(rational rational) (lambda (x y) (tag (div-rat  x y))))
+  (put 'make 'rational           (lambda (n d) (tag (make-rat n d))))
   'done)
 
 (define (make-rational n d)
@@ -102,14 +97,10 @@
                        (- (angle     z1) (angle     z2))))
   ;; interface to rest of system
   (define (tag z) (attach-tag 'complex z))
-  (put 'add '(complex complex)
-       (lambda (z1 z2) (tag (add-complex z1 z2))))
-  (put 'sub '(complex complex)
-       (lambda (z1 z2) (tag (sub-complex z1 z2))))
-  (put 'mul '(complex complex)
-       (lambda (z1 z2) (tag (mul-complex z1 z2))))
-  (put 'div '(complex complex)
-       (lambda (z1 z2) (tag (div-complex z1 z2))))
+  (put 'add '(complex complex) (lambda (z1 z2) (tag (add-complex z1 z2))))
+  (put 'sub '(complex complex) (lambda (z1 z2) (tag (sub-complex z1 z2))))
+  (put 'mul '(complex complex) (lambda (z1 z2) (tag (mul-complex z1 z2))))
+  (put 'div '(complex complex) (lambda (z1 z2) (tag (div-complex z1 z2))))
   (put 'make-from-real-imag 'complex
        (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'complex
