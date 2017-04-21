@@ -172,7 +172,8 @@
   (put 'equ? '(complex       complex)       eq-complex)
   'done)
 
-(define (equ? x y) (apply-generic 'equ? x y))
+(define (equ? x y)
+  (apply-generic 'equ? x y))
 
 ;;
 ;; exercise 2.80
@@ -408,17 +409,52 @@
 ;;
 
 (define (install-drop-package)
-  (define (drop-complex->real a)
+  (define (complex->real a)
     (make-real (real-part a)))
 
-  (define (drop-real->rational a)
+  (define (real->rational a)
     (let ((r (rationalize (inexact->exact a) 1/100)))
       (make-rat (numerator r) (denominator r))))
 
-  (define (drop-rational->integer a)
+  (define (rational->integer a)
     (make-int (floor (/ (numer a) (denom a)))))
 
-  (put 'drop '(complex) drop-complex->real)
-  (put 'drop '(real)    drop-real->rational)
-  (put 'drop '(rat)     drop-rational->integer)
+  (put 'project '(complex) complex->real)
+  (put 'project '(real)    real->rational)
+  (put 'project '(rat)     rational->integer)
   'done)
+
+
+(define (project x)
+  (apply-generic 'project x))
+
+
+(define (drop x)
+  """ drop as deep as possible down the type tower """
+  (let ((project-proc (get 'project (type-tag x))))
+    (if (null? project-proc)           ;; can we at all project?
+      x                                ;; no :~(
+      (let ((projected-x (project x))) ;; yes, we can!
+        (if (equ? x (raise projected-x))
+          (drop projected-x)
+          x)))))
+
+
+(define (apply-generic op . typed-args)
+  """ apply op to typed-args by finding a common supertype and raising
+  typed-args to that common supertype
+
+  additionally drops the result """
+  (let* ((types      (map type-tag typed-args))
+         (supertypes (find-supertypes type)))
+    (if (null? supertypes)
+      (error "no supertype found")
+      (let* ((supertype         (car supertypes))
+             (raised-types      (map (lambda (t) supertype) types))
+             (raised-typed-args (map (lambda (x) (raise-to supertype x))
+                                     typed-args))
+             (raised-args       (map contents raised-typed-args))
+             (typed-op          (get op raised-types)))
+        (if (null? typed-op)
+          (error "no op found")
+          (drop (apply typed-op raised-args)))))))
