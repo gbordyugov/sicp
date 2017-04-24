@@ -576,3 +576,32 @@
       (adjoin-term (make-term (+   (order t1) (order t2))
                               (mul (coeff t1) (coeff t2)))
                    (mul-term-by-all-terms t1 (rest-terms L))))))
+
+;;
+;; Representing term lists
+;;
+
+(define (adjoin-term term term-list)
+  (if (=zero? (coeff term))
+    term-list
+    (cons term term-list)))
+
+(define (the-empty-termlist)
+  '())
+(define (empty-termlist? term-list)
+  (null? term-list))
+
+(define (first-term term-list)
+  (car term-list))
+(define (rest-terms term-list)
+  (cdr term-list))
+
+(define (make-term order coeff)
+  (list order-coeff))
+(define (order term)
+  (car term))
+(define (ceff term)
+  (cadr term))
+
+(define (make-polynomial var terms)
+  ((get 'make 'polynomial) var terms))
