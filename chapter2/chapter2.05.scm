@@ -528,3 +528,37 @@
   (put 'make 'polynomial
        (lambda (var terms) (tag (make-poly var terms))))
   'done)
+
+;;
+;; assume there are two constructors:
+;; the-empty-termlist (makes an empty term list)
+;; adjoin-term (adds a term to a term list)
+;; ... a predicate empty-termlist?
+;; ... and selectors
+;; first-term (extract the highest term)
+;; rest-terms (returns all by the highest term)
+;; constructor of terms
+;; (make-term order coef)
+;; selectors `order` and `coeff`
+;;
+
+;;
+;; the idea of the above is to abstract away terms and list of terms
+;; behind a clear interface
+;;
+
+(define (add-terms L1 L2)
+  (cond ((empty-termlist? L1) L2)
+        ((empty-termlist? L2) L1)
+        (else
+          (let ((t1 (first-term L1))
+                (t2 (first-term L2)))
+            (cond ((> (order t1) (order t2))
+                   (adjoin-term t1 (add-terms (rest-terms L1) L2)))
+                  ((< (order t1) (order t2))
+                   (adjoin-term t2 (add-terms L1 (rest-terms L2))))
+                  (else
+                    (adjoin-term
+                      (make-term (order t1)
+                                 (add (coeff t1) (coeff t2)))
+                      (add-terms (rest-terms L1) (rest-terms L2)))))))))
