@@ -605,3 +605,15 @@
 
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
+
+;;
+;; exercise 2.87
+;;
+
+(put '=zero? '(polynomial)
+     (lambda (p)
+       (let ((termlist (term-list p)))
+         (or (empty-termlist? termlist)
+             (and (=zero? (coeff (first-term termlist)))
+                  (=zero? (make-polynomial (variable p)
+                                           (rest-terms termlist))))))))
