@@ -458,3 +458,28 @@
         (if (null? typed-op)
           (error "no op found")
           (drop (apply typed-op raised-args)))))))
+
+;;
+;; exercise 2.86
+;;
+
+(define (install-numbers)
+  (define (real-sine x)
+    (sin x))
+  (define (real-cosine x)
+    (cos x))
+  (define (rat-sine x)
+    (sin (/ (numer x) (denom x))))
+  (define (rat-cosine x)
+    (cos (/ (numer x) (denom x))))
+  ;; add more functions here: tan, atan, hypot, etc
+  (put 'sine   '(real) real-sine)
+  (put 'cosine '(real) real-cosine)
+  (put 'sine   '(rat)  rat-sine)
+  (put 'cosine '(rat)  rat-cosine)
+  ;; install more functions here: tan, atan, hypot, etc
+  'done)
+
+(define (sine   x) (apply-generic 'sine   x))
+(define (cosine x) (apply-generic 'cosine x))
+;; define more functions here: tan, atan, hypot, etc
