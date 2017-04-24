@@ -625,6 +625,9 @@
 (put 'negate '(polynomial)
      (lambda (p)
        (define (negate-term term)
-         (make-term (order term) (- (coeff term))))
+         (make-term (order term) (negate (coeff term))))
        (let ((termlist (term-list p)))
          (make-poly var (map negate-term) termlist))))
+
+(define (negate x)
+  (apply-generic 'negate x))
