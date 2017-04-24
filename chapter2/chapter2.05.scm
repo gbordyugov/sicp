@@ -617,3 +617,14 @@
              (and (=zero? (coeff (first-term termlist)))
                   (=zero? (make-polynomial (variable p)
                                            (rest-terms termlist))))))))
+
+;;
+;; exercise 2.88
+;;
+
+(put 'negate '(polynomial)
+     (lambda (p)
+       (define (negate-term term)
+         (make-term (order term) (- (coeff term))))
+       (let ((termlist (term-list p)))
+         (make-poly var (map negate-term) termlist))))
