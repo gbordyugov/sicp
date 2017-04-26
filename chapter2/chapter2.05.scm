@@ -667,129 +667,36 @@
 ;;
 ;; exercise 2.90
 ;;
-
-;;
-;; my solution is to tag dense  polynoms by 'dense-poly
-;;                 and   sparse polynoms by 'sparse-poly
-;; and then to define a coercion from sparse to dense
+;; turned out to be a long one, but fun!
 ;;
 
 ;;
 ;; single term representation is shared by both sparse and dense cases
 ;;
 
+(define (install-term-package)
+  ;;
+  ;; internal, i.e.,  tagless code
+  ;;
+  (define (make-term order coeff)
+    (cons order coeff))
+  (define (order term) (car term))
+  (define (coeff term) (cdr term))
+
+  ;;
+  ;; interface to the rest of the system
+  ;;
+  (define (tag x)
+    (attach-tag 'term x))
+
+  (put 'make 'term
+       (lambda (order coeff) (tag (make-term order coeff))))
+  (put 'order 'term order)
+  (put 'coeff 'term coeff)
+  'done)
+
+
 (define (make-term order coeff)
-  (list order-coeff))
-
-(define (order term)
-  (car  term))
-
-(define (coeff term)
-  (cadr term))
-
-;;
-;; sparse term list package
-;;
-
-(define (install-sparse-term-list-package)
-  (define (tag x)
-    (attach-tag 'sparse-term-list x))
-  (define (make-term-list term-list)
-    term-list)
-  (define (add-terms L1 L2)
-    (...)) ;; code from the book
-  (define (mul-terms L1 L2)
-    (...)) ;; code from the book
-  ;; more constructors and accessors...
-  ;; ...
-  (put 'make 'sparse-term-list 
-       (lambda (x) (tag (make-term-list x))))
-  (put 'add '(sparse-term-list sparse-term-list) add-terms)
-  (put 'mul '(sparse-term-list sparse-term-list) mul-terms)
-  ;; more constructors and accessors...
-  'done)
-
-;;
-;; sparse poly list package
-;;
-
-(define (make-sparse-term-list x)
-  ((get 'make 'sparse-term-list) x))
-
-(define (install-sparse-poly-package)
-  (define (tag x)
-    (attach-tag 'sparse-poly x))
-  (define (make-poly variable term-list)
-    (cons variable (make-sparse-term-listterm-list)))
-  (define (variable p)
-    (car p))
-  (define (term-list p)
-    (cdr p))
-  (define (add-poly p1 p2)
-    (...) ;; the appropriate sparse version
-  (define (mul-poly p1 p2)
-    (...) ;; the appropriate sparse version
-  (put 'make 'sparse-poly
-       (lambda (var terms) (tag (make-poly) var terms)))
-  (put 'poly-variable  '(sparse-poly) variable)
-  (put 'poly-term-list '(sparse-poly) term-list)
-  (put 'add '(sparse-poly sparse-poly)
-       (lambda p1 p2) (tag (add-poly p1 p2)))
-  (put 'mul '(sparse-poly sparse-poly)
-       (lambda p1 p2) (tag (mul-poly p1 p2)))
-  'done)
-
-
-;;
-;; dense poly list package
-;;
-
-(define (install-dense-poly-package)
-  (define (tag x)
-    (attach-tag 'dense x))
-  (define (make-poly variable term-list)
-    (cons variable term-list))
-  (define (variable p)
-    (car p))
-  (define (term-list p)
-    (cdr p))
-  (define (add-poly p1 p2)
-    (...) ;; the appropriate dense version
-  (define (mul-poly p1 p2)
-    (...) ;; the appropriate dense version
-  (put 'make 'dense
-       (lambda (var terms) (tag (make-poly) var terms)))
-  (put 'poly-variable  '(dense-poly) variable)
-  (put 'poly-term-list '(dense-poly) term-list)
-  (put 'add '(dense dense)
-       (lambda p1 p2) (tag (add-poly p1 p2)))
-  (put 'mul '(dense dense)
-       (lambda p1 p2) (tag (mul-poly p1 p2)))
-  'done)
-
-(define (add p1 p2)
-  (apply-generic 'add p1 p2)
-
-(define (mul p1 p2)
-  (apply-generic 'mul p1 p2)
-
-(define (poly-variable p)
-  (apply-generic 'poly-variable p))
-
-(define (poly-term-list p)
-  (apply-generic 'poly-term-list p))
-
-;;
-;; the coercion TO BE REWORKED
-;;
-(define (sparse-poly->dense-poly p)
-  (define (n-times x n)
-    (define (go x n acc)
-      (if (= n 0) acc (go x (- n 1) (cons x acc))))
-    (go x n '()))
-  (define (term->dense-poly m)
-    (let ((o (order    m))
-          (c (coef     m)))
-      (cons c (n-times 0 o))))
-  (let ((variable (poly-variable  p))
-        (terms    (poly-term-list p)))
+  ((get 'make 'term) order coeff))
+(define (order term) (apply-generic 'order term))
+(define (coeff term) (apply-generic 'coeff term))
