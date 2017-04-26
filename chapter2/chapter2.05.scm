@@ -674,9 +674,9 @@
 ;; single term representation is shared by both sparse and dense cases
 ;;
 
-(define (install-term-package)
+(define (install-term-type)
   ;;
-  ;; internal, i.e.,  tagless code
+  ;; internal, i.e., tagless code
   ;;
   (define (make-term order coeff)
     (cons order coeff))
@@ -696,7 +696,65 @@
   'done)
 
 
+;;
+;; this allows for further potential term representations
+;;
 (define (make-term order coeff)
   ((get 'make 'term) order coeff))
 (define (order term) (apply-generic 'order term))
 (define (coeff term) (apply-generic 'coeff term))
+
+
+;;
+;; sparse term list code
+;;
+
+(define (install-sparse-term-list-type)
+  ;;
+  ;; internal, i.e., tagless code
+  ;;
+  (define (adjoin-term term term-list)
+    (if (=zero? (coeff term))
+      term-list
+      (cons term term-list)))
+
+  (define (the-empty-termlist)
+    '())
+  (define (empty-termlist? term-list)
+    (null? term-list))
+
+  (define (first-term term-list)
+    (car term-list))
+  (define (rest-terms term-list)
+    (cdr term-list))
+
+  ;;
+  ;; interface to rest of the system
+  ;;
+  (define (tag x)
+    (attach-tag 'sparse-term-list x))
+
+  (put 'adjoint-term '(term sparse-term-list)
+       (lambda (term term-list)
+         (tag (adjoin-term term term-list))))
+  (put 'the-empty-termlist 'sparse-term-list
+       (lambda (x) (tag (the-empty-termlist x))))
+  (put 'empty-termlist? '(sparse-term-list) empty-termlist?)
+  (put 'first-term '(sparse-term-list) first-term)
+  (put 'rest-terms '(sparse-term-list) rest-terms)
+  'done)
+
+
+;;
+;; this ones need to be done only once
+;;
+(define (adjoin-term term term-list)
+  (apply-generic 'adjoint-term term term-list))
+(define (the-empty-termlist)
+  (apply-generic 'the-empty-termlist))
+(define (empty-termlist? x)
+  (apply-generic 'empty-termlist? x))
+(define (first-term x)
+  (apply-generic 'first-term x))
+(define (rest-terms x)
+  (apply-generic 'rest-terms x))
