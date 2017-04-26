@@ -839,3 +839,26 @@
   (put 'make 'polynomial
        (lambda (var terms) (tag (make-poly var terms))))
   'done)
+
+
+;;
+;; exercise 2.91
+;;
+
+(define (div-terms L1 L2)
+  (if (empty-termlist? L1)
+    (list (the-empty-termlist) (the-empty-termlist))
+    (let ((t1 (first-term L1))
+          (t2 (first-term L2)))
+      (if (> (order t2) (order t1))
+        (list (the-empty-termlist) L1)
+        (let* ((new-coeff         (div (coeff t1) (coeff t2)))
+               (new-order         (-   (order t1) (order t2)))
+               (new-term          (make-term new-o new-c))
+               (new-term-times-L2 (mul-term-by-all-terms new-term L2))
+               ;; sub-terms needs to be defined (not difficult)
+               (L1-minus-product  (sub-terms L1 new-term-times-L2))
+               (rest-of-result    (div-terms L1-minus-product L2))
+               (quot              (car  rest-of-result))
+               (remi              (cadr rest-of-result)))
+          (list (adjoin-term new-term quot) remi))))))
