@@ -491,16 +491,16 @@
 
 (define (add-poly p1 p2)
   (if (same-variable? (variable p1) (variable p2))
-                      (make-poly (variable p1)
-                                 (add-terms (term-list p1)
-                                            (term-list p2)))
+                      (make-polynomial (variable p1)
+                                       (add-terms (term-list p1)
+                                                  (term-list p2)))
                       (error "Polys not in same var: ADD-POLY"
                              (list p1 p2))))
 (define (mul-poly p1 p2)
   (if (same-variable? (variable p1) (variable p2))
-                      (make-poly (variable p1)
-                                 (mul-terms (term-list p1)
-                                            (term-list p2)))
+                      (make-polynomial (variable p1)
+                                       (mul-terms (term-list p1)
+                                                  (term-list p2)))
                       (error "Polys not in same var: ADD-POLY"
                              (list p1 p2))))
 
@@ -827,6 +827,7 @@
   ;;
   (define (add-poly p1 p2) (...))
   (define (mul-poly p1 p2) (...))
+  (define (same-variable? p1 p2) (...))
   ;;
   ;; interface to rest of the system
   ;;
@@ -836,10 +837,16 @@
        (lambda (p1 p2) (tag (add-poly p1 p2))))
   (put 'mul '(polynomial polynomial)
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'variable ' polynomial variable)
+  (put 'term-list 'polynomial term-list)
+  (put 'same-variable? 'polynomial same-variable?)
   (put 'make 'polynomial
        (lambda (var terms) (tag (make-poly var terms))))
   'done)
 
+(define (variable       p)     (apply-generic 'variable       p))
+(define (term-list      p)     (apply-generic 'term-list      p))
+(define (same-variable? p1 p2) (apply-generic 'same-variable? p1 p2))
 
 ;;
 ;; exercise 2.91
@@ -860,5 +867,22 @@
                (L1-minus-product  (sub-terms L1 new-term-times-L2))
                (rest-of-result    (div-terms L1-minus-product L2))
                (quot              (car  rest-of-result))
-               (remi              (cadr rest-of-result)))
-          (list (adjoin-term new-term quot) remi))))))
+               (remi              (cdr rest-of-result)))
+          (cons (adjoin-term new-term quot) remi))))))
+
+(define (div-poly p1 p2)
+  (if (not (same-variable? p1 p2))
+    (error "polynomial variable mismatch in div-poly" (list p1 p2))
+    (let ((var (variable p1))
+          (L1  (term-list p1))
+          (L2  (term-list p2))
+          (dt  (div-terms L1 L2))
+          (q   (car dt))
+          (r   (cdr dt)))
+      (cons
+        (make-polynomial var q)
+        (make-polynomial var r)))))
+
+
+
+
