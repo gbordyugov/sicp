@@ -758,3 +758,48 @@
   (apply-generic 'first-term x))
 (define (rest-terms x)
   (apply-generic 'rest-terms x))
+
+
+;;
+;; dense term list code
+;;
+
+(define (install-dense-term-list-type)
+  ;;
+  ;; internal, i.e., tagless code
+  ;;
+  (define (adjoin-term term term-list)
+    (if (=zero? (coeff term))
+      (term list)
+      (cons (coeff term) term-list)))
+
+  (define (the-empty-termlist) '())
+  (define (empty-termlist? term-list)
+    (null? term-list))
+
+  (define (first-term term-list)
+    (let ((order (- (length term-list) 1)))
+      (make-term order (car term-list))))
+
+  (define (rest-terms term-list)
+    (cdr term-list))
+
+  ;;
+  ;; interface to rest of the system
+  ;;
+  (define (tag x)
+    (attach-tag 'dense-term-list x))
+  (put 'adjoint-term '(term dense-term-list)
+       (lambda (term term-list)
+         (tag (adjoin-term term term-list))))
+  (put 'the-empty-termlist 'dense-term-list
+       (lambda (x) (tag (the-empty-termlist x))))
+  (put 'empty-termlist? '(dense-term-list) empty-termlist?)
+  (put 'first-term '(dense-term-list) first-term)
+  (put 'rest-terms '(dense-term-list) rest-terms)
+
+  'done)
+
+;;
+;; see lines 751-760 for interfacing that to rest of the system
+;;
