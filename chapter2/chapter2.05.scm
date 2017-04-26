@@ -803,3 +803,39 @@
 ;;
 ;; see lines 751-760 for interfacing that to rest of the system
 ;;
+
+
+;;
+;; code for polynomials with sparse/dense term lists
+;;
+;; the sparse vs dense decision is simply delegated to the level of
+;; the term list representation. 
+;;
+
+(define (install-polynomial-package)
+  ;;
+  ;; typeless. i.e., tagless code
+  ;;
+  (define (make-poly variable term-list)
+    (cons variable term-list))
+  (define (variable p)
+    (car p))
+  (define (term-list p)
+    (cdr p))
+  ;;
+  ;; those two will dispatch on the underlying type of term list
+  ;;
+  (define (add-poly p1 p2) (...))
+  (define (mul-poly p1 p2) (...))
+  ;;
+  ;; interface to rest of the system
+  ;;
+  (define (tag p)
+    (attach-tag 'polynomial p))
+  (put 'add '(polynomial polynomial)
+       (lambda (p1 p2) (tag (add-poly p1 p2))))
+  (put 'mul '(polynomial polynomial)
+       (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'make 'polynomial
+       (lambda (var terms) (tag (make-poly var terms))))
+  'done)
