@@ -943,4 +943,29 @@
   'done)
 
 
+;;
+;; exercise 2.94
+;;
 
+(define (gcd a b)
+  (if (= b 0)
+    a
+    (gcd b (remainder a b))))
+
+(define (gcd-terms a b)
+  (if (empty-termlist? b)
+    a
+    (gcd-terms b (remainder-terms a b))))
+
+(define (reminder-terms a b)
+  (cdr (div-terms a b)))
+
+(define (gcd-poly a b)
+  (if (not (same-variable? (variable a) (variable b)))
+    (error "not the same variable in gcd-poly")
+    (let* ((t1 (term-list a))
+           (t2 (term-list b)))
+      (make-polynomial (variable a) (gcd-terms t1 t2)))))
+
+(put 'greatest-common-divisor '(polynomial polynomial) gcd-poly)
+(put 'greatest-common-divisor '(scheme-number scheme-number) gcd)
