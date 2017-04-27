@@ -1074,3 +1074,8 @@
            (attach-tag 'polynomial (car  answer))
            (attach-tag 'polynomial (cadr answer))))))
 
+;;
+;; was a long chapter!
+;; my solutions are most certainly buggy and not complete, but I aimed
+;; at a quick-and-dirty solutions. They are not tested either.
+;;
