@@ -1003,3 +1003,19 @@
   (if (empty-termlist? b)
     a
     (gcd-terms b (pseudoremainder-terms a b))))
+
+
+;;
+;; b)
+;;
+
+(define (gcd-terms a b)
+  (if (empty-termlist? b)
+    a
+    (let* ((pre-answer (gcd-terms b (pseudoremainder-terms a b)))
+           (coeffs (map coeff pre-answer))
+           (the-gcd (gcd coeffs)))
+      (map (lambda (t)
+             (make-term (order t)
+                        (/ (coeff t) the-gcd)))
+           pre-answer))))
