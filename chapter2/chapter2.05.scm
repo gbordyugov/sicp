@@ -977,3 +977,29 @@
 ;;
 ;; skipped
 ;;
+
+
+;;
+;; exercise 2.96
+;;
+
+;;
+;; a)
+;;
+
+(define (pseudoreminder-terms p q)
+  (let* ((ftp      (first-term p))
+         (cp       (coeff ftp))
+         (op       (order ftp))
+         (ftq      (first-term q))
+         (cq       (coeff ftq))
+         (oq       (order ftq))
+         (factor   (expt cq (+ 1 (- (cp cq)))))
+         (scaled-p (mul-term-by-all-terms (make-term 0 factor) p)))
+    (cdr (div-terms scaled-p q))))
+
+
+(define (gcd-terms a b)
+  (if (empty-termlist? b)
+    a
+    (gcd-terms b (pseudoremainder-terms a b))))
