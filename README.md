@@ -9,3 +9,4 @@ Open/skipped exercises
  - d) of 2.49 (the `wave` painter)
  - 2.52
  - 2.58 (b) (a beautiful one, must do it later!)
+ - 2.92

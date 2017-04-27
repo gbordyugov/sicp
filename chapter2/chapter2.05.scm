@@ -884,5 +884,14 @@
         (make-polynomial var r)))))
 
 
+;;
+;; exercise 2.92
+;;
+
+;;
+;; skipped
+;;
+
+
 
 
