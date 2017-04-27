@@ -1049,7 +1049,28 @@
 (define (reduce-poly a b)
   (if (not (same-variable? (variable a) (variable b)))
     (error "not the same variable in gcd-poly")
-    (let* ((t1 (term-list a))
-           (t2 (term-list b)))
-      (make-polynomial (variable a) (reduce-terms t1 t2)))))
+    (let* ((t1  (term-list a))
+           (t2  (term-list b))
+           (ans (reduce-terms t1 t2)))
+      (list 
+        (make-polynomial (variable a) (car  ans))
+        (make-polynomial (variable a) (cadr ans))))))
+
+
+;;
+;; b)
+;;
+
+(define (reduce-integers n d)
+  (let ((g (gcd n d)))
+    (list (/ n g) (/ d g))))
+
+(put 'reduce '(scheme-number scheme-nuber) reduce-integers)
+
+(put 'reduce '(polynomial polynomial)
+     (lambda (n d)
+       (let ((answer (reduce-poly n d)))
+         (list
+           (attach-tag 'polynomial (car  answer))
+           (attach-tag 'polynomial (cadr answer))))))
 
