@@ -969,3 +969,11 @@
 
 (put 'greatest-common-divisor '(polynomial polynomial) gcd-poly)
 (put 'greatest-common-divisor '(scheme-number scheme-number) gcd)
+
+;;
+;; exercise 2.95
+;;
+
+;;
+;; skipped
+;;
