@@ -1014,8 +1014,42 @@
     a
     (let* ((pre-answer (gcd-terms b (pseudoremainder-terms a b)))
            (coeffs (map coeff pre-answer))
-           (the-gcd (gcd coeffs)))
+           (the-gcd (apply gcd coeffs)))
       (map (lambda (t)
              (make-term (order t)
                         (/ (coeff t) the-gcd)))
            pre-answer))))
+
+
+;;
+;; exercise 2.97
+;;
+
+;;
+;; a)
+;;
+(define (reduce-terms n d)
+  (define (factor-out-gcd terms)
+    (let ((the-gcd (apply gcd (map coeff terms))))
+      (map (lambda (t)
+             (make-term (order t)
+                        (/ coeff t) the-gcd))
+           terms)))
+  (let ((gcd    (gcd-terms n d))
+        (factor (expt (coeff (first-term gcd))
+                      (+ 1 ( - (max (order (first-term n))
+                                    (order (first-term d)))
+                               (order (first-term gcd))))))
+        (t (make-term 0 factor))
+        (n1 (mul-term-by-all-terms t n))
+        (d1 (mul-term-by-all-terms t d)))
+    (list (factor-out-gcd n1)
+          (factor-out-gcd d1))))
+
+(define (reduce-poly a b)
+  (if (not (same-variable? (variable a) (variable b)))
+    (error "not the same variable in gcd-poly")
+    (let* ((t1 (term-list a))
+           (t2 (term-list b)))
+      (make-polynomial (variable a) (reduce-terms t1 t2)))))
+
