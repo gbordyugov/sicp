@@ -77,3 +77,68 @@
 ((acc 'withdraw) 'pass 10)
 
 ((acc 'withdraw) 'no-pass 10)
+
+;;
+;; exercise 3.4
+;;
+
+(define (make-account password balance)
+  (let ((no-of-wrong-attempts 0))
+    (begin
+      ;;
+      ;;
+      ;;
+      (define (call-the-cops msg)
+        (display msg)
+        (newline))
+      ;;
+      ;;
+      ;;
+      (define (withdraw pass amount)
+        (if (not (eq? pass password))
+          (begin
+            (set! no-of-wrong-attempts (+ no-of-wrong-attempts 1))
+            (if (> no-of-wrong-attempts 6)
+              (call-the-cops "ALARM!"))
+            "wrong password in withdraw")
+          (if (>= balance amount)
+            (begin
+              (set! no-of-wrong-attempts 0)
+              (set! balance (- balance amount))
+              balance)
+            "Insufficient funds")))
+      ;;
+      ;;
+      ;;
+      (define (deposit pass amount)
+        (if (not (eq? pass password))
+          (begin
+            (set! no-of-wrong-attempts (+ no-of-wrong-attempts 1))
+            (if (> no-of-wrong-attempts 6)
+              (call-the-cops "ALARM!"))
+            "wrong password in withdraw")
+          (begin
+            (set! no-of-wrong-attempts 0)
+            (set! balance (+ balance amount))
+            balance)))
+      ;;
+      ;;
+      ;;
+      (define (dispatch m)
+        (cond ((eq? m 'withdraw) withdraw)
+              ((eq? m 'deposit)  deposit)
+              (else (error "Unknown request: MAKE-ACCOUNT" m))))
+      ;;
+      ;;
+      ;;
+      dispatch)))
+
+(define acc (make-account 'pass 10))
+
+((acc 'deposit) 'pass 10)
+
+((acc 'deposit) 'no-pass 10)
+
+((acc 'withdraw) 'pass 10)
+
+((acc 'withdraw) 'no-pass 10)
