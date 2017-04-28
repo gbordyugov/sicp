@@ -41,3 +41,39 @@
 (s 9)
 (s 16)
 (s 'how-many-calls?)
+
+
+;;
+;; exercise 3.3
+;;
+
+(define (make-account password balance)
+  (define (withdraw pass amount)
+    (if (not (eq? pass password))
+      "wrong password in withdraw"
+      (if (>= balance amount)
+        (begin
+          (set! balance (- balance amount))
+          balance)
+        "Insufficient funds")))
+  (define (deposit pass amount)
+    (if (not (eq? pass password))
+      "wrong password in withdraw"
+      (begin
+        (set! balance (+ balance amount))
+        balance)))
+  (define (dispatch m)
+    (cond ((eq? m 'withdraw) withdraw)
+          ((eq? m 'deposit)  deposit)
+          (else (error "Unknown request: MAKE-ACCOUNT" m))))
+  dispatch)
+
+(define acc (make-account 'pass 10))
+
+((acc 'deposit) 'pass 10)
+
+((acc 'deposit) 'no-pass 10)
+
+((acc 'withdraw) 'pass 10)
+
+((acc 'withdraw) 'no-pass 10)
