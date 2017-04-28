@@ -197,3 +197,43 @@
                       trials-passed
                       x2))))))
   (iter trials 0 initial-x))
+
+;;
+;; exercise 3.5
+;;
+
+
+(define (estimate-integral P x1 x2 y1 y2 no-of-trials)
+  ;;
+  ;;
+  ;;
+  (define (random-in-range low high)
+    (let ((range (- high low)))
+      (+ low (random range))))
+  ;;
+  ;;
+  ;;
+  (define (experiment)
+    (P (random-in-range x1 x2) (random-in-range y1 y2)))
+  ;;
+  ;;
+  ;;
+  (define (monte-carlo trials experiment)
+    (define (iter trials-remaining trials-passed)
+      (cond ((= trials-remaining 0)
+             (/ trials-passed trials))
+            ((experiment)
+             (iter (- trials-remaining 1)
+                   (+ trials-passed    1)))
+            (else (iter (- trials-remaining 1)
+                        trials-passed))))
+    (iter trials 0))
+  (monte-carlo no-of-trials experiment))
+
+(estimate-integral (lambda (x y) (< x y)) 0.0 1.0 0.0 1.0 100000)
+
+(* 4.0 (estimate-integral (lambda (x y)
+                            (< (+ (* (- x 1) (- x 1))
+                                  (* (- y 1) (- y 1)))
+                               1.0))
+                          0.0 2.0 0.0 2.0 1000000))
