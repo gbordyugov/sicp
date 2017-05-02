@@ -310,3 +310,18 @@
 ((joint-acc 'withdraw) 'wrong-pass 30)
 
 ((joint-acc 'deposit) 'new-pass 30)
+
+;;
+;; exercise 3.8
+;;
+
+(define (f x)
+  (let ((state 'undefined))
+    (begin
+      (define (try-to-update x)
+        (if (eq? state 'undefined)
+          (begin
+            (set! state x)
+            state)
+          state)))
+      (try-to-update x)))
