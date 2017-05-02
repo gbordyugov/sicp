@@ -58,7 +58,7 @@
         "Insufficient funds")))
   (define (deposit pass amount)
     (if (not (eq? pass password))
-      "wrong password in withdraw"
+      "wrong password in deposit"
       (begin
         (set! balance (+ balance amount))
         balance)))
@@ -253,3 +253,60 @@
                          (set! x (rand-update x))
                          x))
                        (else (error "unknown message in RAND" message))))))
+
+
+;;
+;; exercise 3.3
+;;
+
+;;
+;; old function
+;;
+
+(define (make-account password balance)
+  (define (withdraw pass amount)
+    (if (not (eq? pass password))
+      "wrong password in withdraw"
+      (if (>= balance amount)
+        (begin
+          (set! balance (- balance amount))
+          balance)
+        "Insufficient funds")))
+  (define (deposit pass amount)
+    (if (not (eq? pass password))
+      "wrong password in withdraw"
+      (begin
+        (set! balance (+ balance amount))
+        balance)))
+  (define (dispatch m)
+    (cond ((eq? m 'withdraw) withdraw)
+          ((eq? m 'deposit)  deposit)
+          (else (error "Unknown request: MAKE-ACCOUNT" m))))
+  dispatch)
+
+(define (make-joint old-account old-password new-password)
+  (define (withdraw pass amount)
+    (if (not (eq? pass new-password))
+      "wrong password in joint-withdraw"
+      ((old-account 'withdraw) old-password amount)))
+  (define (deposit pass amount)
+    (if (not (eq? pass new-password))
+      "wrong password in joint-deposit"
+      ((old-account 'deposit) old-password amount)))
+  (define (dispatch m)
+    (cond ((eq? m 'withdraw) withdraw)
+          ((eq? m 'deposit)  deposit)
+          (else (error "Unknown request: MAKE-ACCOUNT" m))))
+  dispatch)
+
+(define acc (make-account 'pass 10))
+
+(define joint-acc (make-joint acc 'pass 'new-pass))
+
+((acc 'deposit) 'pass 30)
+
+((joint-acc 'withdraw)   'new-pass 30)
+
+((joint-acc 'withdraw) 'wrong-pass 30)
+
+((joint-acc 'deposit) 'new-pass 30)
