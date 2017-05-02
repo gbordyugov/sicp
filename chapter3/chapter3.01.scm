@@ -237,3 +237,19 @@
                                   (* (- y 1) (- y 1)))
                                1.0))
                           0.0 2.0 0.0 2.0 1000000))
+
+;;
+;; exercise 3.6
+;;
+
+(define rand (let ((x random-init))
+               (lambda (message)
+                 (define (reset new-x)
+                   (set! x new-x)
+                   x)
+                 (cond ((eq? message 'reset)  reset)
+                       ((eq? message 'generate)
+                        (begin
+                         (set! x (rand-update x))
+                         x))
+                       (else (error "unknown message in RAND" message))))))
