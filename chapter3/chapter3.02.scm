@@ -29,3 +29,13 @@
 ;; this is not very much different, except for an additional binding
 ;; of fact-iter
 ;;
+
+
+;;
+;; exercise 3.10
+;;
+
+;;
+;; the difference is the existence of an intermediate frame with a
+;; value of initial-amount
+;;
