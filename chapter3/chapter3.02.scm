@@ -39,3 +39,14 @@
 ;; the difference is the existence of an intermediate frame with a
 ;; value of initial-amount
 ;;
+
+
+;;
+;; exercise 3.11
+;;
+
+;;
+;; acc and acc2 are keep in the environments that have been created at
+;; the moment of call of make-account
+;; the code is probably shared
+;;
