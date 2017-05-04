@@ -24,3 +24,11 @@
 ;;
 ;; reverses list in-place
 ;;
+
+;;
+;; exercise 3.15
+;;
+
+;;
+;; drawing in my notebook
+;;
