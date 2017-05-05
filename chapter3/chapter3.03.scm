@@ -200,3 +200,44 @@
 ;;
 ;; drawings in my notebook
 ;;
+
+
+;;
+;; 3.3.2 Representing Queues
+;;
+
+(define (front-ptr q) (car q))
+(define (rear-ptr  q) (cdr q))
+(define (set-front-ptr! q iterm)
+  (set-car! q item))
+(define (set-rear-ptr! q iterm)
+  (set-cdr! q item))
+
+(define (empty-queue? q)
+  (null? (front-ptr q)))
+
+(define (make-queue (cons '() '())))
+
+(define (front-queue q)
+  (if (empty-queue? q)
+    (error "empty queue")
+    (car (front-ptr q))))
+
+(define (insert-queue! q item)
+  (let ((new-pair (cons item '())))
+    (cond ((empty-queue? q)
+           (set-front-ptr! q new-pair)
+           (set-rear-ptr!  q new-pair)
+           queue)
+          (else
+            (set-cdr! (rear-ptr q) new-pair)
+            (set-rear-ptr! q new-pair)
+            q))))
+
+(define (delete-queue! q)
+  (cond ((empty-queue? q)
+         (error "empty queue"))
+        (else (set-front-ptr! q (cdr (front-ptr q)))
+              q)))
+
+
