@@ -158,3 +158,36 @@
 (set-cdr! (last-pair y) y)
 
 (cycle? y)
+
+
+;;
+;; exercise 3.19
+;;
+
+;;
+;; iterate with two pointers through the list, shifting the first one
+;; by one and the second one by two. In a cycle list, they will
+;; coincide at some point
+;;
+(define (cycle? x)
+  (define (iter x1 x2)
+    (cond ((or (not (pair? x1))
+               (not (pair? x2))) #f)
+          ((not (pair? (cdr x2))) #f)
+          ((eq? x1 x2) #t)
+          (else (iter (cdr x1) (cdr (cdr x2))))))
+  (if (not (pair? x))
+    #f
+    (iter x (cdr x))))
+
+(cycle? '(a b c))
+
+(define x '(a b))
+(set-cdr! (last-pair x) x)
+
+(cycle? x)
+
+(define y '(a b c))
+(set-cdr! (last-pair y) y)
+
+(cycle? y)
