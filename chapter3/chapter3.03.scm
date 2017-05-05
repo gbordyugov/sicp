@@ -120,3 +120,36 @@
 (count-pairs-new y)
 
 (count-pairs-new z)
+
+
+;;
+;; exercise 3.18
+;;
+
+(define (cycle? x)
+  ;;
+  ;; a simple (and inefficient) set implementation
+  ;;
+  (define empty-set '())
+  (define (adjoin x set)
+    (if (member x set)
+      set
+      (cons x set)))
+  (define in member)
+  ;;
+  ;; main recursion
+  ;;
+  (define (go x seen-so-far)
+    (if (not (pair? x))
+      #f
+      (if (in x seen-so-far)
+        #t
+        (go (cdr x) (adjoin x seen-so-far)))))
+  (go x '()))
+
+(cycle? '(a b c))
+
+(define x '(a b c))
+(set-cdr! (last-pair x) x)
+
+(cycle? x)
