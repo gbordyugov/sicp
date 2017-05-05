@@ -149,7 +149,12 @@
 
 (cycle? '(a b c))
 
-(define x '(a b c))
+(define x '(a b))
 (set-cdr! (last-pair x) x)
 
 (cycle? x)
+
+(define y '(a b c))
+(set-cdr! (last-pair y) y)
+
+(cycle? y)
