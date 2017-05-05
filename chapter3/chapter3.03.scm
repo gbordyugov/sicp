@@ -191,3 +191,12 @@
 (set-cdr! (last-pair y) y)
 
 (cycle? y)
+
+
+;;
+;; exercise 3.20
+;;
+
+;;
+;; drawings in my notebook
+;;
