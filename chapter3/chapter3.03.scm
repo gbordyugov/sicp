@@ -311,3 +311,88 @@
 ((q 'insert-queue) 'e)
 
 ((q 'delete-queue))
+
+
+;;
+;; exercise 3.23
+;;
+
+(define (make-triple item prev next) (cons item (cons prev next)))
+(define (triple-item t) (car      t))
+(define (triple-prev t) (car (cdr t)))
+(define (triple-next t) (cdr (cdr t)))
+;;
+(define (make-deque)
+  (cons '() '()))
+(define (front-ptr-deque d)
+  (car d))
+(define (rear-ptr-deque d)
+  (cdr d))
+(define (set-front-ptr-deque! d item)
+  (set-car! d item))
+(define (set-rear-ptr-deque! d item)
+  (set-cdr! d item))
+(define (empty-deque? d)
+  (null? (front-ptr-deque d)))
+(define (front-deque d)
+  (if (empty-deque? d)
+    (error "empty deque in front-deque" d)
+    (car (front-ptr-deque d))))
+(define (rear-deque d)
+  (if (empty-deque? d)
+    (error "empty deque in rear-deque" d)
+    (car (rear-ptr-deque d))))
+(define (deque-to-list d)
+  (if (empty-deque? d)
+    '()
+    (cons (car (front-ptr-deque d))
+          (deque-to-list (cons (triple-next (front-ptr-deque d))
+                               (rear-ptr-deque d))))))
+(define (front-insert-deque! d item)
+  (if (empty-deque? d)
+    (let ((new-triple (make-triple item '() '())))
+      (set-front-ptr-deque! d new-triple)
+      (set-rear-ptr-deque!  d new-triple)
+      d)
+    (let ((new-triple (make-triple item '() (front-ptr-deque d))))
+      (set-front-ptr-deque! d new-triple)
+      d)))
+(define (rear-insert-deque! d item)
+  (if (empty-deque? d)
+    (let ((new-triple (make-triple item '() '())))
+      (set-front-ptr-deque! d new-triple)
+      (set-rear-ptr-deque!  d new-triple)
+      d)
+    (let ((new-triple (make-triple item (rear-ptr-deque d) '())))
+      (set-cdr! (rear-ptr-deque d) new-triple)
+      (set-rear-ptr-deque! d new-triple)
+      d)))
+
+(define (front-delete-deque! d)
+  (cond ((empty-deque? d)
+         (error "empty deque in front-insert-deque!"))
+        (else (set-front-ptr-deque! d (cdr (front-ptr-deque d)))
+              d)))
+(define (rear-delete-deque! d)
+  (cond ((empty-deque? d)
+         (error "empty deque in rear-insert-deque!"))
+
+
+(define d (make-deque))
+
+(front-insert-deque! d 'a)
+(front-insert-deque! d 'b)
+(front-insert-deque! d 'c)
+(front-insert-deque! d 'd)
+
+(deque-to-list d)
+
+(rear-insert-deque! d 1)
+
+(rear-insert-deque! d 2)
+(rear-insert-deque! d 3)
+
+(rear-insert-deque! d 4)
+
+(front-delete-deque! d)
+(rear-delete-deque!  d)
