@@ -255,3 +255,59 @@
 (define (print-queue q)
   (display (car q))
   (newline))
+
+
+;;
+;; exercise 3.22
+;;
+
+(define (make-queue)
+  (let ((front-ptr '())
+        (rear-ptr '()))
+    (define (set-front-ptr! p)
+      (set! front-ptr p))
+    (define (set-rear-ptr! p)
+      (set! rear-ptr p))
+    (define (empty-queue?)
+      (null? front-ptr))
+    (define (front-queue)
+      (if (empty-queue?)
+        (error "empty queue")
+        (car front-ptr)))
+    (define (insert-queue item)
+      (let ((new-pair (cons item '())))
+        (cond ((empty-queue?)
+               (set-front-ptr! new-pair)
+               (set-rear-ptr!  new-pair)
+               front-ptr)
+              (else
+                (set-cdr! rear-ptr new-pair)
+                (set-rear-ptr! new-pair)
+                front-ptr))))
+    (define (delete-queue)
+      (cond ((empty-queue?)
+             (error "empty queue"))
+            (else (set-front-ptr! (cdr front-ptr))
+                  front-ptr)))
+    (define (dispatch m)
+      (cond ((eq? 'front-ptr      m) front-ptr)
+            ((eq? 'rear-ptr       m) rear-ptr)
+            ((eq? 'set-front-ptr! m) set-front-ptr!)
+            ((eq? 'set-rear-ptr!  m) set-rear-ptr!)
+            ((eq? 'empty-queue?   m) (empty-queue?))
+            ((eq? 'front-queue    m) (front-queue))
+            ((eq? 'insert-queue   m) insert-queue)
+            ((eq? 'delete-queue   m) delete-queue)
+            (else
+              (error "unknown message in make-queue:dispatch" m))))
+    dispatch))
+
+(define q (make-queue))
+
+((q 'insert-queue) 'a)
+((q 'insert-queue) 'b)
+((q 'insert-queue) 'c)
+((q 'insert-queue) 'd)
+((q 'insert-queue) 'e)
+
+((q 'delete-queue))
