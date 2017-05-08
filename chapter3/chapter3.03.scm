@@ -327,39 +327,44 @@
 ;;
 (define (make-deque)
   (cons '() '()))
-(define (front-ptr-deque d)
-  (car d))
-(define (rear-ptr-deque d)
-  (cdr d))
-(define (set-front-ptr-deque! d item)
-  (set-car! d item))
-(define (set-rear-ptr-deque! d item)
-  (set-cdr! d item))
+;;
+(define (front-ptr-deque d) (car d))
+(define ( rear-ptr-deque d) (cdr d))
+;;
+(define (set-front-ptr-deque! d item) (set-car! d item))
+(define ( set-rear-ptr-deque! d item) (set-cdr! d item))
+;;
 (define (empty-deque? d)
-  (null? (front-ptr-deque d)))
+  (or 
+    (null? (front-ptr-deque d))
+    (null? ( rear-ptr-deque d))))
+;;
 (define (front-deque d)
   (if (empty-deque? d)
     (error "empty deque in front-deque" d)
-    (car (front-ptr-deque d))))
+    (triple-item (front-ptr-deque d))))
+;;
 (define (rear-deque d)
   (if (empty-deque? d)
     (error "empty deque in rear-deque" d)
-    (car (rear-ptr-deque d))))
+    (triple-item (rear-ptr-deque d))))
+;;
 (define (deque-to-list d)
   (if (empty-deque? d)
     '()
     (cons (car (front-ptr-deque d))
           (deque-to-list (cons (triple-next (front-ptr-deque d))
                                (rear-ptr-deque d))))))
+;;
 (define (front-insert-deque! d item)
   (if (empty-deque? d)
     (let ((new-triple (make-triple item '() '())))
       (set-front-ptr-deque! d new-triple)
-      (set-rear-ptr-deque!  d new-triple)
-      d)
+      (set-rear-ptr-deque!  d new-triple))
     (let ((new-triple (make-triple item '() (front-ptr-deque d))))
       (set-triple-prev! (front-ptr-deque d) new-triple)
       (set-front-ptr-deque! d new-triple))))
+;;
 (define (rear-insert-deque! d item)
   (if (empty-deque? d)
     (let ((new-triple (make-triple item '() '())))
@@ -368,20 +373,26 @@
     (let ((new-triple (make-triple item (rear-ptr-deque d) '())))
       (set-triple-next! (rear-ptr-deque d) new-triple)
       (set-rear-ptr-deque! d new-triple))))
-
+;;
 (define (front-delete-deque! d)
   (cond ((empty-deque? d)
          (error "empty deque in front-insert-deque!"))
-        (else (set-front-ptr-deque! d (cdr (front-ptr-deque d)))
-              d)))
+        (else (set-front-ptr-deque! d (triple-next (front-ptr-deque d)))
+              (if (not (empty-deque? d))
+                (set-triple-prev! (front-ptr-deque d) '())))))
+;;
 (define (rear-delete-deque! d)
   (cond ((empty-deque? d)
          (error "empty deque in rear-insert-deque!"))
+        (else (set-rear-ptr-deque! d (triple-prev (rear-ptr-deque d)))
+              (if (not (empty-deque? d))
+                (set-triple-next! (rear-ptr-deque d) '())))))
 
 
 (define d (make-deque))
 
 (front-insert-deque! d 'a)
+
 (front-insert-deque! d 'b)
 (front-insert-deque! d 'c)
 (front-insert-deque! d 'd)
@@ -396,4 +407,5 @@
 (deque-to-list d)
 
 (front-delete-deque! d)
+
 (rear-delete-deque!  d)
