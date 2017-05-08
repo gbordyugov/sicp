@@ -241,3 +241,17 @@
               q)))
 
 
+
+;;
+;; exercise 3.21
+;;
+
+;;
+;; queue is a pair, car of which pointing to the beginning of the queue
+;; and cdr pointing to the last element. Thus, when printing that
+;; pair, the queue itself plus its lasat element is printed
+;;
+
+(define (print-queue q)
+  (display (car q))
+  (newline))
