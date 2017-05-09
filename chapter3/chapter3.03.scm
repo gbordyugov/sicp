@@ -572,16 +572,20 @@
         (if (null? keys)
           (cdr table)
           (let ((subtable (assoc (car keys) (cdr table))))
-            (if (not subtable)
-              #f
-              (go (cdr keys) subtable)))))
+            (if subtable
+              (go (cdr keys) subtable)
+              #f))))
       (go list-of-keys local-table))
     ;;
     ;; insert!
     ;;
     (define (insert! list-of-keys value)
       (define (go keys table)
-        (...))
+        (if (null? keys)
+          (set-cdr! table value)
+          (let ((subtable (assoc (car keys) (cdr table))))
+            (if subtable
+              (go (cdr keys) subtable)
       (go list-of-keys local-table)
       'ok)
     ;;
