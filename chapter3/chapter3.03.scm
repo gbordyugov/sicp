@@ -548,3 +548,12 @@
     dispatch))
 
 (define t (make-table))
+
+
+;;
+;; exercise 3.25
+;;
+
+;;
+;; one quick solution would be to use admit list of keys as keys
+;; themselves
