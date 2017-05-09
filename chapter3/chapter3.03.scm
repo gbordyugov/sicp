@@ -501,13 +501,9 @@
 (define t (make-table))
 
 ((t 'insert-proc) 'a 'b 3)
-
 ((t 'insert-proc) 'a 'c 4)
-
 ((t 'lookup-proc) 'a 'b)
-
 ((t 'lookup-proc) 'a 'c)
-
 ((t 'lookup-proc) 'd 'c)
 
 
@@ -557,3 +553,55 @@
 ;;
 ;; one quick solution would be to use admit list of keys as keys
 ;; themselves
+;;
+;; below, I'm implementing a more elaborate solution
+;;
+;;
+
+(define (make-table)
+  (define (assoc key records)
+    (cond ((null? records) false)
+          ((equal? key (caar records)) (car records))
+          (else (assoc key (cdr records)))))
+  (let ((local-table (list '*table*)))
+    ;;
+    ;; lookup
+    ;;
+    (define (lookup list-of-keys)
+      (define (go keys table)
+        (if (null? keys)
+          (cdr table)
+          (let ((subtable (assoc (car keys) (cdr table))))
+            (if (not subtable)
+              #f
+              (go (cdr keys) subtable)))))
+      (go list-of-keys local-table))
+    ;;
+    ;; insert!
+    ;;
+    (define (insert! list-of-keys value)
+      (define (go keys table)
+        (...))
+      (go list-of-keys local-table)
+      'ok)
+    ;;
+    ;; dispatch
+    ;;
+    (define (dispatch m)
+      (cond ((eq? m 'lookup-proc) lookup)
+            ((eq? m 'insert-proc) insert!)
+            ((eq? m 'table) local-table)
+            (else (error "Unknown operation: TABLE" m))))
+    dispatch))
+
+(define t (make-table))
+
+((t 'insert-proc) '(a b) 3)
+
+((t 'insert-proc) '(a c) 4)
+
+((t 'lookup-proc) '(a b))
+
+((t 'lookup-proc) '(a c))
+
+((t 'lookup-proc) '(d c))
