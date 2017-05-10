@@ -559,11 +559,12 @@
 ;;
 
 (define (make-table)
+  (define (empty-table key) (list key))
   (define (assoc key records)
     (cond ((null? records) false)
           ((equal? key (caar records)) (car records))
           (else (assoc key (cdr records)))))
-  (let ((local-table (list '*table*)))
+  (let ((local-table (empty-table '*table*)))
     ;;
     ;; lookup
     ;;
@@ -586,6 +587,9 @@
           (let ((subtable (assoc (car keys) (cdr table))))
             (if subtable
               (go (cdr keys) subtable)
+              (let ((new-subtable (empty-table (car keys))))
+                (go (cdr keys) new-subtable)
+                (set-cdr! table (cons new-subtable (cdr table))))))))
       (go list-of-keys local-table)
       'ok)
     ;;
@@ -594,11 +598,17 @@
     (define (dispatch m)
       (cond ((eq? m 'lookup-proc) lookup)
             ((eq? m 'insert-proc) insert!)
-            ((eq? m 'table) local-table)
+            ((eq? m 'table) local-table)     ;; show the internal table
             (else (error "Unknown operation: TABLE" m))))
     dispatch))
 
 (define t (make-table))
+
+(t 'table)
+
+((t 'insert-proc) '(b b d) 6)
+
+((t 'insert-proc) '(a b) 3)
 
 ((t 'insert-proc) '(a b) 3)
 
@@ -609,3 +619,5 @@
 ((t 'lookup-proc) '(a c))
 
 ((t 'lookup-proc) '(d c))
+
+((t 'lookup-proc) '(b b d))
