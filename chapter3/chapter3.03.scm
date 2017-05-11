@@ -643,22 +643,58 @@
   ;;
   ;; setters
   ;;
+  (define (tree-set-value! t item) (set-car! (cdr   t) item))
   (define (tree-set-left!  t item) (set-car! (cddr  t) item))
   (define (tree-set-right! t item) (set-car! (cdddr t) item))
   ;;
   ;;
-  (define (empty-tree key) '())
-  (let ((local-tree (empty-tree)))
+  (let ((local-table (cons '*local-tree* '())))
+    ;;
+    ;; lookup
+    ;;
     (define (lookup key)
       (define (go key tree)
-        (cond ((empty-tree? tree))
-        (...))
-      (go key local-tree))
-    (define (insert! key)
-      (...))
+        (let ((tkey (tree-key tree)))
+          (cond ((empty-tree? tree) #f)
+                ((= key tkey) (tree-value tree))
+                ((<   key tkey) (go key (tree-left  tree)))
+                (else           (go key (tree-right tree))))))
+      (go key (cdr local-table)))
+    ;;
+    ;; insert!
+    ;;
+    (define (insert! key value)
+      (define (go key value tree)
+        (let ((tkey (tree-key tree)))
+          (cond ((= key tkey) (tree-set-value! tree value))
+                ((< key tkey)
+                 (if (null? (tree-left tree))
+                   (tree-set-left! tree (make-leaf key value))
+                   (go key value (tree-left tree))))
+                (else ;; (> key tkey)
+                 (if (null? (tree-right tree))
+                   (tree-set-right! tree (make-leaf key value))
+                   (go key value (tree-right tree)))))))
+      (if (empty-tree? (cdr local-table))
+        (set-cdr! local-table (make-leaf key value))
+        (go key value (cdr local-table))))
+    ;;
+    ;; dispatch
+    ;;
     (define (dispatch m)
       (cond ((eq? m 'lookup-proc) lookup)
             ((eq? m 'insert-proc) insert!)
             ((eq? m 'table) local-table)     ;; show the internal table
             (else (error "Unknown operation: TABLE" m))))
     dispatch))
+
+(define t (make-table))
+(t 'table)
+((t 'insert-proc) 5 'a)
+((t 'insert-proc) 6 'b)
+((t 'insert-proc) 4 'c)
+((t 'insert-proc) -3 'd)
+((t 'insert-proc) 15 'f)
+(t 'table)
+
+((t 'lookup-proc) 15)
