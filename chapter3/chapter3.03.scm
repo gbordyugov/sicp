@@ -621,3 +621,44 @@
 ((t 'lookup-proc) '(d c))
 
 ((t 'lookup-proc) '(b b d))
+
+
+;;
+;; exercise 3.26
+;;
+
+(define (make-table)
+  ;;
+  ;; tree data structure
+  ;;
+  (define (make-tree key value left right)
+    (list key value left right))
+  (define (make-leaf key value)
+    (make-tree key value '() '()))
+  (define (empty-tree? t) (null?  t))
+  (define (tree-key    t) (car    t))
+  (define (tree-value  t) (cadr   t))
+  (define (tree-left   t) (caddr  t))
+  (define (tree-right  t) (cadddr t))
+  ;;
+  ;; setters
+  ;;
+  (define (tree-set-left!  t item) (set-car! (cddr  t) item))
+  (define (tree-set-right! t item) (set-car! (cdddr t) item))
+  ;;
+  ;;
+  (define (empty-tree key) '())
+  (let ((local-tree (empty-tree)))
+    (define (lookup key)
+      (define (go key tree)
+        (cond ((empty-tree? tree))
+        (...))
+      (go key local-tree))
+    (define (insert! key)
+      (...))
+    (define (dispatch m)
+      (cond ((eq? m 'lookup-proc) lookup)
+            ((eq? m 'insert-proc) insert!)
+            ((eq? m 'table) local-table)     ;; show the internal table
+            (else (error "Unknown operation: TABLE" m))))
+    dispatch))
