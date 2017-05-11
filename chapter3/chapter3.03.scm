@@ -698,3 +698,12 @@
 (t 'table)
 
 ((t 'lookup-proc) 15)
+
+
+;;
+;; exercise 3.27
+;;
+
+;;
+;; I've heard of memoization before
+;;
