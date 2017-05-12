@@ -770,3 +770,22 @@
 
 (define (logical-and a b)
   (if (= 0 (* a b)) 0 1))
+
+
+;;
+;; exercise 3.28
+;;
+
+(define (or-gate a1 a2 output)
+  (define (or-action-procedure)
+    (let ((new-value (logical-or (get-signal a1)
+                                 (get-signal a2))))
+      (after-delay or-gate-delay
+                   (lambda () (set-signal! output new-value)))))
+  (add-action! a1 or-action-procedure) ;; whichever of both changes,
+  (add-action! a2 or-action-procedure) ;; we have to run the proc
+  'ok)
+
+(define (logical-or a b)
+  (if (= 0 (+ a b)) 0 1))
+
