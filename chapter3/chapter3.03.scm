@@ -768,4 +768,5 @@
   (add-action! a2 and-action-procedure) ;; we have to run the proc
   'ok)
 
-
+(define (logical-and a b)
+  (if (= 0 (* a b)) 0 1))
