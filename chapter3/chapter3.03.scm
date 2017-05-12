@@ -789,3 +789,21 @@
 (define (logical-or a b)
   (if (= 0 (+ a b)) 0 1))
 
+
+;;
+;; exercise 3.29
+;;
+
+(define (or-gate input1 input2 output)
+  (let ((j1 (make-wire))
+        (j2 (make-wire))
+        (o  (make-wire)))
+    (inverter input1 j1)
+    (inverter input2 j2)
+    (and-gate j1 j2 o)
+    (inverter o output)))
+
+;;
+;; the delay would be equal to the sum of and-gate's and two times the
+;; inverter's delays
+;;
