@@ -807,3 +807,21 @@
 ;; the delay would be equal to the sum of and-gate's and two times the
 ;; inverter's delays
 ;;
+
+;;
+;; exercise 3.30
+;;
+
+;; (define (full-adder a b c-in sum c-out)
+
+(define (ripple-carry-adder a b s c-out)
+  """ assumes that a, b, and s are all of the sam length """
+  (define (go a b s c-in c-out)
+    (if (null? a)
+
+      (let ((c-out (make-wire)))
+        (full-adder (car a) (car b) c-in (car s) c-out)
+        (go (cdr a) (cdr b) (cdr s) c-out))))
+  (let ((c-in (make-wire)))
+    (set-signal! c-in 0)
+    (go a b s c-in c)))
