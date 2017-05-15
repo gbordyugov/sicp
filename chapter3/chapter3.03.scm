@@ -835,4 +835,4 @@
     (set-signal! c-out 0)
     (let ((c-in (make-wire)))
       (ripple-carry-adder (cdr a) (cdr b)      (cdr s) c-in)
-      (full-adder         (car a) (car b) c-in (car s) c-out)))
+      (full-adder         (car a) (car b) c-in (car s) c-out))))
