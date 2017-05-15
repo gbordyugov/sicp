@@ -808,20 +808,31 @@
 ;; inverter's delays
 ;;
 
+
 ;;
 ;; exercise 3.30
 ;;
 
 ;; (define (full-adder a b c-in sum c-out)
 
-(define (ripple-carry-adder a b s c-out)
-  """ assumes that a, b, and s are all of the sam length """
-  (define (go a b s c-in c-out)
-    (if (null? a)
+;;
+;; suppose there are no a, b, and s wires, just s, then the solution
+;; for n full-adders would be
 
-      (let ((c-out (make-wire)))
-        (full-adder (car a) (car b) c-in (car s) c-out)
-        (go (cdr a) (cdr b) (cdr s) c-out))))
-  (let ((c-in (make-wire)))
-    (set-signal! c-in 0)
-    (go a b s c-in c)))
+(define (ripple-carry-adder n c-out)
+  (if (= n 0)
+    (set-signal! c-out 0)
+    (let ((c-in (make-wire)))
+      (go (- n 1) c-in)
+      (ripple-carry-adder c-in c-out))))
+    
+;;
+;; the actual solution
+;;
+(define (ripple-carry-adder a b s c-out)
+  """ assumes that a, b, and s are all of the same length """
+  (if (null? a)
+    (set-signal! c-out 0)
+    (let ((c-in (make-wire)))
+      (ripple-carry-adder (cdr a) (cdr b)      (cdr s) c-in)
+      (full-adder         (car a) (car b) c-in (car s) c-out)))
