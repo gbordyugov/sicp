@@ -937,4 +937,6 @@
 ;; (probe 'sum   sum)
 ;; (probe 'carry carry)
 
-
+;;
+;; exercise 3.31
+;;
