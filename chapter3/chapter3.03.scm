@@ -875,3 +875,39 @@
   ((wire 'set-signal!) new-value))
 (define (add-action! wire action-procedure)
   ((wire 'add-action!) action-procedure))
+
+;;
+;; The agenda
+;;
+
+;;
+;; (make-agenda) returns a new empty agenda
+;;
+;; (empty-agenda? <agenda>) is true iff the specified agenda is empty
+;;
+;; (first-agenda-item <agenda>) returns the first item on the agenda
+;;
+;; (remove-first-agenda-item! <agenda>) modifies the agenda by
+;; removing the first item
+;;
+;; (add-to-agenda! <time> <action> <agenda>) motifies the agenda by
+;; adding the given action procedure to be run an the specified time
+;;
+;; (current-time <agenda>) returns the current simulation time
+;;
+;; "the-agenda" is the name of our agenda variable
+;;
+
+(define (after-delay delay action)
+  (add-to-agenda! (+ delay (current-time the-agenda))
+                  action
+                  the-agenda))
+
+(define (propagate)
+  (if (empty-agenda? the-agenda)
+    'done
+    (let ((first-item (first-agenda-item the-agenda)))
+      (first-item)
+      (remove-first-agenda-item! the-agenda)
+      (propagage))))
+
