@@ -1009,3 +1009,13 @@
     (let ((first-seg (first-segment agenda)))
       (set-current-time! agenda (segment-time first-seg))
       (front-queue (segment-queue first-seg)))))
+
+
+
+;;
+;; exercise 3.32
+;;
+
+;;
+;; that's just the preservation of the direction of the time arrow
+;;
