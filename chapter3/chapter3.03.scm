@@ -498,13 +498,13 @@
             (else (error "Unknown operation: TABLE" m))))
     dispatch))
 
-(define t (make-table))
-
-((t 'insert-proc) 'a 'b 3)
-((t 'insert-proc) 'a 'c 4)
-((t 'lookup-proc) 'a 'b)
-((t 'lookup-proc) 'a 'c)
-((t 'lookup-proc) 'd 'c)
+;; (define t (make-table))
+;; 
+;; ((t 'insert-proc) 'a 'b 3)
+;; ((t 'insert-proc) 'a 'c 4)
+;; ((t 'lookup-proc) 'a 'b)
+;; ((t 'lookup-proc) 'a 'c)
+;; ((t 'lookup-proc) 'd 'c)
 
 
 ;;
@@ -543,7 +543,7 @@
             (else (error "Unknown operation: TABLE" m))))
     dispatch))
 
-(define t (make-table))
+;; (define t (make-table))
 
 
 ;;
@@ -602,25 +602,16 @@
             (else (error "Unknown operation: TABLE" m))))
     dispatch))
 
-(define t (make-table))
-
-(t 'table)
-
-((t 'insert-proc) '(b b d) 6)
-
-((t 'insert-proc) '(a b) 3)
-
-((t 'insert-proc) '(a b) 3)
-
-((t 'insert-proc) '(a c) 4)
-
-((t 'lookup-proc) '(a b))
-
-((t 'lookup-proc) '(a c))
-
-((t 'lookup-proc) '(d c))
-
-((t 'lookup-proc) '(b b d))
+;; (define t (make-table))
+;; (t 'table)
+;; ((t 'insert-proc) '(b b d) 6)
+;; ((t 'insert-proc) '(a b) 3)
+;; ((t 'insert-proc) '(a b) 3)
+;; ((t 'insert-proc) '(a c) 4)
+;; ((t 'lookup-proc) '(a b))
+;; ((t 'lookup-proc) '(a c))
+;; ((t 'lookup-proc) '(d c))
+;; ((t 'lookup-proc) '(b b d))
 
 
 ;;
@@ -688,16 +679,16 @@
             (else (error "Unknown operation: TABLE" m))))
     dispatch))
 
-(define t (make-table))
-(t 'table)
-((t 'insert-proc) 5 'a)
-((t 'insert-proc) 6 'b)
-((t 'insert-proc) 4 'c)
-((t 'insert-proc) -3 'd)
-((t 'insert-proc) 15 'f)
-(t 'table)
-
-((t 'lookup-proc) 15)
+;; (define t (make-table))
+;; (t 'table)
+;; ((t 'insert-proc) 5 'a)
+;; ((t 'insert-proc) 6 'b)
+;; ((t 'insert-proc) 4 'c)
+;; ((t 'insert-proc) -3 'd)
+;; ((t 'insert-proc) 15 'f)
+;; (t 'table)
+;; 
+;; ((t 'lookup-proc) 15)
 
 
 ;;
@@ -745,7 +736,7 @@
 ;; (after-delay <tau> <procedure of no arguments>)
 ;; executes the procedure after delay tau
 
-(let (inverter input output)
+(define (inverter input output)
   (define (invert-output)
     (let ((new-value (logical-not (get-signal input))))
       (after-delay inverter-delay
@@ -924,7 +915,7 @@
                  (display "  New-value = ")
                  (display (get-signal wire)))))
 
-(define the-agenda (make-agenda))
+;; (define the-agenda (make-agenda))
 (define inverter-delay 2)
 (define and-gate-delay 3)
 (define  or-gate-delay 5)
@@ -1018,4 +1009,8 @@
 
 ;;
 ;; that's just the preservation of the direction of the time arrow
+;;
+
+;;
+;; 3.3.5 Propagation of Constraints
 ;;
