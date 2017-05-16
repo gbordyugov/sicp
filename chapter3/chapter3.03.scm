@@ -940,3 +940,8 @@
 ;;
 ;; exercise 3.31
 ;;
+
+;;
+;; the call to function is needed to propagate the initial state on
+;; the input wires
+;;
