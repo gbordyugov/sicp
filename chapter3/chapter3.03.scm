@@ -1050,9 +1050,11 @@
            (set-value! a1 (- (get-value sum) (get-value a2))
                        me))))
   (define (process-forget-value)
+    ;; first try to drop everything which was set by me
     (forget-value! sum me)
     (forget-value! a1  me)
     (forget-value! a2  me)
+    ;; in case there are values left, propagate them
     (process-new-value))
   (define (me request)
     (cond ((eq? request 'I-have-a-value) (process-new-value))
@@ -1063,5 +1065,7 @@
   (connect sum me)
   me)
 
-
-
+(define (inform-about-value constraint)
+  (constraint 'I-have-a-value))
+(define (inform-about-no-value constraint)
+  (constraint 'I-lost-my-value))
