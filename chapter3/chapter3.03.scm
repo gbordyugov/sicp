@@ -1032,3 +1032,9 @@
 ;; (connect <connector> <new-constraint>) tells the connector to
 ;; participate in the new constraint
 ;;
+;; (inform-about-value) tells the given constraint that the connector
+;; has a value
+;;
+;; (inform-about-no-value) tells the constraint that the connector has
+;; lost its value
+;;
