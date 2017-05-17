@@ -1014,3 +1014,21 @@
 ;;
 ;; 3.3.5 Propagation of Constraints
 ;;
+
+;;
+;; basic operations:
+;;
+;; (has-value? <connector>) tell whether the connector has a value
+;;
+;; (get-value <connector>) returns the connector's current value
+;;
+;; (set-value! <connector> <new-value> <informant>) indicates that the
+;; informant is requesting the connector to set its value to the new
+;; value
+;;
+;; (forget-value! <connector> <retractor>) tells the connector that
+;; the retractor is requesting it to forget its value
+;;
+;; (connect <connector> <new-constraint>) tells the connector to
+;; participate in the new constraint
+;;
