@@ -1184,3 +1184,12 @@
     (multiplier u v c)
     (constant 0.5 v)))
 
+;;
+;; exercise 3.34
+;;
+
+;;
+;; it's not invertible, i.e. setting b would cause problems in
+;; computing a
+;;
+
