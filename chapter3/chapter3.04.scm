@@ -29,3 +29,12 @@
 ;; both deposit and withdraw read balance only once, hence I see no
 ;; need to protect the balance query
 ;;
+
+;;
+;; exercise 3.42
+;;
+;;
+;; in the original version, we create the protected procedures on the
+;; fly in each call of dispatch. Here, we pre-cache them. Seems OK to
+;; me
+;;
