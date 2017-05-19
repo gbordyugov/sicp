@@ -1217,3 +1217,9 @@
   (connect b me)
   me)
 
+
+;;
+;; exercise 3.36
+;;
+;; diagramme in my head :)
+;;
