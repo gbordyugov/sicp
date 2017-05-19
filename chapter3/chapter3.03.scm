@@ -1242,16 +1242,16 @@
 (define (c- x y)
   (let ((z (make-connector))
         (w (make-connector)))
-    (multiplier x y w)
-    (negator w z)        ;; assumes it's implemented
-    z))
+    (negator y z)        ;; assumes it's implemented
+    (multiplier x z w)
+    w))
 
 (define (c/ x y)
   (let ((z (make-connector))
         (w (make-connector)))
-    (multiplier x y w)
-    (oneover w z)        ;; assumes it's implemented
-    z))
+    (oneover y z)        ;; assumes it's implemented
+    (multiplier x z w)
+    w))
 
 (define (cv value)
   (let ((z (make-connector)))
