@@ -22,3 +22,10 @@
 ;; same result independently of the order the serialized funcs are
 ;; called in.
 ;;
+
+;;
+;; exercise 3.41
+;;
+;; both deposit and withdraw read balance only once, hence I see no
+;; need to protect the balance query
+;;
