@@ -1223,3 +1223,37 @@
 ;;
 ;; diagramme in my head :)
 ;;
+
+
+;;
+;; exercise 3.37
+;;
+
+(define (c+ x y)
+  (let ((z (make-connector)))
+    (adder x y z)
+    z))
+
+(define (c* x y)
+  (let ((z (make-connector)))
+    (multiplier x y z)
+    z))
+
+(define (c- x y)
+  (let ((z (make-connector))
+        (w (make-connector)))
+    (multiplier x y w)
+    (negator w z)        ;; assumes it's implemented
+    z))
+
+(define (c/ x y)
+  (let ((z (make-connector))
+        (w (make-connector)))
+    (multiplier x y w)
+    (oneover w z)        ;; assumes it's implemented
+    z))
+
+(define (cv value)
+  (let ((z (make-connector)))
+    (constant value z)
+    z))
