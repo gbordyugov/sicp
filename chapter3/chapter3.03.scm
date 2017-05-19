@@ -1207,4 +1207,13 @@
       (set-value! b (* a a) me)))
   (define (process-forget-value)
     (forget-value! a me)
+    (forget-value! b me)
+    (process-new-value))
+  (define (me request)
+    (cond ((eq? request 'I-have-a-value)  (process-forget-value))
+          ((eq? request 'I-lost-my-value) (process-forget-value))
+          (else (error "Unknown request: SQUARER" request))))
+  (connect a me)
+  (connect b me)
+  me)
 
