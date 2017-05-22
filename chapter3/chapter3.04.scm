@@ -122,3 +122,40 @@
 ;; problems emerge if test-and-set! is not performed atomically, i.e.
 ;; there is a possibility of change of cell between reading and
 ;; updating it
+
+;;
+;; a)
+;;
+
+(define (make-semaphore n)
+  (let ((m (make-mutex))
+        (how-many-already 0))
+    ;;
+    ;;
+    ;;
+    (define (acquire)
+      (m 'acquire)
+      (if (< how-many-already (- n 1))
+        (begin
+          (set! how-many-already (+ how-many-already 1))
+          (m 'release))
+        (begin
+          (m 'release)
+          (me 'acquire))))
+    ;;
+    ;;
+    ;;
+    (define (release)
+      (m 'acquire)
+      (if (> how-many-already 0)
+        (begin
+          (set! how-many-already (- how-many-already 1))
+          (m 'release))
+        (begin
+          (m 'release)
+          (error "trying to release an empty semaphore"))))
+    (define (me m)
+      (cond ((eq? 'acquire m) acquire)
+            ((eq? 'release m) release)
+            (else (error "unknown request in make-semaphore" m))))
+    me))
