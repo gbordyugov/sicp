@@ -58,3 +58,13 @@
 ;;
 ;; the sum remains preserved since both deposit and withdraw
 ;; operations are atomic (serialized)
+;
+
+
+;;
+;; exercise 3.44
+;;
+;;
+;; seems ok to me. At each point of time, the state is the account
+;; plus the sum to deposit, I don't see how this can be screwed up
+;;
