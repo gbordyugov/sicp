@@ -58,7 +58,7 @@
 ;;
 ;; the sum remains preserved since both deposit and withdraw
 ;; operations are atomic (serialized)
-;
+;;
 
 
 ;;
@@ -67,4 +67,16 @@
 ;;
 ;; seems ok to me. At each point of time, the state is the account
 ;; plus the sum to deposit, I don't see how this can be screwed up
+;;
+
+
+;;
+;; exercise 3.45
+;;
+;;
+;; the problem with serialized-exchange is that it serializes exchange
+;; by serializers of both accounts. Exchange, in its turn, calls
+;; deposit and withdraw methods, which are already serialized by the
+;; corresponding serializers. Function exchange would thus wait until
+;; both mutexes are free, which would lead to a lock
 ;;
