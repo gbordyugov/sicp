@@ -152,8 +152,54 @@
           (set! how-many-already (- how-many-already 1))
           (m 'release))
         (begin
-          (m 'release)
-          (error "trying to release an empty semaphore"))))
+          (error "trying to release an empty semaphore")
+          (m 'release))))
+    ;;
+    ;;
+    ;;
+    (define (me m)
+      (cond ((eq? 'acquire m) acquire)
+            ((eq? 'release m) release)
+            (else (error "unknown request in make-semaphore" m))))
+    me))
+
+
+;;
+;; (b)
+;;
+
+(define (make-semaphore n)
+  (let ((cell (list false))
+        (how-many-already 0))
+    ;;
+    ;;
+    ;;
+    (define (acquire)
+      (if (test-and-set! cell)
+        (me 'acquire) ;; wait a bit more
+        (if (< how-many-already (- n 1)) ;; now we're reading/writing
+          (begin
+            (set! how-many-already (- how-many-already 1))
+            (clear! cell))
+          (begin
+            (clear! cell)
+            (me 'acquire)))))
+    ;;
+    ;;
+    ;;
+    (define (release)
+      (if (test-and-set! cell)
+        (me 'acquire) ;; wait a bit more
+        (if (> how-many-already 0)
+          (begin
+            (set! how-many-already (- how-many-already 1))
+            (clear! cell))
+          (begin
+            (error "trying to release an empty semaphore")
+            (clear! cell)))))
+    ;;
+    ;;
+    ;;
     (define (me m)
       (cond ((eq? 'acquire m) acquire)
             ((eq? 'release m) release)
