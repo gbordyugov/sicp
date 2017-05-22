@@ -114,3 +114,11 @@
     (begin
       (set-car! cell true)
       false)))
+
+;;
+;; exercise 3.46
+;;
+;;
+;; problems emerge if test-and-set! is not performed atomically, i.e.
+;; there is a possibility of change of cell between reading and
+;; updating it
