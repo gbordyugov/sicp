@@ -265,3 +265,13 @@
 ;; partner account is not known before locking the given one, we
 ;; cannot decide in advance, which account to lock first.
 ;;
+
+;;
+;; Concurrency, time, and communication
+;;
+;;
+;; "Any notion of time in concurrency control must be intimately tied
+;; to communication". "A similar connection between time and
+;; communication also arises in the Theory of Relativity, where the
+;; speed of light (the fastest signal that can be used to synchronized
+;; events) is a fundamental constant relating time and space".
