@@ -115,8 +115,17 @@
       (set-car! cell true)
       false)))
 
+
 ;;
 ;; exercise 3.46
+;;
+;; a diagram showing the non-atomicity of test-and-set! follows
+;;
+
+
+
+;;
+;; exercise 3.47
 ;;
 ;;
 ;; problems emerge if test-and-set! is not performed atomically, i.e.
