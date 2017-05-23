@@ -219,26 +219,25 @@
 ;; exercise 3.48
 ;;
 
-;;
-;; old version
-;;
 (define (make-account balance)
-  (define (withdraw amount)
-    (if (>= balance amount)
-      (begin
-        (set! balance (- balance amount))
-        balance)
-      "Insufficient funds"))
-  (define (deposit amount)
-    (set! balance (+ balance amount)))
-  (let ((protected (make-serializer)))
-    (define (dispatch m)
-      (cond ((eq m 'withdraw)   (protected withdraw))
-            ((eq m 'deposit )   (protected deposit))
-            ((eq m 'balance )    balance)
-            ((eq m 'serializer)  serializer)
-            (else (error "Unknown request: MAKE-ACCOUNT" m))))
-    dispatch))
+  (let ((account-id (get-random-account-id))) ;; assuming this one is implemented
+    (define (withdraw amount)
+      (if (>= balance amount)
+        (begin
+          (set! balance (- balance amount))
+          balance)
+        "Insufficient funds"))
+    (define (deposit amount)
+      (set! balance (+ balance amount)))
+    (let ((protected (make-serializer)))
+      (define (dispatch m)
+        (cond ((eq m 'withdraw)   (protected withdraw))
+              ((eq m 'deposit )   (protected deposit))
+              ((eq m 'balance )    balance)
+              ((eq m 'serializer)  serializer)
+              ((eq m 'account-id)  account-id)
+              (else (error "Unknown request: MAKE-ACCOUNT" m))))
+      dispatch)))
 
 (define (exchage account1 account2)
   (let ((difference (- (account1 'balance)
@@ -247,8 +246,10 @@
     ((account2 'deposit ) difference)))
 
 (define (serialized-exchange account1 account2)
-  (let ((serializer1 (account1 'serializer))
+  (let ((id1         (account1 'id))
+        (id2         (account2 'id))
+        (serializer1 (account1 'serializer))
         (serializer2 (account2 'serializer)))
-    ((serializer1 (serializer2 exchange))
-     account1
-     account2)))
+    (if (< id1 id2)
+      ((serializer1 (serializer2 exchange)) account1 account2)
+      ((serializer2 (serializer1 exchange)) account1 account2))))
