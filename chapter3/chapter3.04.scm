@@ -253,3 +253,15 @@
     (if (< id1 id2)
       ((serializer1 (serializer2 exchange)) account1 account2)
       ((serializer2 (serializer1 exchange)) account1 account2))))
+
+;;
+;; exercise 3.49
+;;
+;;
+;; as the hint suggests, we can associated a 'partner' account with
+;; each existing one and define an 'exchange-with-partner' function.
+;; It would lock the account, look into it to get the partner account
+;; and exchange it it with the current one. Since the id of the
+;; partner account is not known before locking the given one, we
+;; cannot decide in advance, which account to lock first.
+;;
