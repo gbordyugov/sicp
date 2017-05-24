@@ -101,3 +101,9 @@
 (define no-sevens
   (stream-filter (lambda (x) (not (divisible? x 7)))
                  integers))
+
+(stream-ref no-sevens 100)
+
+(define (fibgen a b)
+  (cons-stream a (fibgen b (+ a b))))
+(define fibs (fibgen 0 1))
