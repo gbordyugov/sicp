@@ -52,3 +52,14 @@
 ;;
 ;; will show numbers up to 5 first, then those between 5 and 7
 ;;
+
+
+;;
+;; exercise 3.52
+;;
+;; the point here is that sum is not accumulated fully over the whole
+;; stream, but rather over the portion of it that has been used
+;; (either by stream-filter or something else)
+;;
+;; memoizing would prevent adding things to sum twice
+;;
