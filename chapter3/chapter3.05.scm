@@ -43,3 +43,12 @@
     (stream-cons
       (apply proc       (map stream-car argstreams))
       (apply stream-map (cons proc (map (stream-cdr) argstreams))))))
+
+
+;;
+;; exercise 3.51
+;;
+
+;;
+;; will show numbers up to 5 first, then those between 5 and 7
+;;
