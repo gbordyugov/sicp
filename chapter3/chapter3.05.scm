@@ -107,3 +107,13 @@
 (define (fibgen a b)
   (cons-stream a (fibgen b (+ a b))))
 (define fibs (fibgen 0 1))
+
+(define (sieve stream)
+  (let ((n (stream-car stream)))
+    (cons-stream
+      n
+      (sieve (stream-filter
+               (lambda (x)
+                 (not (divisible? x n)))
+               (stream-cdr stream))))))
+(define primes (sieve (integers-starting-from 2)))
