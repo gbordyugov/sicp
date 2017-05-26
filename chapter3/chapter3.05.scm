@@ -148,3 +148,14 @@
           ((divisible? n (stream-car ps)) false)
           (else (iter (stream-cdr ps)))))
   (iter primes))
+
+
+;;
+;; exercise 3.53
+;;
+
+(define s (cons-stream 1 (add-streams s s)))
+
+;;
+;; x_i = 2^i
+;;
