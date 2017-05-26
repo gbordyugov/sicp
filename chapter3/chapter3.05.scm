@@ -63,11 +63,11 @@
 ;;
 
 (define (stream-map proc . argstreams)
-  (if (null? (car argstreams))
+  (if (stream-null? (car argstreams))
     the-empty-stream
     (cons-stream
       (apply proc       (map stream-car argstreams))
-      (apply stream-map (cons proc (map (stream-cdr) argstreams))))))
+      (apply stream-map (cons proc (map stream-cdr argstreams))))))
 
 
 ;;
@@ -127,7 +127,7 @@
 (define (add-streams s1 s2) (stream-map + s1 s2))
 
 (define integers
-  (cons-stream 1 (add-streams one integers)))
+  (cons-stream 1 (add-streams ones integers)))
 
 (define fibs
     (cons-stream 0 (cons-stream 1 (add-streams (stream-cdr fibs) fibs))))
@@ -135,7 +135,7 @@
 (define (scale-stream stream factor)
   (stream-map (lambda (x) (* x factor)) stream))
 
-(define double (cons-stream (scale-stream double 2)))
+(define double (cons-stream 1 (scale-stream double 2)))
 
 (define primes
   (cons-stream
