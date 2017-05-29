@@ -236,3 +236,15 @@
 
 (define (integrate-series as)
   (div-streams as integers))
+
+;;
+;; (b)
+;;
+
+(define exp-series
+  (cons-stream 1 (integrate-series exp-series)))
+
+(define sin-series
+  (cons-stream 0 (integrate-series cos-series)))
+(define cos-series
+  (cons-stream 1 (scale-stream (integrate-series sin-series) -1)))
