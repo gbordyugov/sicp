@@ -208,3 +208,17 @@
 ;; this is a reference to an earlier discussion of Fibonacci sequence
 ;; generating an exponential tree
 ;;
+
+
+;;
+;; exercise 3.58
+;;
+
+(define (expand num den radix)
+  (cons-stream
+    (quotient (* num radix) den)
+    (expand (remainder (* num radix) den) den radix)))
+
+;;
+;; this function expands num/den in radix-based system
+;;
