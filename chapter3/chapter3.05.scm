@@ -169,3 +169,12 @@
 
 (define factorials
   (cons-stream 1 (mul-streams factorials integers)))
+
+;;
+;; exercise 3.55
+;;
+
+(define (partial-sums stream)
+  (cons-stream (stream-car stream)
+        (add-streams (partial-sums stream) (stream-cdr stream))))
+  
