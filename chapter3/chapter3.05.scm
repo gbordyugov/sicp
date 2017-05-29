@@ -222,3 +222,17 @@
 ;;
 ;; this function expands num/den in radix-based system
 ;;
+
+
+;;
+;; exercise 3.59
+;;
+
+;;
+;; (a)
+;;
+
+(define (div-streams s1 s2) (stream-map / s1 s2))
+
+(define (integrate-series as)
+  (div-streams as integers))
