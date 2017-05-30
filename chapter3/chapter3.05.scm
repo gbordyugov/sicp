@@ -270,3 +270,14 @@
     (mul-series sin-series sin-series)))
 
 (stream-ref p 0)
+
+;;
+;; exercise 3.61
+;;
+
+(define (invert-unit-series s)
+  (cons-stream 1 (scale-stream (mul-series (stream-cdr s)
+                                           (invert-unit-series s))
+                               -1)))
+
+(define testomatic (mul-series cos-series (invert-unit-series cos-series)))
