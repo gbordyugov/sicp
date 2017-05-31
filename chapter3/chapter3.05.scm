@@ -272,14 +272,13 @@
 ;; you shallt not use LET with streams!
 ;;
 (define (mul-series s1 s2)
-    (cons-stream (* (stream-car s1)
-                    (stream-car s2))
+  (let ((s1car (stream-car s1))
+        (s2car (stream-car s2)))
+    (cons-stream (* s1car s2car)
                  (add-streams (cons-stream 0 (mul-series (stream-cdr s1)
                                                          (stream-cdr s2)))
-                              (add-streams (scale-stream (stream-cdr s2)
-                                                         (stream-car s1))
-                                           (scale-stream (stream-cdr s1)
-                                                         (stream-car s2))))))
+                              (add-streams (scale-stream (stream-cdr s2) s1car)
+                                           (scale-stream (stream-cdr s1) s2car))))))
 
 ;;
 ;; this version seems to be compatible with exercise 3.61
@@ -296,6 +295,7 @@
 
 (stream-ref p 0)
 
+
 ;;
 ;; exercise 3.61
 ;;
@@ -310,6 +310,7 @@
 ;; (define testomatic (mul-series cos-series (invert-unit-series cos-series)))
 (define testomatic (mul-series cos-series invert-cos))
 
+(stream-ref testomatic 0)
 
 ;;
 ;; exercse 3.62
