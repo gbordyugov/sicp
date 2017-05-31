@@ -256,6 +256,7 @@
 
 ;;
 ;; this is a buggy version somehow, need to investigate further
+;; I understand why, see the solution below
 ;;
 (define (mul-series s1 s2)
   (let* ((s1car (stream-car s1))
@@ -266,6 +267,19 @@
                  (add-streams (cons-stream 0 (mul-series s1cdr s2cdr))
                               (add-streams (scale-stream s2cdr s1car)
                                            (scale-stream s1cdr s2car))))))
+
+;;
+;; you shallt not use LET with streams!
+;;
+(define (mul-series s1 s2)
+    (cons-stream (* (stream-car s1)
+                    (stream-car s2))
+                 (add-streams (cons-stream 0 (mul-series (stream-cdr s1)
+                                                         (stream-cdr s2)))
+                              (add-streams (scale-stream (stream-cdr s2)
+                                                         (stream-car s1))
+                                           (scale-stream (stream-cdr s1)
+                                                         (stream-car s2))))))
 
 ;;
 ;; this version seems to be compatible with exercise 3.61
