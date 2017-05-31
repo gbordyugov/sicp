@@ -254,6 +254,9 @@
 ;; exercise 3.60
 ;;
 
+;;
+;; this is a buggy version somehow, need to investigate further
+;;
 (define (mul-series s1 s2)
   (let* ((s1car (stream-car s1))
          (s2car (stream-car s2))
@@ -264,20 +267,17 @@
                               (add-streams (scale-stream s2cdr s1car)
                                            (scale-stream s1cdr s2car))))))
 
+;;
+;; this version seems to be compatible with exercise 3.61
+;;
+(define (mul-series s1 s2)
+  (cons-stream (* (stream-car s1)
+                  (stream-car s2))
+               (add-streams (scale-stream (stream-cdr s2) (stream-car s1))
+                            (mul-series (stream-cdr s1) s2))))
 (define p 
   (add-streams
     (mul-series cos-series cos-series)
     (mul-series sin-series sin-series)))
 
 (stream-ref p 0)
-
-;;
-;; exercise 3.61
-;;
-
-(define (invert-unit-series s)
-  (cons-stream 1 (scale-stream (mul-series (stream-cdr s)
-                                           (invert-unit-series s))
-                               -1)))
-
-(define testomatic (mul-series cos-series (invert-unit-series cos-series)))
