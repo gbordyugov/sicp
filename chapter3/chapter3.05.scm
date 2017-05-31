@@ -309,3 +309,20 @@
 (define invert-cos (invert-unit-series cos-series))
 ;; (define testomatic (mul-series cos-series (invert-unit-series cos-series)))
 (define testomatic (mul-series cos-series invert-cos))
+
+
+;;
+;; exercse 3.62
+;;
+
+(define (div-series numer denom)
+  (let ((d (stream-car denom)))
+    (if (= 0 d)
+      (error "zero constant term in denominator: DIV-SERIES")
+      (scale-stream (mul-series numer
+                                (invert-unit-series (scale-stream denom (/ 1 d))))
+                    d))))
+
+(define tan-series (div-series sin-series cos-series))
+
+(stream-ref tan-series 0)
