@@ -484,3 +484,14 @@
                   (stream-cdr ss))
       (pairs (stream-cdr s) (stream-cdr t)))))
 
+
+;;
+;; exercise 3.68
+;;
+
+(define (pairs-lr ss ts)
+  (interleave
+    (stream-map (lambda (t) (list (stream-car ss) t)) ts)
+    (pairs-lr (stream-cdr ss) (stream-cdr ts))))
+
+(define pp (pairs-lr integers integers)) ;; infinite loop, since no delaying
