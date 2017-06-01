@@ -371,3 +371,11 @@
   (stream-map stream-car (make-tableau transform s))))
 
 (stream-ref (accelerated-sequence euler-transform pi-stream) 0)
+
+
+;;
+;; exercise 3.63
+;;
+;;
+;; in the original version, `guesses` involves caching (memoization)
+;;
