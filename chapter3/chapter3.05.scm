@@ -379,3 +379,22 @@
 ;;
 ;; in the original version, `guesses` involves caching (memoization)
 ;;
+
+
+;;
+;; exercise 3.64
+;;
+
+(define (stream-limit s tol)
+  (let ((s0 (stream-car             s))
+        (s1 (stream-car (stream-cdr s))))
+    (if (< (abs (- s0 s1)) tol)
+      s1
+      (stream-limit (stream-cdr s) tol))))
+
+(define (sqrt-l x tol)
+  (stream-limit (sqrt-stream x) tol))
+
+(sqrt-l 2.0 0.001)
+
+(sqrt-l 256 0.1)
