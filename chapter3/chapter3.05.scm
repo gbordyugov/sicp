@@ -449,3 +449,19 @@
       (stream-map (lambda (x) (list (stream-car s) x))
                   (stream-cdr t))
       (pairs (stream-cdr s) (stream-cdr t)))))
+
+
+;;
+;; exercise 3.66
+;;
+
+(define pairs-of-integers (pairs integers integers))
+
+(stream-ref pairs-of-integers 0)
+
+;;
+;; ok, every 2nd element come from the first row
+;; every other second from the rows below it
+;; among them (elements coming from the rows below it), every second
+;; comes from the second row and others from the rows below it
+;; etc.
