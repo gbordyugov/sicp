@@ -412,3 +412,40 @@
   (partial-sums (ln2-summands 1)))
 
 (stream-ref (accelerated-sequence euler-transform ln2-stream) 0)
+
+
+;;
+;; Infinite streams of pairs
+;;
+
+
+;; (define (pairs s t)
+;;   (cons-stream
+;;     (list (stream-car s) (stream-car t))
+;;     (<combine-in-some-way>
+;;       (stream-map (lambda (x) (list (stream-car s) x))
+;;                   (stream-cdr t))
+;;       (pairs (stream-cdr s) (stream-cdr t)))))
+
+;;
+;; not suited for this purpose
+;;
+(define (stream-append s1 s2)
+  (if (stream-null? s1)
+    s2
+    (cons-stream (stream-car s1)
+                 (stream-append (stream-cdr s1) s2))))
+
+(define (interleave s1 s2)
+  (if (stream-null? s1)
+    s2
+    (cons-stream (stream-car s1)
+                 (interleave s2 (stream-cdr s1)))))
+
+(define (pairs s t)
+  (cons-stream
+    (list (stream-car s) (stream-car t))
+    (interleave
+      (stream-map (lambda (x) (list (stream-car s) x))
+                  (stream-cdr t))
+      (pairs (stream-cdr s) (stream-cdr t)))))
