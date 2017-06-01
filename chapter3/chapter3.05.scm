@@ -465,3 +465,22 @@
 ;; among them (elements coming from the rows below it), every second
 ;; comes from the second row and others from the rows below it
 ;; etc.
+
+
+;;
+;; exercise 3.67
+;;
+
+(define (interleave3 as bs cs)
+  (interleave as (interleave bs cs)))
+
+(define (t-pairs ss ts)
+  (cons-stream
+    (list (stream-car ss) (stream-car ts))
+    (interleave3 ;; the order can be of importance here
+      (stream-map (lambda (t) (list (stream-car ss) t))
+                  (stream-cdr ts))
+      (stream-map (lambda (s) (list s (stream-car ts)))
+                  (stream-cdr ss))
+      (pairs (stream-cdr s) (stream-cdr t)))))
+
