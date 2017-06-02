@@ -525,8 +525,21 @@
                   (stream-cdr ts))
       (weighted-pairs weight (stream-cdr ss) (stream-cdr ts)))))
 
+;;
+;; (a)
+;;
 (define sss (weighted-pairs (lambda (pair) (apply + pair))
                             integers
                             integers))
 
 (stream-ref sss 0)
+
+;;
+;; (b)
+;;
+(define ttt (weighted-pairs (lambda (p)
+                              (let ((i (car  p))
+                                    (j (cadr p)))
+                                (+ (* 2 i) (* 3 j) (* 5 i j))))
+                            (stream-filter no-divisible-by-2-3-5 integers)
+                            (stream-filter no-divisible-by-2-3-5 integers)))
