@@ -495,3 +495,38 @@
     (pairs-lr (stream-cdr ss) (stream-cdr ts))))
 
 (define pp (pairs-lr integers integers)) ;; infinite loop, since no delaying
+
+;;
+;; exercise 3.69
+;;
+;; has to be done after exercise 3.70
+
+;;
+;; exercise 3.70
+;;
+
+(define (merge-weighted weight s1 s2)
+  (cond ((stream-null? s1) s2)
+        ((stream-null? s2) s1)
+        (else (let* ((s1car (stream-car s1))
+                     (s2car (stream-car s2))
+                     (w1    (weight s1car))
+                     (w2    (weight s2car)))
+                (if (< w1 w2)
+                  (cons-stream s1car (merge-weighted weight (stream-cdr s1) s2))
+                  (cons-stream s2car (merge-weighted weight  s1 (stream-cdr s2))))))))
+
+(define (weighted-pairs weight ss ts)
+  (cons-stream
+    (list (stream-car ss) (stream-car ts))
+    (merge-weighted
+      weight
+      (stream-map (lambda (t) (list (stream-car ss) t))
+                  (stream-cdr ts))
+      (weighted-pairs weight (stream-cdr ss) (stream-cdr ts)))))
+
+(define sss (weighted-pairs (lambda (pair) (apply + pair))
+                            integers
+                            integers))
+
+(stream-ref sss 0)
