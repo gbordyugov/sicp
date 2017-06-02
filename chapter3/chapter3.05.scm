@@ -482,7 +482,7 @@
                   (stream-cdr ts))
       (stream-map (lambda (s) (list s (stream-car ts)))
                   (stream-cdr ss))
-      (pairs (stream-cdr s) (stream-cdr t)))))
+      (pairs (stream-cdr ss) (stream-cdr ts)))))
 
 
 ;;
