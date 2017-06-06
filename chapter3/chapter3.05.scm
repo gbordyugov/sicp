@@ -588,17 +588,10 @@
 (define (consecutive-pairs s)
   (stream-map list s (stream-cdr s)))
 
-(define iii (consecutive-pairs integers))
-
 (define (cube-weight ij)
   (let ((i (car  ij))
         (j (cadr ij)))
     (+ (* i i i) (* j j j))))
-
-(define (square-weight ij)
-  (let ((i (car  ij))
-        (j (cadr ij)))
-    (+ (* i i) (* j j))))
 
 (define pairs-of-integers (consecutive-pairs (weighted-pairs cube-weight   integers integers)))
 
@@ -607,3 +600,27 @@
                    (= (cube-weight (car  x))
                       (cube-weight (cadr x))))
                  pairs-of-integers))
+
+
+;;
+;; exercise 3.72
+;;
+(define (consecutive-triples s)
+  (stream-map list s (stream-cdr s) (stream-cdr (stream-cdr s))))
+
+(define (square-weight ij)
+  (let ((i (car  ij))
+        (j (cadr ij)))
+    (+ (* i i) (* j j))))
+
+(define triples-of-pairs
+  (consecutive-triples (weighted-pairs square-weight integers integers)))
+
+(define bordyugov
+  (stream-filter (lambda (x)
+                   (and 
+                     (= (square-weight (car   x))
+                        (square-weight (cadr  x)))
+                     (= (square-weight (cadr  x))
+                        (square-weight (caddr x)))))
+                 triples-of-integers))
