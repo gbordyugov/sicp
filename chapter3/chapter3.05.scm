@@ -499,12 +499,43 @@
 ;;
 ;; exercise 3.69
 ;;
+
+;;
+;; pairs version
+;;
+;; (define (pairs s t)
+;;   (cons-stream
+;;     (list (stream-car s) (stream-car t))
+;;     (interleave
+;;       (stream-map (lambda (x) (list (stream-car s) x))
+;;                   (stream-cdr t))
+;;       (pairs (stream-cdr s) (stream-cdr t)))))
+
 (define (triples ss ts us)
   (cons-stream
     (list (stream-car ss)
           (stream-car ts)
           (stream-car us))
+    (interleave
+      (stream-map (lambda (tu)
+                    (cons (stream-car ss) tu))
+                  (stream-cdr (pairs ts us)))
+      (triples (stream-cdr ss)
+               (stream-cdr ts)
+               (stream-cdr us)))))
 
+(define ppp (triples integers integers integers))
+
+(stream-ref ppp 0)
+
+(define pyth (stream-filter (lambda (ijk)
+                              (let ((i (car   ijk))
+                                    (j (cadr  ijk))
+                                    (k (caddr ijk)))
+                              (= (* k k) (+ (* i i) (* j j)))))
+                            ppp))
+
+(stream-ref pyth 0)
 
 ;;
 ;; exercise 3.70
