@@ -579,3 +579,24 @@
                                 (+ (* 2 i) (* 3 j) (* 5 i j))))
                             (stream-filter no-divisible-by-2-3-5 integers)
                             (stream-filter no-divisible-by-2-3-5 integers)))
+
+
+;;
+;; exercise 3.71
+;;
+
+(define (consecutive-pairs s)
+  (stream-map (lambda (x y) (list x y))
+              s (stream-cdr s)))
+
+(define iii (consecutive-pairs integers))
+
+(define (cube-weight ij)
+  (let ((i (car  ij))
+        (j (cadr ij)))
+    (+ (* i i i) (* j j j))))
+
+(define ramanujan
+  (stream-filter (lambda (x)
+                   (equal? (car x) (cadr x)))
+                 (consecutive-pairs (weighted-pairs cube-weight integers integers))))
