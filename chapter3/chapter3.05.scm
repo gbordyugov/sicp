@@ -499,7 +499,12 @@
 ;;
 ;; exercise 3.69
 ;;
-;; has to be done after exercise 3.70
+(define (triples ss ts us)
+  (cons-stream
+    (list (stream-car ss)
+          (stream-car ts)
+          (stream-car us))
+
 
 ;;
 ;; exercise 3.70
