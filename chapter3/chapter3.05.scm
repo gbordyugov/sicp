@@ -700,3 +700,31 @@
 
 (define (make-zero-crossings s)
   (stream-map sign-change-detector (smooth s) (stream-car (smooth s))))
+
+
+;;
+;; 3.5.4 Streams and Delayed Evaluation
+;;
+
+;; (define (solve f y0 dt)
+;;   (define y (integral dy y0 dt))
+;;   (define dy (stream-map f y))
+;;   y)
+
+(define (integral delayed-integrad initial-value dt)
+  (define int
+    (cons-stream
+      initial-value
+      (let ((integrand (force delayed-integrad)))
+        (add-streams (scale-stream integrand dt) int))))
+  int)
+
+(define (solve f y0 dt)
+  (define y  (integral (delay dy) y0 dt))
+  (define dy (stream-map f y))
+  y)
+
+(stream-ref (solve (lambda (y) y)
+                   1
+                   0.001)
+            1000)
