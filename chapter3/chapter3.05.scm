@@ -673,4 +673,18 @@
   (stream-map sign-change-detector
               sense-data
               (stream-cdr sense-data)))
-                                
+
+;;
+;; exercise 3.75
+;;
+
+(define (make-zero-crossings input-stream last-value last-avpt)
+  (let ((avpt (/ (+ (stream-car input-stream)
+                    last-value)
+                 2)))
+    (cons-stream
+      (sign-change-detector avpt last-avpt)
+      (make-zero-crossings
+        (stream-cdr input-stream) ;; input-stream
+        (stream-car input-stream) ;; last-value
+        avpt))))                  ;; last-avpt
