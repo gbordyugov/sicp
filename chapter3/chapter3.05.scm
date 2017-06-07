@@ -361,14 +361,14 @@
                           (+ s0 (* -2 s1) s2)))
                  (euler-transform (stream-cdr s)))))
 
-(display-stream (euler-transform pi-stream))
+;; (display-stream (euler-transform pi-stream))
 
 
 (define (make-tableau transform s)
   (cons-stream s (make-tableau transform (transform s))))
 
 (define (accelerated-sequence transform s)
-  (stream-map stream-car (make-tableau transform s))))
+  (stream-map stream-car (make-tableau transform s)))
 
 (stream-ref (accelerated-sequence euler-transform pi-stream) 0)
 
@@ -494,7 +494,7 @@
     (stream-map (lambda (t) (list (stream-car ss) t)) ts)
     (pairs-lr (stream-cdr ss) (stream-cdr ts))))
 
-(define pp (pairs-lr integers integers)) ;; infinite loop, since no delaying
+;; (define pp (pairs-lr integers integers)) ;; infinite loop, since no delaying
 
 ;;
 ;; exercise 3.69
@@ -573,12 +573,15 @@
 ;;
 ;; (b)
 ;;
+(define (not-divisible-by-2-3-5 x)
+  #t)
+
 (define ttt (weighted-pairs (lambda (p)
                               (let ((i (car  p))
                                     (j (cadr p)))
                                 (+ (* 2 i) (* 3 j) (* 5 i j))))
-                            (stream-filter no-divisible-by-2-3-5 integers)
-                            (stream-filter no-divisible-by-2-3-5 integers)))
+                            (stream-filter not-divisible-by-2-3-5 integers)
+                            (stream-filter not-divisible-by-2-3-5 integers)))
 
 
 ;;
@@ -623,7 +626,7 @@
                         (square-weight (cadr  x)))
                      (= (square-weight (cadr  x))
                         (square-weight (caddr x)))))
-                 triples-of-integers))
+                 triples-of-pairs))
 
 
 
@@ -657,6 +660,8 @@
 ;; exercise 3.74
 ;;
 
+(define (sign-change-detector x y) #t) ;; just dummy
+
 (define (make-zero-crossings input-stream last-value)
   (cons-stream
     (sign-change-detector
@@ -665,6 +670,8 @@
     (make-zero-crossings
       (stream-cdr input-stream)
       (stream-car input-stream))))
+
+(define sense-data integers)
 
 (define zero-crossings
   (make-zero-crossings sense-data 0))
@@ -677,6 +684,7 @@
 ;;
 ;; exercise 3.75
 ;;
+
 
 (define (make-zero-crossings input-stream last-value last-avpt)
   (let ((avpt (/ (+ (stream-car input-stream)
