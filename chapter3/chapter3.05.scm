@@ -688,3 +688,15 @@
         (stream-cdr input-stream) ;; input-stream
         (stream-car input-stream) ;; last-value
         avpt))))                  ;; last-avpt
+
+
+;;
+;; exercise 3.76
+;;
+
+(define (smooth s)
+  (stream-map (lambda (a b) (/ (+ a b) 2))
+              s (stream-cdr s)))
+
+(define (make-zero-crossings s)
+  (stream-map sign-change-detector (smooth s) (stream-car (smooth s))))
