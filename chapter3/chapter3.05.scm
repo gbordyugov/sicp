@@ -720,6 +720,9 @@
   int)
 
 (define (solve f y0 dt)
+  ;; the trick in the line below is that (delay dy) does not evaluate
+  ;; its argument, i.e. dy and hence does not expect that dy is
+  ;; defined upon the invocation of (delay dy)
   (define y  (integral (delay dy) y0 dt))
   (define dy (stream-map f y))
   y)
