@@ -731,3 +731,19 @@
                    1
                    0.001)
             1000)
+
+
+;;
+;; exercise 3.77
+;;
+
+(define (integral delayed-integrand initial-value dt)
+  (cons-stream
+    initial-value
+    (let ((integrand (force delayed-integrad))) ;; is important to put it after the first element of stream
+      (if (stream-null? integrand)
+        the-empty-stream
+        (integral (stream-cdr integrand)
+                  (+ (* dt (stream-car integrand))
+                     initial-value)
+                  dt)))))
