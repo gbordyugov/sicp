@@ -637,3 +637,19 @@
                  (add-streams (scale-stream integrand dt)
                               int)))
   int)
+
+
+;;
+;; exercise 3.73
+;;
+
+(define (make-rc-circuit R C dt)
+  (define (go i v0)
+    (define int
+      (cons-stream v0
+                   (add-streams (scale-stream (scale-stream i dt)
+                                              (/ 1.0 C)) i)))
+    (add-streams int (scale-stream int R)))
+  go)
+
+                                
