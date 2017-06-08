@@ -834,3 +834,16 @@
 ;;
 ;; 3.5.5 Modularity of Functional Programs and Modularity of Objects
 ;;
+
+
+;;
+;; exercise 3.81
+;;
+
+(define (process-requests requests)
+  (if (stream-null? requests)
+    the-empty-stream
+    ((let ((request (stream-car requests)))
+       (cond ((eq? request 'generate) (do-smth))
+             ((eq? request 'reset)    (do-smth))
+             (else (error "Unknown request: PROCESS-REQUESTS")))))))
