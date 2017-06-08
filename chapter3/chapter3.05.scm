@@ -787,6 +787,10 @@
   (define ddy (stream-map f dy y))
   y)
 
+(define sol (solve-2nd (lambda (dy y ) y) 0.01 1.0 0.01))
+
+(stream-ref sol 0)
+
 
 ;;
 ;; exercise 3.80
