@@ -751,9 +751,13 @@
     (let ((integrand (force delayed-integrand))) ;; is important to put it after the first element of stream
       (if (stream-null? integrand)
         the-empty-stream
-        (integral (stream-cdr integrand)
+        (integral (delay (stream-cdr integrand))
                   (+ (* dt (stream-car integrand)) initial-value)
                   dt)))))
+
+(define tratata (integral (delay ones) 0.0 1.0))
+
+(stream-ref tratata 0)
 
 
 ;;
@@ -767,6 +771,10 @@
                 (scale-stream dy a)
                 (scale-stream  y b)))
   y)
+
+(define sol (solve-2nd 1.0 1.0 0.01 1.0 1.0))
+
+(stream-ref sol 0)
 
 
 ;;
