@@ -786,3 +786,33 @@
   (define dy  (integral (delay ddy) dy0 dt))
   (define ddy (stream-map f dy y))
   y)
+
+
+;;
+;; exercise 3.80
+;;
+
+(define (make-rlc R L C dt)
+  (define (go v0 i0)
+    (define v
+      (integral (delay v-integrand) v0 dt))
+    (define i
+      (integral (delay i-integrand) i0 dt))
+    (define i-integrand
+      (add-streams (scale-stream v    (/ 1.0 L))
+                   (scale-stream i (- (/ R   L)))))
+    (define v-integrand
+      (scale-stream i (/ -1.0 C)))
+    (cons v i))
+  go)
+
+(define RLC (make-rlc 1.0 0.2 1.0 0.1))
+
+(define sol (RLC 10.0 0.0))
+
+(define v (car sol))
+(define i (cdr sol))
+
+(stream-ref v 0)
+
+(stream-ref i 0)
