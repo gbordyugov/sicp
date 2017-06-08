@@ -719,11 +719,11 @@
 ;;   (define dy (stream-map f y))
 ;;   y)
 
-(define (integral delayed-integrad initial-value dt)
+(define (integral delayed-integrand initial-value dt)
   (define int
     (cons-stream
       initial-value
-      (let ((integrand (force delayed-integrad)))
+      (let ((integrand (force delayed-integrand)))
         (add-streams (scale-stream integrand dt) int))))
   int)
 
@@ -748,12 +748,11 @@
 (define (integral delayed-integrand initial-value dt)
   (cons-stream
     initial-value
-    (let ((integrand (force delayed-integrad))) ;; is important to put it after the first element of stream
+    (let ((integrand (force delayed-integrand))) ;; is important to put it after the first element of stream
       (if (stream-null? integrand)
         the-empty-stream
         (integral (stream-cdr integrand)
-                  (+ (* dt (stream-car integrand))
-                     initial-value)
+                  (+ (* dt (stream-car integrand)) initial-value)
                   dt)))))
 
 
