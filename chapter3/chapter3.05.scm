@@ -820,3 +820,17 @@
 (stream-ref v 0)
 
 (stream-ref i 0)
+
+
+;;
+;; Normal order evaluation
+;;
+
+;;
+;; just bla-bla: lazy evaluation do not mix well with assignment and state
+;;
+
+
+;;
+;; 3.5.5 Modularity of Functional Programs and Modularity of Objects
+;;
