@@ -940,3 +940,17 @@
 (define pi (scale-stream (estimate-integral helper 0.0 2.0 0.0 2.0) 4.0))
 
 (stream-ref pi 0)
+
+
+;;
+;; A functional-programming view of time
+;;
+
+;;
+;; objects with states vs streams
+;;
+;; stream merging is a relation rather than a function
+;; (equip each event in the streams to be merged with a time stamp?)
+;;
+;; the object model is useful when the volume of the object is much
+;; bigger than its surface area
