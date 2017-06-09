@@ -883,12 +883,21 @@
         (else (error "Unknown request: MAP-REQUEST" request))))
 
 (define (request-stream-processor requests seed)
-  (cons-stream
-    (map-request (stream-car requests) seed)
-(define (random-stream seed)
-  (cons-stream
-    seed
-    (stream-map (lambda (x)
-                  (map-request
+  (let ((first-outcome (map-request (stream-car requests) seed)))
+    (cons-stream
+      first-outcome
+      (request-stream-processor (stream-cdr requests) first-outcome))))
 
 
+(define requests
+  (stream-map (lambda (x)
+                (if (= 0 (remainder x 10))
+                  (list 'reset 0)
+                  'generate))
+              integers))
+
+(stream-ref requests 0)
+
+(define rrr (request-stream-processor requests 0))
+
+(stream-ref rrr 0)
