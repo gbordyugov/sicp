@@ -903,3 +903,40 @@
 (define rrr (request-stream-processor requests 0))
 
 (stream-ref rrr 0)
+
+;;
+;; exercise 3.82
+;;
+
+(define (random-in-range low high)
+  (let ((range (- high low)))
+    (+ low (random range))))
+
+(define (randoms-between-stream x1 x2)
+  (define stream
+    (cons-stream
+      (random-in-range x1 x2)
+      (stream-map (lambda (x)
+                    (random-in-range x1 x2))
+                  stream)))
+  stream)
+
+(define test-stream (randoms-between-stream 1.0 2.0))
+
+(stream-ref test-stream 0)
+   
+(define (estimate-integral P x1 x2 y1 y2)
+  (define x-stream (randoms-between-stream x1 x2))
+  (define y-stream (randoms-between-stream x1 x2))
+  (define experiment-stream
+    (stream-map P x-stream y-stream))
+  (monte-carlo experiment-stream 0 0))
+
+(define (helper X Y)
+  (let ((x (- X 1))
+        (y (- Y 1)))
+    (< (+ (* x x) (* y y)) 1)))
+
+(define pi (scale-stream (estimate-integral helper 0.0 2.0 0.0 2.0) 4.0))
+
+(stream-ref pi 0)
