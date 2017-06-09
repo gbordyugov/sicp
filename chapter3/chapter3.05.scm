@@ -883,10 +883,12 @@
         (else (error "Unknown request: MAP-REQUEST" request))))
 
 (define (request-stream-processor requests seed)
-  (let ((first-outcome (map-request (stream-car requests) seed)))
-    (cons-stream
+  (define tmp
+    (let ((first-outcome (map-request (stream-car requests) seed)))
+      (cons-stream
       first-outcome
       (request-stream-processor (stream-cdr requests) first-outcome))))
+  tmp)
 
 
 (define requests
