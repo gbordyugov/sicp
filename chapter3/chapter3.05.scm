@@ -869,3 +869,26 @@
 (define pi
   (stream-map (lambda (p) (sqrt (/ 6 p)))
               (monte-carlo cesaro-stream 0 0)))
+
+;;
+;; exercise 3.81
+;;
+
+(define (map-request request last-value)
+  (cond ((eq? request 'generate) (rand-update last-value))
+        ((and (pair? request)
+              (eq? (car request) 'reset)
+              (number? (cadr request)))
+         (cadr request))
+        (else (error "Unknown request: MAP-REQUEST" request))))
+
+(define (request-stream-processor requests seed)
+  (cons-stream
+    (map-request (stream-car requests) seed)
+(define (random-stream seed)
+  (cons-stream
+    seed
+    (stream-map (lambda (x)
+                  (map-request
+
+
