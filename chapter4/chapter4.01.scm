@@ -67,3 +67,11 @@
     '()
     (cons (eval (first-operand exps) env)
           (list-of-values (rest-operands exps) env))))
+
+(define (eval-if exp env)
+  ;; the if-predicate is a value in the language we're implementing
+  ;; and is not necessarily a Lisp boolean, that's why we're using
+  ;; the `true?` predicate
+  (if (true? (eval (if-predicate exp) env))
+    (eval (if-consequent  exp) env)
+    (eval (if-alternative exp) env)))
