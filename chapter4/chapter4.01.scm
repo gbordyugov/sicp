@@ -315,5 +315,75 @@
 ;; exercise 4.3
 ;;
 
-(define (evald exp)
-  (...))
+;;
+;; the old version
+;;
+(define (eval exp env)
+  (cond ((self-evaluating? exp) exp)
+        ((variable? exp)       (lookup-variable-value exp env))
+        ((quoted? exp)         (text-of-quotation exp))
+        ((assignment? exp)     (eval-assignment exp env))
+        ((definition? exp)     (eval-definition exp env))
+        ((if? exp)             (eval-if exp env))
+        ((lambda? exp)         (make-procedure (lambda-parameters exp)
+                                               (lambda-body exp)
+                                               env))
+        ((begin? exp)          (eval-sequence (begin-actions exp) env))
+        ((cond? exp)           (eval (cond->if exp) env))
+        ((application? exp)    (apply (eval (operator exp) env)
+                                      (list-of-values (operands exp) env)))
+        (else                  (error "Unknown expression-type: EVAL" exp))))
+
+;;
+;; the data-directed dispatch style version
+;;
+(define (evald exp env)
+  (cond ((self-evaluating? exp) exp)
+        ((variable? exp)       (lookup-variable-value exp env))
+        ;;
+        ;; so instead of
+        ;;
+        ;; ((quoted? exp)         (text-of-quotation exp))
+        ;; ((assignment? exp)     (eval-assignment exp env))
+        ;; ((definition? exp)     (eval-definition exp env))
+        ;; ((if? exp)             (eval-if exp env))
+        ;; ((lambda? exp)         (make-procedure (lambda-parameters exp)
+        ;;                                        (lambda-body exp)
+        ;;                                        env))
+        ;; ((begin? exp)          (eval-sequence (begin-actions exp) env))
+        ;; ((cond? exp)           (eval (cond->if exp) env))
+        ;;
+        ;; we just have
+        ;;
+        ((get-op (car exp))    ((get-op (car exp)) (cdr exp) env))
+        ((application? exp)    (apply (evald (operator exp) env)
+                                      (list-of-values (operands exp) env)))
+        (else                  (error "Unknown expression-type: EVAL" exp))))
+
+(define (put-op sym call)
+  #t)
+
+(define (get-op sym call)
+  #f)
+
+(define (eval-quoted exp env)
+  (text-of-quotation exp))
+(put-op 'quote eval-quoted)
+
+(put-op 'set!   eval-assignment)
+(put-op 'define eval-definition)
+(put-op 'if     eval-definition)
+
+(define (eval-lambda exp env)
+  (make-procedure (lambda-parameters exp)
+                  (lambda-body exp)
+                  env))
+(put-op 'lambda     eval-lambda)
+
+(define (eval-begin exp env)
+  (eval-sequence (begin-actions exp) env))
+(put-op 'begin     eval-begin)
+
+(define (eval-cond exp env)
+  (evald (cond-if exp) env))
+(put-op 'cond     eval-cond)
