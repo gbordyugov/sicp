@@ -283,3 +283,12 @@
         (make-if (cond-predicate first)
                  (sequence->exp (cond-actions first))
                  (expand-clauses rest))))))
+
+;;
+;; Exercise 4.2
+;;
+
+;;
+;; (a) it will be evaluated as a procedure application of procedure
+;; `define`
+;;
