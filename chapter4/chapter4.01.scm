@@ -387,3 +387,48 @@
 (define (eval-cond exp env)
   (evald (cond-if exp) env))
 (put-op 'cond     eval-cond)
+
+
+;;
+;; exercise 4.4
+;;
+
+;;
+;; the `and` part
+;;
+(define (and? exp)
+  (tagged-list? exp 'and))
+
+(define (and-clauses and-exp)
+  (cdr and-exp))
+
+(define (eval-and-clauses clauses env)
+  (if (null? clauses)
+    #t
+    (and (eval (car clauses) exp)
+         (eval-and-clauses (cdr clauses) env))))
+
+(define (eval-and exp env)
+  (eval-and-clauses (and-clauses) exp env))
+
+;;
+;; the `or` part
+;;
+(define (or? exp)
+  (tagged-list? exp 'or))
+
+(define (or-clauses or-exp)
+  (cdr or-exp))
+
+(define (eval-or-clauses clauses env)
+  (if (null? clauses)
+    #f
+    (and (eval (car clauses) exp)
+         (eval-or-clauses (cdr clauses) env))))
+
+(define (eval-or exp env)
+  (eval-or-clauses (or-clauses) exp env))
+
+;;
+;; to expand the body of `eval` is trivial
+;;
