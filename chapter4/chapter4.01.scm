@@ -292,3 +292,23 @@
 ;; (a) it will be evaluated as a procedure application of procedure
 ;; `define`
 ;;
+
+;;
+;; (b)
+;;
+(define (louis-application? exp)
+  (tagged-list? exp 'call))
+
+(define (louis-operator exp)
+  (cadr exp))
+(define (louis-operands exp)
+  (cddr exp))
+;;
+;; the rest stays the same
+;;
+(define (louis-no-operands? ops)
+  (null? ops))
+(define (louis-first-operand ops)
+  (car ops))
+(define (louis-rest-operands ops)
+  (cdr ops))
