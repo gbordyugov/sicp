@@ -114,3 +114,140 @@
     (let ((rest (list-of-values (rest-operands exps) env)))
       (cons (eval (first-operand exps) env)
             rest))))
+
+;;
+;; 4.1.2 Representing Expressions
+;;
+
+;;
+;; the only self-evaluating expressions are numbers and strings
+;;
+(define (self-evaluating? exp)
+  (cond ((number? exp) true)
+        ((string? exp) true)
+        (else false)))
+
+;;
+;; variables are symbols
+;;
+(define (variable? exp)
+  (symbol? exp))
+
+;;
+;; quotations in the form of (quote a)
+;;
+(define (quoted? exp)
+  (tagged-list? exp 'quote))
+
+(define (text-of-quotation exp)
+  (cadr exp))
+
+;;
+;; a little helper function
+;;
+(define (tagged-list? exp tag)
+  (if (pair? exp)
+    (eq? (car exp) tag)
+    false))
+
+;;
+;; assignments in the form of (set! <var> <value>)
+(define (assignment? exp)
+  (tagged-list? exp 'set!))
+
+(define (assignment-variable exp)
+  (cadr exp))
+
+(define (assignment-value exp)
+  (caddr exp))
+
+;;
+;; definitions have the form
+;; (define <var> <value>)
+;; or the form
+;; (define (<var> <p1> <p2> ... <pn>) <body>)
+;; which is syntactic sugar for
+;; (define <var> (lambda (<p1> <p2> ... <pn>) <body>))
+;;
+(define (definition? exp) (tagged-list? exp 'define))
+
+(define (definition-variable exp)
+  (if (symbol? (cadr exp))
+    (cadr exp)     ;; example: (define twice (lambda (x) (+ x x)))
+    (caadr exp)))  ;; example: (define (twice x) (+ x x))
+
+(define (definition-value exp)
+  (if (symbol? (cadr exp))
+    (caddr exp)  ;; example (define twice (lambda (x) (+ x x)))
+    (make-lambda ;; example (define (twice x) (+ x x))
+      (cdadr exp)       ;; formal parameters
+      (cddr exp))))     ;; body
+
+;;
+;; lambda expressions are lists that begin with the symbol `lambda`
+;;
+(define (lambda? exp)
+  (tagged-list? exp 'lambda))
+(define (lambda-parameters exp)
+  (cadr exp))
+(define (lambda-body exp)
+  (cddr exp))
+
+(define (make-lambda parameters body)
+  (cons 'lambda (cons parameters body)))
+
+;;
+;; conditionals
+;;
+(define (if? exp)
+  (tagged-list? exp 'if))
+(define (if-predicate exp)
+  (cadr exp))
+(define (if-consequent exp)
+  (caddr exp))
+(define (if-alternative exp)
+  (if (not (null? (cdddr exp)))
+    (cadddr exp)
+    'false))
+
+(define (make-if predicate consequent alternative)
+  (list 'if predicate consequent alternative))
+
+(define (begin? exp)
+  (tagged-list? exp 'begin))
+(define (begin-actions exp)
+  (cdr exp))
+(define (last-exp? seq)
+  (null? (cdr seq)))
+(define (first-exp seq)
+  (car seq))
+(define (rest-exps seq)
+  (cdr seq))
+
+;;
+;; this constructs a (begin ...) expression out of a list of
+;; expressions, useful for cond
+;;
+(define (sequence->exp seq)
+  (cond ((null? seq) seq)
+        ((last-exp? seq) (first-exp seq))
+        (else (make-begin seq))))
+
+(define (make-begin seq)
+  (cons 'begin seq))
+
+;;
+;; procedure application
+;;
+(define (application? exp)
+  (pair? exp))
+(define (operator exp)
+  (car exp))
+(define (operands exp)
+  (cdr exp))
+(define (no-operands? ops)
+  (null? ops))
+(define (first-operand ops)
+  (car ops))
+(define (rest-operands ops)
+  (cdr ops))
