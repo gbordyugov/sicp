@@ -309,3 +309,11 @@
   (car ops))
 (define (louis-rest-operands ops)
   (cdr ops))
+
+
+;;
+;; exercise 4.3
+;;
+
+(define (evald exp)
+  (...))
