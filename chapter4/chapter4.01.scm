@@ -498,3 +498,30 @@
 ;;
 ;; 
 ;; ((let? exp) (eval (let->application exp) env))
+
+
+;;
+;; exercise 4.7
+;;
+
+(define (let*? exp)
+  (tagged-list? exp 'let*))
+
+(define (let*-bindings exp)
+  (cadr exp))
+
+(define (let*-body exp)
+  (caddr exp))
+
+(define (let*-binding-var binding)
+  (car binding))
+
+(define (let*-binding-exp binding)
+  (cadr binding))
+
+(define (make-let bindings body)
+  (cons 'let (cons bindings body)))
+
+(define (let*->nested-lets exp)
+  '())
+
