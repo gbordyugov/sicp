@@ -464,3 +464,5 @@
           (make-if (cond-predicate first)
                    (sequence->exp (cond-actions first))
                    (expand-clauses rest)))))))
+
+(expand-clauses (list '(x y) '(a => b) '(else 1)))
