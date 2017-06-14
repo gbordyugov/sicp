@@ -432,3 +432,35 @@
 ;;
 ;; to expand the body of `eval` is trivial
 ;;
+
+
+;;
+;; exercise 4.5
+;;
+(define (extended-cond-clause? clause)
+  (eq? (cadr clause) '=>))
+
+(define (extended-cond-clause-test clause)
+  (car clause))
+
+(define (extended-cond-clause-recepient clause)
+  (caddr clause))
+
+(define (expand-clauses clauses)
+  (if (null? clauses)
+    'false
+    (let ((first (car clauses))
+          (rest  (cdr clauses)))
+      (if (cond-else-clause? first)
+        (if (null? rest)
+          (sequence->exp (cond-actions first))
+          (error "ELSE clause isn't last: COND->IF"
+                 clauses))
+        (if (extended-cond-clause? first)
+          (make-if (extended-cond-clause-test first)
+                   (list (extended-cond-clause-recepient)
+                         (extended-cond-clause-test))
+                   (expand-clauses rest))
+          (make-if (cond-predicate first)
+                   (sequence->exp (cond-actions first))
+                   (expand-clauses rest)))))))
