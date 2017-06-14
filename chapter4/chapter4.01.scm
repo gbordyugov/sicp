@@ -466,3 +466,35 @@
                    (expand-clauses rest)))))))
 
 (expand-clauses (list '(x y) '(a => b) '(else 1)))
+
+;;
+;; exercise 4.6
+;;
+
+(define (let? exp)
+  (tagged-list? exp 'let))
+
+(define (let-bindings exp)
+  (cadr exp))
+
+(define (let-body exp)
+  (caddr exp))
+
+(define (let-binding-var binding)
+  (car binding))
+
+(define (let-binding-exp binding)
+  (cadr binding))
+
+(define (let->application exp)
+  (cons (make-lambda (map let-binding-var (let-bindings exp))
+                     (let-body exp))
+        (map let-binding-exp (let-bindings exp))))
+
+(define let-test-exp '(let ((a b) (c d)) ((bla bli) (tri la))))
+
+;;
+;; addition to eval
+;;
+;; 
+;; ((let? exp) (eval (let->application exp) env))
