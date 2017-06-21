@@ -511,7 +511,7 @@
   (cadr exp))
 
 (define (let*-body exp)
-  (caddr exp))
+  (cddr exp))
 
 (define (let*-binding-var binding)
   (car binding))
@@ -522,6 +522,30 @@
 (define (make-let bindings body)
   (cons 'let (cons bindings body)))
 
-(define (let*->nested-lets exp)
-  '())
+(define (make-let* bindings body)
+  (cons 'let* (cons bindings body)))
 
+(define (let*->nested-lets exp)
+  (if (null? (let*-bindings exp))
+    (let*-body exp)
+    (let* ((bindings (let*-bindings exp))
+           (head (car bindings))
+           (tail (cdr bindings)))
+      (make-let (list head)
+                (list (let*->nested-lets (make-let* tail
+                                                    (let*-body exp))))))))
+
+(let*->nested-lets '(let* ()
+                     (bla bli) (tu du)))
+
+(let*->nested-lets '(let* ((a b))
+                     true (bla bli)))
+
+(let*->nested-lets '(let* ((a b)
+                           (c d))
+                      true false))
+
+(let*->nested-lets '(let* ((a b)
+                           (c d)
+                           (e f))
+                      true false true))
