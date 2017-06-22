@@ -577,9 +577,11 @@
 ;; still not working
 ;;
 
-(define (named-let->application exp)
-  (cons (make-lambda (map let-binding-var (let-bindings exp))
-                     (let-body exp))
-        (map let-binding-exp (let-bindings exp))))
+(define (let->application exp)
+  (if (named-let? exp)
+    '() ;; TODO
+    (cons (make-lambda (map let-binding-var (let-bindings exp))
+                       (let-body exp))
+          (map let-binding-exp (let-bindings exp)))))
 
 ;; (define let-test-exp '(let ((a b) (c d)) ((bla bli) (tri la))))
