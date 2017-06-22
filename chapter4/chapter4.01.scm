@@ -549,3 +549,37 @@
                            (c d)
                            (e f))
                       true false true))
+
+;;
+;; exercise 4.8
+;;
+
+(define (named-let? exp)
+  (and (tagged-list? exp 'let)
+       (symbol? (cadr exp))))
+
+(define (named-let-var exp)
+  (cadr exp))
+
+(define (named-let-bindings exp)
+  (caddr exp))
+
+(define (named-let-body exp)
+  (cadddr exp))
+
+(define (named-let-binding-var binding)
+  (car binding))
+
+(define (named-let-binding-exp binding)
+  (cadr binding))
+
+;;
+;; still not working
+;;
+
+(define (named-let->application exp)
+  (cons (make-lambda (map let-binding-var (let-bindings exp))
+                     (let-body exp))
+        (map let-binding-exp (let-bindings exp))))
+
+;; (define let-test-exp '(let ((a b) (c d)) ((bla bli) (tri la))))
