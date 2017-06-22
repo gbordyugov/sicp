@@ -477,6 +477,9 @@
 (define (let-bindings exp)
   (cadr exp))
 
+(define (let-vars exp)
+  (map let-binding-var (let-bindings exp)))
+
 (define (let-body exp)
   (caddr exp))
 
@@ -487,11 +490,13 @@
   (cadr binding))
 
 (define (let->application exp)
-  (cons (make-lambda (map let-binding-var (let-bindings exp))
+  (cons (make-lambda (let-vars exp)
                      (let-body exp))
         (map let-binding-exp (let-bindings exp))))
 
 (define let-test-exp '(let ((a b) (c d)) ((bla bli) (tri la))))
+
+(let->application let-test-exp)
 
 ;;
 ;; addition to eval
@@ -564,6 +569,9 @@
 (define (named-let-bindings exp)
   (caddr exp))
 
+(define (named-let-vars exp)
+  (map named-let-binding-var (named-let-bindings exp)))
+
 (define (named-let-body exp)
   (cadddr exp))
 
@@ -580,8 +588,8 @@
 (define (let->application exp)
   (if (named-let? exp)
     '() ;; TODO
-    (cons (make-lambda (map let-binding-var (let-bindings exp))
-                       (let-body exp))
+    (cons (make-lambda (named-let-vars exp)
+                       (named-let-body exp))
           (map let-binding-exp (let-bindings exp)))))
 
 ;; (define let-test-exp '(let ((a b) (c d)) ((bla bli) (tri la))))
