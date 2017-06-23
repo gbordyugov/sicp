@@ -663,3 +663,50 @@
 ;;
 ;; exercise 4.10 is a larger project, skipped
 ;;
+
+
+;;
+;; 4.1.3 Evaluator Data Structures
+;;
+
+
+;;
+;; Testing of predicates
+;;
+
+(define (true?  x) (not (eq? x false)))
+(define (false? x)      (eq? x false))
+
+
+;;
+;; Representing procedures
+;;
+;
+;;
+;; Assuming we have
+;;
+;; (apply-primitive-procedure <proc> <args>)
+;;
+;; which applies the given primitive procedure to the argument values
+;; in the list <args> and returns the result of the application, and
+;;
+;; (primitive-procedure? <proc>)
+;;
+;; which tests whether <proc> is a primitive procedure.
+;;
+
+
+(define (make-procedure parameters body env)
+  (list 'procedure parameters body env))
+
+(define (compound-procedure? p)
+  (tagged-list? p 'procedure))
+
+(define (procedure-parameters p)
+  (cadr p))
+
+(define (procedure-body p)
+  (caddr p))
+
+(define (procedure-environment p)
+  (cadddr p))
