@@ -805,3 +805,27 @@
             ((eq? var (car vars)) (set-car! vals val))
             (else (scan (cdr vars) (cdr vals))))))
   (scan (frame-variables frame) (frame-values frame)))
+
+
+;;
+;; exercise 4.11
+;;
+
+(define (make-frame variables values)
+  (map cons variables values))
+
+(define test-frame (make-frame '(a b c) '(1 2 3)))
+
+
+(define (frame-variables f) (map car f))
+(define (frame-values    f) (map cdr f))
+
+(frame-variables test-frame)
+
+(frame-values test-frame)
+
+(define (add-binding-to-frame! var val frame)
+  (set-cdr! frame frame)                ;; not working ;-(
+  (set-car! frame (cons var val)))
+
+(add-binding-to-frame! 'e 4 test-frame)
