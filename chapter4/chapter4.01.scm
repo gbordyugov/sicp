@@ -658,3 +658,8 @@
 ;;         (go)
 ;;         true)))
 ;;   (go))
+
+
+;;
+;; exercise 4.10 is a larger project, skipped
+;;

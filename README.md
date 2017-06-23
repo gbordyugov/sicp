@@ -11,3 +11,4 @@ Open/skipped exercises
  - 2.58 (b) (a beautiful one, must do it later!)
  - 2.92
  - 2.95
+ - 4.10 (is a larger project)
