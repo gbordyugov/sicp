@@ -569,9 +569,6 @@
 (define (named-let-bindings exp)
   (caddr exp))
 
-(define (named-let-vars exp)
-  (map named-let-binding-var (named-let-bindings exp)))
-
 (define (named-let-body exp)
   (cadddr exp))
 
@@ -581,15 +578,27 @@
 (define (named-let-binding-exp binding)
   (cadr binding))
 
-;;
-;; still not working
-;;
+(define (named-let-vars exp)
+  (map named-let-binding-var (named-let-bindings exp)))
+
+(define (named-let-exps exp)
+  (map named-let-binding-exp (named-let-bindings exp)))
 
 (define (let->application exp)
   (if (named-let? exp)
-    '() ;; TODO
-    (cons (make-lambda (named-let-vars exp)
-                       (named-let-body exp))
+    (list
+      (cons 'define
+            (cons (cons (named-let-var  exp)
+                        (named-let-vars exp))
+                  (named-let-body exp)))
+      (cons (named-let-var exp) (named-let-exps exp)))
+    (cons (make-lambda (let-vars exp)
+                       (let-body exp))
           (map let-binding-exp (let-bindings exp)))))
 
-;; (define let-test-exp '(let ((a b) (c d)) ((bla bli) (tri la))))
+(define       let-test-exp '(let      ((a b) (c d)) ((bla bli) (tri la))))
+(define named-let-test-exp '(let func ((a b) (c d)) ((bla bli) (tri la))))
+
+(let->application let-test-exp)
+
+(let->application named-let-test-exp)
