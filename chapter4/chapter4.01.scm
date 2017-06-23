@@ -602,3 +602,59 @@
 (let->application let-test-exp)
 
 (let->application named-let-test-exp)
+
+;;
+;; exercise 4.9
+;;
+;; I will go for a while loop with the syntax
+;;
+;; (while <expr> <body>)
+;;
+;; which is transformed to
+;;
+;; (begin
+;;   (define (while-iter)
+;;     <body>
+;;     (if expr
+;;       (while-iter)
+;;       #t))
+;;   (while-iter))
+ 
+
+
+(define (while? exp)
+  (tagged-list? exp 'while))
+
+(define (while-clause exp)
+  (cadr exp))
+
+(define (while-body exp)
+  (caddr exp))
+
+(define (transform-while exp)
+  (sequence->exp
+    (list
+      (list 'define '(go)
+            (sequence->exp
+              (list
+                (while-body exp)
+                (make-if (while-clause exp)
+                         '(go)
+                         'true))))
+      (list 'go)))); call
+
+(define while-test '(while (null? a) (repeat a)))
+
+(transform-while while-test)
+
+;;
+;; output:
+;;
+;; (begin
+;;   (define (go)
+;;     (begin
+;;       (repeat a)
+;;       (if (null? a)
+;;         (go)
+;;         true)))
+;;   (go))
