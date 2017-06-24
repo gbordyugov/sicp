@@ -750,7 +750,7 @@
 ;;
 
 (define (make-frame variables values)
-  (cons variable values))
+  (cons variables values))
 
 (define (frame-variables frame)
   (car frame))
