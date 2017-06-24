@@ -762,6 +762,10 @@
   (set-car! frame (cons var (car frame))) ;; not really a data abstraction
   (set-cdr! frame (cons val (cdr frame))))
 
+(define test-frame (make-frame '(a b c) '(1 2 3)))
+
+(add-binding-to-frame! 'd 4 test-frame)
+
 
 (define (extend-environment vars vals base-env)
   (if (= (length vars) (length vals))
@@ -829,3 +833,6 @@
   (set-car! frame (cons var val)))
 
 (add-binding-to-frame! 'e 4 test-frame)
+
+(define test (list 1 2))
+(set-car! test (cons 3 test))
