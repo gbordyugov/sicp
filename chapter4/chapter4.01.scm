@@ -815,24 +815,22 @@
 ;; exercise 4.11
 ;;
 
+(define (frame? f)
+  (tagged-list? f 'frame))
+
 (define (make-frame variables values)
-  (map cons variables values))
+  (cons 'frame (map cons variables values)))
 
 (define test-frame (make-frame '(a b c) '(1 2 3)))
 
-
-(define (frame-variables f) (map car f))
-(define (frame-values    f) (map cdr f))
+(define (frame-variables f) (map car (cdr f)))
+(define (frame-values    f) (map cdr (cdr f)))
 
 (frame-variables test-frame)
 
 (frame-values test-frame)
 
 (define (add-binding-to-frame! var val frame)
-  (set-cdr! frame frame)                ;; not working ;-(
-  (set-car! frame (cons var val)))
+  (set-cdr! frame (cons (cons var val) (cdr frame))))
 
 (add-binding-to-frame! 'e 4 test-frame)
-
-(define test (list 1 2))
-(set-car! test (cons 3 test))
