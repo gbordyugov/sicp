@@ -835,3 +835,8 @@
   (set-cdr! frame (cons (cons var val) (cdr frame))))
 
 (add-binding-to-frame! 'e 4 test-frame)
+
+
+;;
+;; exercise 4.12
+;;
