@@ -840,3 +840,11 @@
 ;;
 ;; exercise 4.12
 ;;
+
+;;
+;; would this be enough?
+;;
+(define (scan vars vals empty-func eq-func)
+  (cond ((null? vars)         (empty-func))
+        ((eq? var (car vars)) (eq-func))
+        (else (scan (cdr vars) (cdr vals)))))
