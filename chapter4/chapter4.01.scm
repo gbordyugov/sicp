@@ -883,3 +883,17 @@
     (lambda (frame)     ;; not-found-in-frame-func
       (add-binding-to-frame! var val frame))
     'all-your-base))    ;; not-found-in-env-func, never called
+
+;;
+;; exercise 4.13
+;;
+
+;;
+;; unbind just in the current frame
+;;
+
+(define unbind-variable! var env
+  (let ((frame (first-frame env)))
+    (define (go vars vals)
+      (cond ((null? vars) (error "Binding not found" var))
+            ((eq? (car va
