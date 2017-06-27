@@ -880,6 +880,6 @@
     var env
     (lambda (vars vals) ;; found-func
       (set-car! vals val))
-    (lambda (frame)
+    (lambda (frame)     ;; not-found-in-frame-func
       (add-binding-to-frame! var val frame))
-    'all-your-base))
+    'all-your-base))    ;; not-found-in-env-func, never called
