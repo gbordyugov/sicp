@@ -841,19 +841,45 @@
 ;; exercise 4.12
 ;;
 
-;;
-;; would this be enough?
-;;
-(define (scan vars vals empty-func eq-func)
-  (cond ((null? vars)         (empty-func))
-        ((eq? var (car vars)) (eq-func vars vals))
-        (else (scan (cdr vars) (cdr vals)))))
+(define (traverse-environment var env
+                              found-func
+                              not-found-in-frame-func
+                              not-found-in-env-func)
+  (let ((frame (first-frame env)))
+    (define (scan vars vals)
+      (cond ((null? vars)          (not-found-in-frame-func frame))
+            ((eq? (car vars) var)  (found-func vars vals))
+            (else (scan (cdr vars) (cdr vals)))))
+    (if (eq? env the-empty-environment)
+      (not-found-in-env-func env)
+      (scan (frame-variables (first-frame env))
+            (frame-values    (first-frame env))))))
 
-(define (lookup-eq-func vars vals)
-  (car vals))
+(define (g-lookup-variable-value var env)
+  (traverse-environment
+    var env
+    (lambda (vars vals) ;; found-func
+      (car vals))
+    (lambda (frame)     ;; not-found-in-frame-func
+      (g-lookup-variable-value var (enclosing-environment env)))
+    (lambda (env)       ;; not-found-in-env-func
+      (error "Binding not found" var env))))
 
-(define (set-eq-func vars vals v)
-  (set-car! vals v))
+(define (g-set-variable-value! var val env)
+  (traverse-environment
+    var env
+    (lambda (vars vals) ;; found-func
+      (set-car! vals val))
+    (lambda (frame)     ;; not-found-in-frame-func
+      (g-set-variable-value! var val (enclosing-environment env)))
+    (lambda (env)       ;; not-found-in-env-func
+      (error "Binding not found" var env))))
 
-(define (define-eq-func vars vals v)
-  (set-car! vals v))
+(define (g-define-variable! var val env)
+  (traverse-environment
+    var env
+    (lambda (vars vals) ;; found-func
+      (set-car! vals val))
+    (lambda (frame)
+      (add-binding-to-frame! var val frame))
+    'all-your-base))
