@@ -846,5 +846,14 @@
 ;;
 (define (scan vars vals empty-func eq-func)
   (cond ((null? vars)         (empty-func))
-        ((eq? var (car vars)) (eq-func))
+        ((eq? var (car vars)) (eq-func vars vals))
         (else (scan (cdr vars) (cdr vals)))))
+
+(define (lookup-eq-func vars vals)
+  (car vals))
+
+(define (set-eq-func vars vals v)
+  (set-car! vals v))
+
+(define (define-eq-func vars vals v)
+  (set-car! vals v))
