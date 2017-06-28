@@ -892,8 +892,29 @@
 ;; unbind just in the current frame
 ;;
 
-(define unbind-variable! var env
-  (let ((frame (first-frame env)))
-    (define (go vars vals)
-      (cond ((null? vars) (error "Binding not found" var))
-            ((eq? (car va
+(define make-frame cons)
+
+(define (frame-variables frame)
+  (car frame))
+
+(define (frame-values frame)
+  (cdr frame))
+
+(define (drop-variable frame var)
+  (let ((vars (frame-variables frame))
+        (vals (frame-values    frame)))
+    (cond ((null? vars) (error "Unbound variable" var))
+          ((eq? (car vars) var) (make-frame (cdr vars) (cdr vals)))
+          (else
+            (let* ((res (drop-variable (make-frame (cdr vars) (cdr vals)) var))
+                   (nvars (car res))
+                   (nvals (cdr res)))
+              (make-frame (cons (car vars) nvars)
+                          (cons (car vals) nvals)))))))
+
+(drop-variable (make-frame '(a b c) '(1 2 3)) 'b)
+
+(drop-variable (make-frame '(a b c) '(1 2 3)) 'd)
+
+(define (unbind-variable! var env)
+  (set-car! env (drop-variable (first-frame env) var)))
