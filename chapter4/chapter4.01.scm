@@ -918,3 +918,19 @@
 
 (define (unbind-variable! var env)
   (set-car! env (drop-variable (first-frame env) var)))
+
+
+;;
+;; 4.1.4 Running the Evaluator as a Program
+;;
+
+(define (setup-environment)
+  (let ((initial-env
+          (extend-environment (primitive-procedure-names)
+                              (primitive-procedure-objects)
+                              the-empty-environment)))
+    (define-variable! 'true  true  initial-env)
+    (define-variable! 'false false initial-env)
+    initial-env))
+
+(define the-global-environment (setup-environment))
