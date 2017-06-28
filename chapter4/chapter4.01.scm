@@ -989,3 +989,14 @@
 (define the-global-environment (setup-environment))
 
 ;; (driver-loop)
+
+
+;;
+;; exercise 4.14
+;;
+
+;;
+;; using native `map` assumes using native functions, but this
+;; assumption doesn't hold if one uses native `map` within the
+;; interpreted language
+;;
