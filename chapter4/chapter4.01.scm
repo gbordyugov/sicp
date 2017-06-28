@@ -1008,3 +1008,7 @@
 ;;
 ;; this has been discussed in `The Little Schemer`
 ;;
+
+;;
+;; 4.1.6 Internal Definitions
+;;
