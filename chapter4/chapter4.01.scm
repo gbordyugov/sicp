@@ -1000,3 +1000,11 @@
 ;; assumption doesn't hold if one uses native `map` within the
 ;; interpreted language
 ;;
+
+
+;;
+;; exercise 4.15
+;;
+;;
+;; this has been discussed in `The Little Schemer`
+;;
