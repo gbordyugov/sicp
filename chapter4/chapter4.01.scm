@@ -1106,3 +1106,11 @@
     (cons 'let (cons lets (append sets new-body)))))
 
 (transform-body body)
+
+
+;;
+;; c.
+;;
+
+(define (make-procedure parameters body env)
+  (list 'procedure parameters (transform-body body) env))
