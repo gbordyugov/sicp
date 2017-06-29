@@ -1070,26 +1070,39 @@
       - body stripped of defines
       - list of variables from defines
       - list of values    from defines """
-  (define (first  x) (car   x))
-  (define (second x) (cadr  x))
-  (define (third  x) (caddr x))
   (define (go body)
     (if (null? body)
       (list '() '() '())
       (let* ((head  (car    body))
              (tail  (cdr    body))
              (nres  (go     tail))
-             (nbody (first  nres))
-             (nvars (second nres))
-             (nvals (third  nres)))
+             (nbody (car    nres))
+             (nvars (cadr   nres))
+             (nvals (caddr  nres)))
         (if (tagged-list? head 'define)
-          (let ((var (second head))
-                (val (third  head)))
+          (let ((var (cadr  head))
+                (val (caddr  head)))
             (list nbody (cons var nvars) (cons val nvals)))
           (list (cons head nbody) nvars nvals)))))
   (go body))
 
 (define body '((define a (lambda (x) (+ x x)))
-               (define c 3) 3 (newline) 7))
+               (define c 3) 5 (newline) 7))
 
 (collect-defines body)
+
+
+(define (transform-body body)
+  (define (make-set var val)
+    (list 'set! var val))
+  (define (make-let var)
+    (list var '*unassigned*))
+  (let* ((new-body-vars-vals (collect-defines body))
+         (new-body           (car             new-body-vars-vals))
+         (vars               (cadr            new-body-vars-vals))
+         (vals               (caddr           new-body-vars-vals))
+         (sets               (map make-set vars vals))
+         (lets               (map make-let vars)))
+    (cons 'let (cons lets (append sets new-body)))))
+
+(transform-body body)
