@@ -1065,7 +1065,31 @@
           (go tail (cons head new-body) vars vals)))))
   (go body '() '() '()))
 
+(define (collect-defines body)
+  """ returns a list of three:
+      - body stripped of defines
+      - list of variables from defines
+      - list of values    from defines """
+  (define (first  x) (car   x))
+  (define (second x) (cadr  x))
+  (define (third  x) (caddr x))
+  (define (go body)
+    (if (null? body)
+      (list '() '() '())
+      (let* ((head  (car    body))
+             (tail  (cdr    body))
+             (nres  (go     tail))
+             (nbody (first  nres))
+             (nvars (second nres))
+             (nvals (third  nres)))
+        (if (tagged-list? head 'define)
+          (let ((var (second head))
+                (val (third  head)))
+            (list nbody (cons var nvars) (cons val nvals)))
+          (list (cons head nbody) nvars nvals)))))
+  (go body))
+
 (define body '((define a (lambda (x) (+ x x)))
-               (define c 3) 3 5 7))
+               (define c 3) 3 (newline) 7))
 
 (collect-defines body)
