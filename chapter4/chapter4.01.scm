@@ -1038,3 +1038,34 @@
         (scan (frame-variables frame)
               (frame-values    frame)))))
     (env-loop env))
+
+
+;;
+;; b.
+;;
+
+(define (tagged-list? exp tag)
+  (if (pair? exp)
+    (eq? (car exp) tag)
+    false))
+
+;;
+;; tail-recursive version, not really what we want
+;;
+(define (collect-defines body)
+  (define (go body new-body vars vals)
+    (if (null? body)
+      (list new-body vars vals)
+      (let* ((head (car body))
+             (tail (cdr body)))
+        (if (tagged-list? head 'define)
+          (let ((var (cadr  head))
+                (val (caddr head)))
+            (go tail new-body (cons var vars) (cons val vals)))
+          (go tail (cons head new-body) vars vals)))))
+  (go body '() '() '()))
+
+(define body '((define a (lambda (x) (+ x x)))
+               (define c 3) 3 5 7))
+
+(collect-defines body)
