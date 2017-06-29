@@ -1114,3 +1114,18 @@
 
 (define (make-procedure parameters body env)
   (list 'procedure parameters (transform-body body) env))
+
+
+;;
+;; exercise 4.17
+;;
+
+;;
+;; let (which is a lambda application) introduces a new frame
+;;
+
+;;
+;; another method would be to move all internal definitions to the
+;; beginning of the body thus making sure that none of them will be
+;; actually called before being defined
+;;
