@@ -1138,3 +1138,11 @@
 ;; that wouldn't work - would break at the assignment of dy to b,
 ;; since y hasn't been assigned to a at this point
 ;;
+
+;;
+;; exercise 4.19
+;;
+
+;;
+;; lots of bla-bla ;-) I'm in favour of Eva's opinion
+;;
