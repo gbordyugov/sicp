@@ -1129,3 +1129,12 @@
 ;; beginning of the body thus making sure that none of them will be
 ;; actually called before being defined
 ;;
+
+;;
+;; exercise 4.18
+;;
+
+;;
+;; that wouldn't work - would break at the assignment of dy to b,
+;; since y hasn't been assigned to a at this point
+;;
