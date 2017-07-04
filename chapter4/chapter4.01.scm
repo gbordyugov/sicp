@@ -1152,12 +1152,45 @@
 ;; exercise 4.20
 ;;
 
+(define (tagged-list? exp tag)
+  (if (pair? exp)
+    (eq? (car exp) tag)
+    false))
+
 (define (letrec? x)
   (tagged-list? x 'letrec))
-
 
 (define (letrec-bindings lr)
   (cadr lr))
 
 (define (letrec-body lr)
   (cddr lr))
+
+(define (letrec-binding-var b)
+  (car b))
+
+(define (letrec-binding-exp b)
+  (cadr b))
+
+(define lr '(letrec ((a b) (b c)) 3 4 (newline)))
+
+(letrec? lr)
+
+(letrec-bindings lr)
+
+(letrec-body lr)
+
+(define (letrec->let lr)
+  (define (make-set var val)
+    (list 'set! var val))
+  (define (make-let var)
+    (list var '*unassigned*))
+  (let* ((bindings (letrec-bindings lr))
+         (body     (letrec-body     lr))
+         (vars     (map letrec-binding-var bindings))
+         (exps     (map letrec-binding-exp bindings))
+         (sets     (map make-set           vars exps))
+         (lets     (map make-let           vars)))
+    (cons 'let (cons lets (append sets body)))))
+
+(letrec->let lr)
