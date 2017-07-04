@@ -1146,3 +1146,18 @@
 ;;
 ;; lots of bla-bla ;-) I'm in favour of Eva's opinion
 ;;
+
+
+;;
+;; exercise 4.20
+;;
+
+(define (letrec? x)
+  (tagged-list? x 'letrec))
+
+
+(define (letrec-bindings lr)
+  (cadr lr))
+
+(define (letrec-body lr)
+  (cddr lr))
