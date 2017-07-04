@@ -1208,3 +1208,17 @@
 ;; and odd? and even? are not visible from the corresponding lambda
 ;; bodies
 
+
+;;
+;; exercise 4.21
+;;
+
+;;
+;; (a)
+;;
+((lambda (n)
+   ((lambda (fact) (fact fact n))
+    (lambda (ft k) (if (= k 1)
+                     1
+                     (* k (ft ft (- k 1)))))))
+ 10)
