@@ -1194,3 +1194,17 @@
     (cons 'let (cons lets (append sets body)))))
 
 (letrec->let lr)
+
+;;
+;; (b)
+;;
+
+;;
+;; a single let is transformed into a lambda application like
+;; ((lambda (even? odd?) 1)
+;;  (lambda (n) (if (= n 0) #t (odd?  (- n 1))))
+;;  (lambda (n) (if (= n 0) #f (even? (- n 1))))
+;;
+;; and odd? and even? are not visible from the corresponding lambda
+;; bodies
+
