@@ -1370,3 +1370,11 @@
                               (procedure-environment proc))))
         (else
           (error "Unknown procedure type: EXECUTE-APPLICATION" proc))))
+
+
+;;
+;; exercise 4.22
+;;
+
+;; addition to analyze:
+;; ((let? exp) (analyze (let->application exp)))
