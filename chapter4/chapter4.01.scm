@@ -1372,9 +1372,19 @@
           (error "Unknown procedure type: EXECUTE-APPLICATION" proc))))
 
 
+
 ;;
 ;; exercise 4.22
 ;;
 
 ;; addition to analyze:
 ;; ((let? exp) (analyze (let->application exp)))
+
+
+;;
+;; exercise 4.23
+;;
+
+;;
+;; it's down to analyzing in run-time vs `compile`-time
+;;
