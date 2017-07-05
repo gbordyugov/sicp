@@ -1388,3 +1388,12 @@
 ;;
 ;; it's down to analyzing in run-time vs `compile`-time
 ;;
+
+
+;;
+;; exercise 4.24
+;;
+
+;;
+;; skipped
+;;
