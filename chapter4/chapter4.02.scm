@@ -24,5 +24,15 @@
 (define (unless-condition-usual-value exp)
   (caddr exp))
 
-(define (unless-exceptional-value exp)
-  (cDddr exp))
+(define (unless-condition-exceptional-value exp)
+  (cdddr exp))
+
+(define (eval-unless exp env)
+  (if (true? (eval (unless-condition exp) env))
+    (eval (unless-condition-exceptional-value  exp) env)
+    (eval (unless-condition-usual-value exp) env)))
+
+;;
+;; there are probably some exotic uses of unless as a higher-order
+;; procedure, cannot think of them now
+;;
