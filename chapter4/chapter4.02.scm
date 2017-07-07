@@ -49,3 +49,9 @@
 ;; Thunk: an expression together with the environment, in which the
 ;; procedure application is being created
 ;;
+;; Thunk is forced when:
+;;  - it is passed to a primitive procedure
+;;  - when it is the value of a predicate in a conditional
+;;  - when it is the value of an operator that is about to be applied
+;;  as a procedure
+;;
