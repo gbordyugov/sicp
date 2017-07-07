@@ -41,3 +41,11 @@
 ;;
 ;; 4.2.2 An Interpreter with Lazy Evalution
 ;;
+
+;;
+;; the lazy arguments of a procedure is transformed into thunks upon
+;; the call.
+;;
+;; Thunk: an expression together with the environment, in which the
+;; procedure application is being created
+;;
