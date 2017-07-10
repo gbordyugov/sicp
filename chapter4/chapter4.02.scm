@@ -180,3 +180,26 @@
 ;;
 ;; factorial would be a nice example of that
 ;;
+
+
+;;
+;; exercise 4.30
+;;
+
+;;
+;; (a) applications of primitive functions are always forced, see
+;; the thunks rules above
+;;
+
+;;
+;; (b) depending on forced or not, (p2 1) returns either 1 or (1 2)
+;;
+
+
+;;
+;; (c) (display) is a primitive function
+;;
+
+;;
+;; (d) Cy D Effect seems logical to me here
+;;
