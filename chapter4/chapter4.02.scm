@@ -153,3 +153,12 @@
            result))
         ((evaluated-thunk? obj) (thunk-value obj))
         (else obj)))
+
+
+;;
+;; exercise 4.27
+;;
+
+;;
+;; count would be incremented on forcing w
+;;
