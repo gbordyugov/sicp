@@ -172,3 +172,11 @@
 ;; procedure values must be fully forced before applying them to their
 ;; arguments
 ;;
+
+;;
+;; exercise 4.29
+;;
+
+;;
+;; factorial would be a nice example of that
+;;
