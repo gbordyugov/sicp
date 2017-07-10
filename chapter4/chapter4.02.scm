@@ -113,4 +113,22 @@
 (define the-global-environment (setup-environment))
 
 ;; (driver-loop)
-      
+
+
+;;
+;; Representing thunks
+;;
+
+(define (force-it obj)
+  (if (thunk? obj)
+    (actual-vaue (thunk-exp obj) (thunk-env obj))
+    obj))
+
+
+(define (delay-it exp env)
+  (list 'thunk exp env))
+(define (thunk? obj)
+  (tagged-list? obj 'thung))
+
+(define (thunk-exp t) (cadr  t))
+(define (thunk-env t) (caddr t))
