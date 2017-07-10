@@ -203,3 +203,8 @@
 ;;
 ;; (d) Cy D Effect seems logical to me here
 ;;
+
+
+;;
+;; exercise 4.31 skipped
+;;
