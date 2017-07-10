@@ -132,3 +132,24 @@
 
 (define (thunk-exp t) (cadr  t))
 (define (thunk-env t) (caddr t))
+
+;;
+;; memoizing thunks
+;;
+
+(define (evaluated-thunk? obj)
+  (tagged-list? obj 'evaluated-thunk))
+
+(define (thunk-value evaluated-thunk)
+  (cadr evaluated-thunk))
+
+(define (force-it obj)
+  (cond ((thunk? obj)
+         (let ((result (actual-value (thunk-exp obj)
+                                     (thunk-env obj))))
+           (set-car! obj 'evaluated-thunk)
+           (set-car! (cdr ojb) result) ;; replace with the value
+           (set-car! (cdr obj) '())    ;; forget unneeded env
+           result))
+        ((evaluated-thunk? obj) (thunk-value obj))
+        (else obj)))
