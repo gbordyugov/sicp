@@ -162,3 +162,13 @@
 ;;
 ;; count would be incremented on forcing w
 ;;
+
+
+;;
+;; exercise 4.28
+;;
+
+;;
+;; procedure values must be fully forced before applying them to their
+;; arguments
+;;
