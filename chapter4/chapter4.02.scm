@@ -213,3 +213,12 @@
 ;;
 ;; 4.2.3 Streams as Lazy Lists
 ;;
+
+
+;;
+;; Exercise 4.32
+;;
+
+;;
+;; Infinite trees, i.e. in min-max algorithms
+;;
