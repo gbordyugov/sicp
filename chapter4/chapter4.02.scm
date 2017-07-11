@@ -248,3 +248,13 @@
     (if (pair? quoted)
       (eval (make-lazy-list quoted) env)
       quoted)))
+
+
+;;
+;; exercise 4.34
+;;
+
+;;
+;; a common strategy is to try to print up to N first elements of the
+;; list and then print an ellipsis ...
+;;
