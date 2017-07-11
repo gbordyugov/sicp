@@ -208,3 +208,8 @@
 ;;
 ;; exercise 4.31 skipped
 ;;
+
+
+;;
+;; 4.2.3 Streams as Lazy Lists
+;;
