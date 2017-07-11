@@ -222,3 +222,29 @@
 ;;
 ;; Infinite trees, i.e. in min-max algorithms
 ;;
+
+
+;;
+;; Exercise 4.33
+;;
+
+;;
+;; turn list into series of applications of cons
+;;
+(define (make-lazy-list elems)
+  (if (null? elems)
+    '()
+    (list 'cons (car elems) make-lazy-list (cdr elems))))
+
+;; extracts (a b c) from (quote (a b c))
+;; old version
+(define (text-of-quotation exp)
+  (cadr exp))
+
+;; extracts (a b c) from (quote (a b c))
+;; new version
+(define (text-of-quotation exp env)
+  (let ((quoted (cadr exp)))
+    (if (pair? quoted)
+      (eval (make-lazy-list quoted) env)
+      quoted)))
