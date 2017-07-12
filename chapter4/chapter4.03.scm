@@ -80,6 +80,7 @@
     (list (list 'backer   backer)
           (list 'cooper   cooper)
           (list 'fletcher fletcher)
+          (list 'miller   miller)
           (list 'smith    smith))))
 
 ;;
@@ -103,3 +104,50 @@
 ;; the order of constrains must not affect the answer, but it may
 ;; affect the runtime
 ;;
+
+
+;;
+;; exercise 4.40
+;;
+
+;;
+;; the first four requirements can be eliminated altogether by
+;; restricting possible values for baker, cooper, and fletcher.
+;;
+
+(define (multiple-dwelling)
+  (let ((baker    (amb 1 2 3 4  ))
+        (cooper   (amb   2 3 4 5))
+        (fletcher (amb   2 3 4  ))
+        (miller   (amb 1 2 3 4 5))
+        (smith    (amb 1 2 3 4 5)))
+    (requre (distinct? (list baker cooper fletcher miller smith)))
+    (require (> miller cooper))
+    (require (not (= (abs (- smith  fletcher)) 1)))
+    (require (not (= (abs (- fletcher cooper)) 1)))
+    (list (list 'backer   backer)
+          (list 'cooper   cooper)
+          (list 'fletcher fletcher)
+          (list 'miller   miller)
+          (list 'smith    smith))))
+
+;;
+;; further optimization: postponing introducing ambiguity only when
+;; it's really neaded
+;;
+
+(define (multiple-dwelling)
+  (let ((cooper   (amb   2 3 4 5))
+        (miller   (amb 1 2 3 4 5)))
+    (require (> miller cooper))
+    (let ((fletcher (amb 2 3 4)))
+      (require (not (= (abs (- fletcher cooper)) 1)))
+    (let ((smith (amb 1 2 3 4 5)))
+      (require (not (= (abs (- smith  fletcher)) 1)))
+      (let ((baker (amb 1 2 3 4 5)))
+        (requre (distinct? (list baker cooper fletcher miller smith)))
+        (list (list 'backer   backer)
+              (list 'cooper   cooper)
+              (list 'fletcher fletcher)
+              (list 'miller   miller)
+              (list 'smith    smith)))))))
