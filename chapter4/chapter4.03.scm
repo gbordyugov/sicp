@@ -41,4 +41,13 @@
         (list i j k)))))
 
 
+;;
+;; exercise 4.37
+;;
+
+;;
+;; several useful pruning techniques:
+;;
+;; - sum of squares of i and j must be a square of an integer
+;; - sum of squares of i and j is smaller than high^2
 
