@@ -93,3 +93,13 @@
 ;; if I'd had an interpreter at this point of time, it would have
 ;; shown that there were 5 solutions ;-)
 ;;
+
+
+;;
+;; exercise 4.39
+;;
+
+;;
+;; the order of constrains must not affect the answer, but it may
+;; affect the runtime
+;;
