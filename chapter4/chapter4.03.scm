@@ -81,3 +81,15 @@
           (list 'cooper   cooper)
           (list 'fletcher fletcher)
           (list 'smith    smith))))
+
+;;
+;; Exercise 4.38
+;;
+
+;;
+;; just remove the string with
+;; (require (not (= (abs (- smith  fletcher)) 1)))
+;;
+;; if I'd had an interpreter at this point of time, it would have
+;; shown that there were 5 solutions ;-)
+;;
