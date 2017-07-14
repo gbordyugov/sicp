@@ -1,5 +1,5 @@
 
-(define (eval exp env)
+(define (eval. exp env)
   (cond ((self-evaluating? exp) exp)
         ((variable? exp)       (lookup-variable-value exp env))
         ((quoted? exp)         (text-of-quotation exp))
@@ -10,19 +10,19 @@
                                                (lambda-body exp)
                                                env))
         ((begin? exp)          (eval-sequence (begin-actions exp) env))
-        ((cond?  exp)          (eval (cond->if exp) env))
+        ((cond?  exp)          (eval. (cond->if exp) env))
         ((or?    exp)          (eval-or  exp env))
         ((and?   exp)          (eval-and exp env))
-        ((let?   exp)          (eval (let->application  exp) env))
-        ((let*?  exp)          (eval (let*->nested-lets exp) env))
-        ((while? exp)          (eval (transform-while   exp) env))
-        ((application? exp)    (apply (eval (operator exp) env)
+        ((let?   exp)          (eval. (let->application  exp) env))
+        ((let*?  exp)          (eval. (let*->nested-lets exp) env))
+        ((while? exp)          (eval. (transform-while   exp) env))
+        ((application? exp)    (apply. (eval. (operator exp) env)
                                       (list-of-values (operands exp) env)))
         (else                  (error "Unknown expression-type: EVAL" exp))))
 
-(define apply-in-underlyng-scheme apply) ;; we'll need it later
+(define apply-in-underlying-scheme apply) ;; we'll need it later
 
-(define (apply procedure arguments)
+(define (apply. procedure arguments)
   (cond ((primitive-procedure? procedure)
          (apply-primitive-procedure procedure arguments))
         ((compound-procedure? procedure)
@@ -37,21 +37,21 @@
 (define (list-of-values exps env)
   (if (no-operands? exps)
     '()
-    (cons (eval (first-operand exps) env)
+    (cons (eval. (first-operand exps) env)
           (list-of-values (rest-operands exps) env))))
 
 (define (eval-if exp env)
   ;; the if-predicate is a value in the language we're implementing
   ;; and is not necessarily a Lisp boolean, that's why we're using
   ;; the `true?` predicate
-  (if (true? (eval (if-predicate exp) env))
-    (eval (if-consequent  exp) env)
-    (eval (if-alternative exp) env)))
+  (if (true? (eval. (if-predicate exp) env))
+    (eval. (if-consequent  exp) env)
+    (eval. (if-alternative exp) env)))
 
 
 (define (eval-sequence exps env)
-  (cond ((last-exp? exps) (eval (first-exp exps) env))
-        (else             (eval (first-exp exps) env)
+  (cond ((last-exp? exps) (eval. (first-exp exps) env))
+        (else             (eval. (first-exp exps) env)
                           (eval-sequence (rest-exps exps) env))))
 
 ;;
@@ -60,13 +60,13 @@
 
 (define (eval-assignment exp env)
   (set-variable-value! (assignment-variable exp)
-                       (eval (assignment-value exp) env)
+                       (eval. (assignment-value exp) env)
                        env)
   'ok)
 
 (define (eval-definition exp env)
   (define-variable! (definition-variable exp)
-                    (eval (definition-value exp) env)
+                    (eval. (definition-value exp) env)
                     env)
   'ok)
 
@@ -258,7 +258,7 @@
 (define (eval-and-clauses clauses env)
   (if (null? clauses)
     #t
-    (and (eval (car clauses) exp)
+    (and (eval. (car clauses) exp)
          (eval-and-clauses (cdr clauses) env))))
 
 (define (eval-and exp env)
@@ -276,14 +276,14 @@
 (define (eval-or-clauses clauses env)
   (if (null? clauses)
     #f
-    (and (eval (car clauses) exp)
+    (and (eval. (car clauses) exp)
          (eval-or-clauses (cdr clauses) env))))
 
 (define (eval-or exp env)
   (eval-or-clauses (or-clauses) exp env))
 
 ;;
-;; to expand the body of `eval` is trivial
+;; to expand the body of `eval.` is trivial
 ;;
 
 
@@ -352,10 +352,10 @@
 ;; (let->application let-test-exp)
 
 ;;
-;; addition to eval
+;; addition to eval.
 ;;
 ;; 
-;; ((let? exp) (eval (let->application exp) env))
+;; ((let? exp) (eval. (let->application exp) env))
 
 
 ;;
@@ -409,10 +409,10 @@
 ;;                       true false true))
 
 ;;
-;; addition to eval
+;; addition to eval.
 ;;
 ;; 
-;; ((let*? exp) (eval (let*->nested-lets exp) env))
+;; ((let*? exp) (eval. (let*->nested-lets exp) env))
 
 ;;
 ;; exercise 4.8
@@ -694,7 +694,7 @@
        primitive-procedures))
 
 (define (apply-primitive-procedure proc args)
-  (apply-in-underlyng-scheme
+  (apply-in-underlying-scheme
     (primitive-implementation proc) args))
 
 (define  input-prompt ";;; M-Eval input:")
@@ -705,7 +705,7 @@
 (define (driver-loop)
   (prompt-for-input input-prompt)
   (let ((input (read)))
-    (let ((output (eval input the-global-environment)))
+    (let ((output (eval. input the-global-environment)))
       (announce-output output-prompt)
       (user-print output)))
   (driver-loop))
@@ -1006,7 +1006,7 @@
 ;; ;; This saves work because `analyze` will be called only once on an
 ;; ;; expression, while the execution procedure may be called many times.
 ;; ;; (I don't quite understant it yet. Are they saying that partially
-;; ;; applying eval to exp will be done once and then the result will be
+;; ;; applying eval. to exp will be done once and then the result will be
 ;; ;; applied to environment many times?)
 ;; ;;
 ;; 
