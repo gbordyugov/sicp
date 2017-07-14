@@ -625,7 +625,7 @@
             ((eq? var (car vars)) (car vals))
             (else (scan (cdr vars) (cdr vals)))))
     (if (eq? env the-empty-environment)
-      (error "Unbound variable" var)
+      (error "Unbound variable: LOOKUP-VARIABLE-VALUE:" var)
       (let ((frame (first-frame env)))
         (scan (frame-variables frame)
               (frame-values    frame)))))
@@ -639,7 +639,7 @@
             ((eq? var (car vars)) (set-car! vals val))
             (else (scan (cdr vars) (cdr vals)))))
     (if (eq? env the-empty-environment)
-      (error "Unbound variable: SET!" var)
+      (error "Unbound variable: SET!:" var)
       (let ((frame (first-frame env)))
         (scan (frame-variables frame)
               (frame-values    frame)))))
@@ -733,131 +733,141 @@
 ;; (driver-loop)
 
 
-;; ;;
-;; ;; exercise 4.14
-;; ;;
-;; 
-;; ;;
-;; ;; using native `map` assumes using native functions, but this
-;; ;; assumption doesn't hold if one uses native `map` within the
-;; ;; interpreted language
-;; ;;
-;; 
-;; 
-;; ;;
-;; ;; exercise 4.15
-;; ;;
-;; ;;
-;; ;; this has been discussed in `The Little Schemer`
-;; ;;
-;; 
-;; ;;
-;; ;; 4.1.6 Internal Definitions
-;; ;;
-;; 
-;; 
-;; ;;
-;; ;; exercise 4.16
-;; ;;
-;; 
-;; ;;
-;; ;; a.
-;; ;;
-;; 
-;; (define (lookup-variable-value var env)
-;;   (define (env-loop env)
-;;     (define (scan vars vals)
-;;       (cond ((null? vars) (env-loop (enclosing-environment env)))
-;;             ((eq? var (car vars))
-;;              (let ((val (car vals)))
-;;                (if (eq? val *unassigned*)
-;;                  (error "an unassigned variable" var)
-;;                  val)))
-;;             (else (scan (cdr vars) (cdr vals)))))
-;;     (if (eq? env the-empty-environment)
-;;       (error "Unbound variable" var)
-;;       (let ((frame (first-frame env)))
-;;         (scan (frame-variables frame)
-;;               (frame-values    frame)))))
-;;     (env-loop env))
-;; 
-;; 
-;; ;;
-;; ;; b.
-;; ;;
-;; 
-;; (define (tagged-list? exp tag)
-;;   (if (pair? exp)
-;;     (eq? (car exp) tag)
-;;     false))
-;; 
-;; ;;
-;; ;; tail-recursive version, not really what we want
-;; ;;
-;; (define (collect-defines body)
-;;   (define (go body new-body vars vals)
-;;     (if (null? body)
-;;       (list new-body vars vals)
-;;       (let* ((head (car body))
-;;              (tail (cdr body)))
-;;         (if (tagged-list? head 'define)
-;;           (let ((var (cadr  head))
-;;                 (val (caddr head)))
-;;             (go tail new-body (cons var vars) (cons val vals)))
-;;           (go tail (cons head new-body) vars vals)))))
-;;   (go body '() '() '()))
-;; 
-;; (define (collect-defines body)
-;;   """ returns a list of three:
-;;       - body stripped of defines
-;;       - list of variables from defines
-;;       - list of values    from defines """
-;;   (define (go body)
-;;     (if (null? body)
-;;       (list '() '() '())
-;;       (let* ((head  (car    body))
-;;              (tail  (cdr    body))
-;;              (nres  (go     tail))
-;;              (nbody (car    nres))
-;;              (nvars (cadr   nres))
-;;              (nvals (caddr  nres)))
-;;         (if (tagged-list? head 'define)
-;;           (let ((var (cadr  head))
-;;                 (val (caddr  head)))
-;;             (list nbody (cons var nvars) (cons val nvals)))
-;;           (list (cons head nbody) nvars nvals)))))
-;;   (go body))
-;; 
-;; (define body '((define a (lambda (x) (+ x x)))
-;;                (define c 3) 5 (newline) 7))
-;; 
-;; (collect-defines body)
-;; 
-;; 
-;; (define (transform-body body)
-;;   (define (make-set var val)
-;;     (list 'set! var val))
-;;   (define (make-let var)
-;;     (list var '*unassigned*))
-;;   (let* ((new-body-vars-vals (collect-defines body))
-;;          (new-body           (car             new-body-vars-vals))
-;;          (vars               (cadr            new-body-vars-vals))
-;;          (vals               (caddr           new-body-vars-vals))
-;;          (sets               (map make-set vars vals))
-;;          (lets               (map make-let vars)))
-;;     (cons 'let (cons lets (append sets new-body)))))
-;; 
-;; (transform-body body)
-;; 
-;; 
-;; ;;
-;; ;; c.
-;; ;;
-;; 
-;; (define (make-procedure parameters body env)
-;;   (list 'procedure parameters (transform-body body) env))
-;; 
-;; 
+;;
+;; exercise 4.14
+;;
+
+;;
+;; using native `map` assumes using native functions, but this
+;; assumption doesn't hold if one uses native `map` within the
+;; interpreted language
+;;
+
+
+;;
+;; exercise 4.15
+;;
+;;
+;; this has been discussed in `The Little Schemer`
+;;
+
+;;
+;; 4.1.6 Internal Definitions
+;;
+
+
+
+;;
+;; exercise 4.16
+;;
+
+;;
+;; a.
+;;
+
+(define (lookup-variable-value var env)
+  (display var)
+  (newline)
+  (display env)
+  (newline)
+  (define (env-loop env)
+    (define (scan vars vals)
+      (cond ((null? vars) (env-loop (enclosing-environment env)))
+            ((eq? var (car vars))
+             (let ((val (car vals)))
+               (if (eq? val '*unassigned*)
+                 (error "an unassigned variable: LOOKUP-VARIABLE-VALUE:"
+                        var)
+                 val)))
+            (else (scan (cdr vars) (cdr vals)))))
+    (if (eq? env the-empty-environment)
+      (error "Unbound variable: LOOKUP-VARIABLE-VALUE:" var)
+      (let ((frame (first-frame env)))
+        (scan (frame-variables frame)
+              (frame-values    frame)))))
+    (env-loop env))
+
+
+;;
+;; b.
+;;
+
+(define (tagged-list? exp tag)
+  (if (pair? exp)
+    (eq? (car exp) tag)
+    false))
+
+;;
+;; tail-recursive version, not really what we want
+;;
+(define (collect-defines body)
+  (define (go body new-body vars vals)
+    (if (null? body)
+      (list new-body vars vals)
+      (let* ((head (car body))
+             (tail (cdr body)))
+        (if (tagged-list? head 'define)
+          (let ((var (cadr  head))
+                (val (caddr head)))
+            (go tail new-body (cons var vars) (cons val vals)))
+          (go tail (cons head new-body) vars vals)))))
+  (go body '() '() '()))
+
+(define (collect-defines body)
+  """ returns a list of three:
+      - body stripped of defines
+      - list of variables from defines
+      - list of values    from defines """
+  (define (go body)
+    (if (null? body)
+      (list '() '() '())
+      (let* ((head  (car    body))
+             (tail  (cdr    body))
+             (nres  (go     tail))
+             (nbody (car    nres))
+             (nvars (cadr   nres))
+             (nvals (caddr  nres)))
+        (if (tagged-list? head 'define)
+          (let ((var (cadr  head))
+                (val (caddr  head)))
+            (list nbody (cons var nvars) (cons val nvals)))
+          (list (cons head nbody) nvars nvals)))))
+  (go body))
+
+
+
+(define (transform-body body)
+  (define (make-set var val)
+    (list 'set! var val))
+  (define (make-let var)
+    (list var ''*unassigned*))
+  (let* ((new-body-vars-vals (collect-defines body))
+         (new-body           (car             new-body-vars-vals))
+         (vars               (cadr            new-body-vars-vals))
+         (vals               (caddr           new-body-vars-vals))
+         (sets               (map make-set vars vals))
+         (lets               (map make-let vars)))
+    (list (cons 'let (cons lets (append sets new-body))))))
+
+(define parameters '(a))
+
+(define body '(3))
+
+(collect-defines body)
+
+(transform-body body)
+
+;;
+;; c.
+;;
+
+(define (make-procedure parameters body env)
+  ;; (list 'procedure parameters (transform-body body) env))
+  (list 'procedure parameters body env))
+
+(define procedure (make-procedure parameters body '()))
+
+
 ;; ;;
 ;; ;; exercise 4.17
 ;; ;;
