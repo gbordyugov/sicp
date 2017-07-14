@@ -479,7 +479,7 @@
   (map let-binding-var (let-bindings exp)))
 
 (define (let-body exp)
-  (caddr exp))
+  (cddr exp))
 
 (define (let-binding-var binding)
   (car binding))
@@ -568,7 +568,7 @@
   (caddr exp))
 
 (define (named-let-body exp)
-  (cadddr exp))
+  (cdddr exp))
 
 (define (named-let-binding-var binding)
   (car binding))
