@@ -334,7 +334,7 @@
   (map let-binding-var (let-bindings exp)))
 
 (define (let-body exp)
-  (caddr exp))
+  (cddr exp))
 
 (define (let-binding-var binding)
   (car binding))
@@ -348,7 +348,9 @@
         (map let-binding-exp (let-bindings exp))))
 
 ;; (define let-test-exp '(let ((a b) (c d)) ((bla bli) (tri la))))
-
+;; 
+;; (define let-test-exp '(let ((a 3)) a))
+;; 
 ;; (let->application let-test-exp)
 
 ;;
@@ -429,7 +431,7 @@
   (caddr exp))
 
 (define (named-let-body exp)
-  (cadddr exp))
+  (cdddr exp))
 
 (define (named-let-binding-var binding)
   (car binding))
@@ -683,6 +685,8 @@
         (list '-     -)
         (list '*     *)
         (list '/     /)
+        (list '=     =)
+        (list 'eq?   eq?)
         ;; ... more primitives))
         ))
 
