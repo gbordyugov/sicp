@@ -766,10 +766,6 @@
 ;;
 
 (define (lookup-variable-value var env)
-  (display var)
-  (newline)
-  (display env)
-  (newline)
   (define (env-loop env)
     (define (scan vars vals)
       (cond ((null? vars) (env-loop (enclosing-environment env)))
@@ -873,7 +869,7 @@
                 (define (sum x y) (+ x y))
                 (+ a (sum x 5))))
 
-(define proc-body (cddr test-proc))
+(define test-proc-body (cddr test-proc))
 
 (collect-defines test-proc-body)
 
