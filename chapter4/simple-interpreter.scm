@@ -857,6 +857,15 @@
 
 (transform-body body)
 
+(define proc '(define (adder x)
+                (define a 3)
+                (define (triple x) (+ x x x))
+                (+ a (triple x))))
+
+(define proc-body (cddr proc))
+
+(transform-body proc-body)
+
 ;;
 ;; c.
 ;;
