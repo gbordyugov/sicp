@@ -800,6 +800,8 @@
 ;;
 ;; tail-recursive version, not really what we want
 ;;
+;; doesn't work
+;;
 (define (collect-defines body)
   (define (go body new-body vars vals)
     (if (null? body)
@@ -830,7 +832,7 @@
         (if (tagged-list? head 'define)
           (let ((var (cadr  head))
                 (val (caddr  head)))
-            (list nbody (cons var nvars) (cons val nvals)))
+            (list nbody (cons      var  nvars) (cons val nvals)))
           (list (cons head nbody) nvars nvals)))))
   (go body))
 
@@ -838,16 +840,24 @@
 
 (define (transform-body body)
   (define (make-set var val)
-    (list 'set! var val))
+    (if (not (pair? var))          ;; variable or proc definition?
+      (list 'set! var val)
+      (let* ((proc-name (car var))
+             (proc-args (cdr var)))
+        (list 'set! proc-name (list 'lambda proc-args val)))))
   (define (make-let var)
-    (list var ''*unassigned*))
+    (if (not (pair? var))          ;; variable or proc definition?
+      (list      var  ''*unassigned*)
+      (list (car var) ''*unassigned*)))
   (let* ((new-body-vars-vals (collect-defines body))
          (new-body           (car             new-body-vars-vals))
          (vars               (cadr            new-body-vars-vals))
-         (vals               (caddr           new-body-vars-vals))
-         (sets               (map make-set vars vals))
-         (lets               (map make-let vars)))
-    (list (cons 'let (cons lets (append sets new-body))))))
+         (vals               (caddr           new-body-vars-vals)))
+    (if (null? vars)
+      body
+      (let ((sets (map make-set vars vals))
+            (lets (map make-let vars)))
+        (list (cons 'let (cons lets (append sets new-body))))))))
 
 (define parameters '(a))
 
@@ -857,14 +867,17 @@
 
 (transform-body body)
 
-(define proc '(define (adder x)
+(define test-proc '(define (adder x)
                 (define a 3)
                 (define (triple x) (+ x x x))
-                (+ a (triple x))))
+                (define (sum x y) (+ x y))
+                (+ a (sum x 5))))
 
-(define proc-body (cddr proc))
+(define proc-body (cddr test-proc))
 
-(transform-body proc-body)
+(collect-defines test-proc-body)
+
+(transform-body test-proc-body)
 
 ;;
 ;; c.
