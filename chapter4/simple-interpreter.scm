@@ -886,99 +886,106 @@
 (define procedure (make-procedure parameters body '()))
 
 
-;; ;;
-;; ;; exercise 4.17
-;; ;;
-;; 
-;; ;;
-;; ;; let (which is a lambda application) introduces a new frame
-;; ;;
-;; 
-;; ;;
-;; ;; another method would be to move all internal definitions to the
-;; ;; beginning of the body thus making sure that none of them will be
-;; ;; actually called before being defined
-;; ;;
-;; 
-;; ;;
-;; ;; exercise 4.18
-;; ;;
-;; 
-;; ;;
-;; ;; that wouldn't work - would break at the assignment of dy to b,
-;; ;; since y hasn't been assigned to a at this point
-;; ;;
-;; 
-;; ;;
-;; ;; exercise 4.19
-;; ;;
-;; 
-;; ;;
-;; ;; lots of bla-bla ;-) I'm in favour of Eva's opinion
-;; ;;
-;; 
-;; 
-;; ;;
-;; ;; exercise 4.20
-;; ;;
-;; 
-;; (define (tagged-list? exp tag)
-;;   (if (pair? exp)
-;;     (eq? (car exp) tag)
-;;     false))
-;; 
-;; (define (letrec? x)
-;;   (tagged-list? x 'letrec))
-;; 
-;; (define (letrec-bindings lr)
-;;   (cadr lr))
-;; 
-;; (define (letrec-body lr)
-;;   (cddr lr))
-;; 
-;; (define (letrec-binding-var b)
-;;   (car b))
-;; 
-;; (define (letrec-binding-exp b)
-;;   (cadr b))
-;; 
-;; (define lr '(letrec ((a b) (b c)) 3 4 (newline)))
-;; 
-;; (letrec? lr)
-;; 
-;; (letrec-bindings lr)
-;; 
-;; (letrec-body lr)
-;; 
-;; (define (letrec->let lr)
-;;   (define (make-set var val)
-;;     (list 'set! var val))
-;;   (define (make-let var)
-;;     (list var '*unassigned*))
-;;   (let* ((bindings (letrec-bindings lr))
-;;          (body     (letrec-body     lr))
-;;          (vars     (map letrec-binding-var bindings))
-;;          (exps     (map letrec-binding-exp bindings))
-;;          (sets     (map make-set           vars exps))
-;;          (lets     (map make-let           vars)))
-;;     (cons 'let (cons lets (append sets body)))))
-;; 
-;; (letrec->let lr)
-;; 
-;; ;;
-;; ;; (b)
-;; ;;
-;; 
-;; ;;
-;; ;; a single let is transformed into a lambda application like
-;; ;; ((lambda (even? odd?) 1)
-;; ;;  (lambda (n) (if (= n 0) #t (odd?  (- n 1))))
-;; ;;  (lambda (n) (if (= n 0) #f (even? (- n 1))))
-;; ;;
-;; ;; and odd? and even? are not visible from the corresponding lambda
-;; ;; bodies
-;; 
-;; 
+;;
+;; exercise 4.17
+;;
+
+;;
+;; let (which is a lambda application) introduces a new frame
+;;
+
+;;
+;; another method would be to move all internal definitions to the
+;; beginning of the body thus making sure that none of them will be
+;; actually called before being defined
+;;
+
+;;
+;; exercise 4.18
+;;
+
+;;
+;; that wouldn't work - would break at the assignment of dy to b,
+;; since y hasn't been assigned to a at this point
+;;
+
+;;
+;; exercise 4.19
+;;
+
+;;
+;; lots of bla-bla ;-) I'm in favour of Eva's opinion
+;;
+
+
+;;
+;; exercise 4.20
+;;
+
+(define (tagged-list? exp tag)
+  (if (pair? exp)
+    (eq? (car exp) tag)
+    false))
+
+(define (letrec? x)
+  (tagged-list? x 'letrec))
+
+(define (letrec-bindings lr)
+  (cadr lr))
+
+(define (letrec-body lr)
+  (cddr lr))
+
+(define (letrec-binding-var b)
+  (car b))
+
+(define (letrec-binding-exp b)
+  (cadr b))
+
+(define lr '(letrec ((a b) (b c)) 3 4 (newline)))
+
+(letrec? lr)
+
+(letrec-bindings lr)
+
+(letrec-body lr)
+
+(define (letrec->let lr)
+  (define (make-set var val)
+    (list 'set! var val))
+  (define (make-let var)
+    (list var '*unassigned*))
+  (let* ((bindings (letrec-bindings lr))
+         (body     (letrec-body     lr))
+         (vars     (map letrec-binding-var bindings))
+         (exps     (map letrec-binding-exp bindings))
+         (sets     (map make-set           vars exps))
+         (lets     (map make-let           vars)))
+    (cons 'let (cons lets (append sets body)))))
+
+(define lr '(letrec
+              ((even? (lambda (n)
+                        (if (= n 0) true (odd? (- n 1)))))
+               (odd?  (lambda (n)
+                        (if (= n 0) false (even? (- n 1))))))
+              (even? x)))
+
+(letrec->let lr)
+
+;;
+;; (b)
+;;
+
+;;
+;; a single let is transformed into a lambda application like
+;; ((lambda (even? odd?) 1)
+;;  (lambda (n) (if (= n 0) #t (odd?  (- n 1))))
+;;  (lambda (n) (if (= n 0) #f (even? (- n 1))))
+;;
+;; and odd? and even? are not visible from the corresponding lambda
+;; bodies
+
+
 ;; ;;
 ;; ;; exercise 4.21
 ;; ;;
@@ -1147,27 +1154,27 @@
 
 
 
-;; ;;
-;; ;; exercise 4.22
-;; ;;
-;; 
-;; ;; addition to analyze:
-;; ;; ((let? exp) (analyze (let->application exp)))
-;; 
-;; 
-;; ;;
-;; ;; exercise 4.23
-;; ;;
-;; 
-;; ;;
-;; ;; it's down to analyzing in run-time vs `compile`-time
-;; ;;
-;; 
-;; 
-;; ;;
-;; ;; exercise 4.24
-;; ;;
-;; 
-;; ;;
-;; ;; skipped
-;; ;;
+;;
+;; exercise 4.22
+;;
+
+;; addition to analyze:
+;; ((let? exp) (analyze (let->application exp)))
+
+
+;;
+;; exercise 4.23
+;;
+
+;;
+;; it's down to analyzing in run-time vs `compile`-time
+;;
+
+
+;;
+;; exercise 4.24
+;;
+
+;;
+;; skipped
+;;
