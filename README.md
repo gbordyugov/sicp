@@ -12,5 +12,4 @@ Open/skipped exercises
  - 2.92
  - 2.95
  - 4.10 (is a larger project)
- - 4.23 (a larger project too)
  - 4.31

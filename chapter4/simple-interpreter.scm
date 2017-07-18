@@ -677,16 +677,19 @@
   (cadr proc))
 
 (define primitive-procedures
-  (list (list 'car   car)
-        (list 'cdr   cdr)
-        (list 'cons  cons)
-        (list 'null? null?)
-        (list '+     +)
-        (list '-     -)
-        (list '*     *)
-        (list '/     /)
-        (list '=     =)
-        (list 'eq?   eq?)
+  (list (list 'car             car)
+        (list 'cdr             cdr)
+        (list 'cons            cons)
+        (list 'null?           null?)
+        (list '+               +)
+        (list '-               -)
+        (list '*               *)
+        (list '/               /)
+        (list '=               =)
+        (list 'eq?             eq?)
+        (list 'real-time-clock real-time-clock)
+        (list 'newline         newline)
+        (list 'display         display)
         ;; ... more primitives))
         ))
 
@@ -1049,8 +1052,7 @@
 ;; applied to environment many times?)
 ;;
 
-(define (eval. exp env)
-  ((analyze exp) env))
+(define (eval. exp env) ((analyze exp) env))
 
 (define (analyze exp)
   (cond ((self-evaluating? exp) (analyze-self-evaluating   exp))
@@ -1179,5 +1181,26 @@
 ;;
 
 ;;
-;; skipped
+;; in order to run the non-analyzing version, comment out the
+;; definition of analyzing eval above
+;;
+
+(define program
+  '(begin
+    (define (fac n)
+      (if (= n 1)
+        1
+        (* n (fac (- n 1)))))
+    (define start (real-time-clock))
+    (fac 1000)
+    (define end (- (real-time-clock) start))
+    (newline)
+    (display end)
+    (newline)))
+
+(eval. program the-global-environment)
+
+;;
+;; the difference as measured by real-time-clock is 200 msec vs 105
+;; msec
 ;;
