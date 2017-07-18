@@ -318,8 +318,6 @@
                    (sequence->exp (cond-actions first))
                    (expand-clauses rest)))))))
 
-;; (expand-clauses (list '(x y) '(a => b) '(else 1)))
-
 ;;
 ;; exercise 4.6
 ;;
@@ -346,12 +344,6 @@
   (cons (make-lambda (let-vars exp)
                      (let-body exp))
         (map let-binding-exp (let-bindings exp))))
-
-;; (define let-test-exp '(let ((a b) (c d)) ((bla bli) (tri la))))
-;; 
-;; (define let-test-exp '(let ((a 3)) a))
-;; 
-;; (let->application let-test-exp)
 
 ;;
 ;; addition to eval.
@@ -394,21 +386,6 @@
       (make-let (list head)
                 (list (let*->nested-lets (make-let* tail
                                                     (let*-body exp))))))))
-
-;; (let*->nested-lets '(let* ()
-;;                      (bla bli) (tu du)))
-;; 
-;; (let*->nested-lets '(let* ((a b))
-;;                      true (bla bli)))
-;; 
-;; (let*->nested-lets '(let* ((a b)
-;;                            (c d))
-;;                       true false))
-;; 
-;; (let*->nested-lets '(let* ((a b)
-;;                            (c d)
-;;                            (e f))
-;;                       true false true))
 
 ;;
 ;; addition to eval.
@@ -456,13 +433,6 @@
     (cons (make-lambda (let-vars exp)
                        (let-body exp))
           (map let-binding-exp (let-bindings exp)))))
-
-;; (define       let-test-exp '(let      ((a b) (c d)) ((bla bli) (tri la))))
-;; (define named-let-test-exp '(let func ((a b) (c d)) ((bla bli) (tri la))))
-;; 
-;; (let->application let-test-exp)
-;; 
-;; (let->application named-let-test-exp)
 
 ;;
 ;; Testing of predicates
@@ -678,105 +648,3 @@
         (scan (frame-variables frame)
               (frame-values    frame)))))
     (env-loop env))
-
-
-;;
-;; b.
-;;
-
-(define (tagged-list? exp tag)
-  (if (pair? exp)
-    (eq? (car exp) tag)
-    false))
-
-;;
-;; tail-recursive version, not really what we want
-;;
-;; doesn't work
-;;
-(define (collect-defines body)
-  (define (go body new-body vars vals)
-    (if (null? body)
-      (list new-body vars vals)
-      (let* ((head (car body))
-             (tail (cdr body)))
-        (if (tagged-list? head 'define)
-          (let ((var (cadr  head))
-                (val (caddr head)))
-            (go tail new-body (cons var vars) (cons val vals)))
-          (go tail (cons head new-body) vars vals)))))
-  (go body '() '() '()))
-
-(define (collect-defines body)
-  """ returns a list of three:
-      - body stripped of defines
-      - list of variables from defines
-      - list of values    from defines """
-  (define (go body)
-    (if (null? body)
-      (list '() '() '())
-      (let* ((head  (car    body))
-             (tail  (cdr    body))
-             (nres  (go     tail))
-             (nbody (car    nres))
-             (nvars (cadr   nres))
-             (nvals (caddr  nres)))
-        (if (tagged-list? head 'define)
-          (let ((var (cadr  head))
-                (val (caddr  head)))
-            (list nbody (cons      var  nvars) (cons val nvals)))
-          (list (cons head nbody) nvars nvals)))))
-  (go body))
-
-
-
-(define (transform-body body)
-  (define (make-set var val)
-    (if (not (pair? var))          ;; variable or proc definition?
-      (list 'set! var val)
-      (let* ((proc-name (car var))
-             (proc-args (cdr var)))
-        (list 'set! proc-name (list 'lambda proc-args val)))))
-  (define (make-let var)
-    (if (not (pair? var))          ;; variable or proc definition?
-      (list      var  ''*unassigned*)
-      (list (car var) ''*unassigned*)))
-  (let* ((new-body-vars-vals (collect-defines body))
-         (new-body           (car             new-body-vars-vals))
-         (vars               (cadr            new-body-vars-vals))
-         (vals               (caddr           new-body-vars-vals)))
-    (if (null? vars)
-      body
-      (let ((sets (map make-set vars vals))
-            (lets (map make-let vars)))
-        (list (cons 'let (cons lets (append sets new-body))))))))
-
-(define parameters '(a))
-
-(define body '(3))
-
-(collect-defines body)
-
-(transform-body body)
-
-(define test-proc '(define (adder x)
-                (define a 3)
-                (define (triple x) (+ x x x))
-                (define (sum x y) (+ x y))
-                (+ a (sum x 5))))
-
-(define test-proc-body (cddr test-proc))
-
-(collect-defines test-proc-body)
-
-(transform-body test-proc-body)
-
-;;
-;; c.
-;;
-
-(define (make-procedure parameters body env)
-  (list 'procedure parameters (transform-body body) env))
-  ;; (list 'procedure parameters body env))
-
-(define procedure (make-procedure parameters body '()))
