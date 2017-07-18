@@ -1119,9 +1119,7 @@
 
 (define (analyze-sequence exps)
   (define (sequentially proc1 proc2)
-    (lambda (env)
-      (proc1 env)
-      (proc2 env)))
+    (lambda (env) (proc1 env) (proc2 env)))
   (define (loop first-proc rest-procs)
     (if (null? rest-procs)
       first-proc
@@ -1168,6 +1166,11 @@
 
 ;;
 ;; it's down to analyzing in run-time vs `compile`-time
+;;
+;; addendum: in Alyssa's version, the looping through procs happens at
+;; run-time, whereas in the version in the text loops in `compile`
+;; time. With just one expression in a sequence, that makes little
+;; difference. With more expressions, it does more.
 ;;
 
 
