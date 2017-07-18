@@ -557,8 +557,11 @@
 ;;
 
 
-(define (make-procedure parameters body env)
-  (list 'procedure parameters body env))
+;;
+;; a better version below
+;;
+;; (define (make-procedure parameters body env)
+;;   (list 'procedure parameters body env))
 
 (define (compound-procedure? p)
   (tagged-list? p 'procedure))
@@ -709,6 +712,8 @@
 
 (define the-global-environment (setup-environment))
 
+(define tge (setup-environment))
+
 (define (driver-loop)
   (prompt-for-input input-prompt)
   (let ((input (read)))
@@ -801,18 +806,18 @@
 ;;
 ;; doesn't work
 ;;
-(define (collect-defines body)
-  (define (go body new-body vars vals)
-    (if (null? body)
-      (list new-body vars vals)
-      (let* ((head (car body))
-             (tail (cdr body)))
-        (if (tagged-list? head 'define)
-          (let ((var (cadr  head))
-                (val (caddr head)))
-            (go tail new-body (cons var vars) (cons val vals)))
-          (go tail (cons head new-body) vars vals)))))
-  (go body '() '() '()))
+;; (define (collect-defines body)
+;;   (define (go body new-body vars vals)
+;;     (if (null? body)
+;;       (list new-body vars vals)
+;;       (let* ((head (car body))
+;;              (tail (cdr body)))
+;;         (if (tagged-list? head 'define)
+;;           (let ((var (cadr  head))
+;;                 (val (caddr head)))
+;;             (go tail new-body (cons var vars) (cons val vals)))
+;;           (go tail (cons head new-body) vars vals)))))
+;;   (go body '() '() '()))
 
 (define (collect-defines body)
   """ returns a list of three:
@@ -858,35 +863,14 @@
             (lets (map make-let vars)))
         (list (cons 'let (cons lets (append sets new-body))))))))
 
-(define parameters '(a))
-
-(define body '(3))
-
-(collect-defines body)
-
-(transform-body body)
-
-(define test-proc '(define (adder x)
-                (define a 3)
-                (define (triple x) (+ x x x))
-                (define (sum x y) (+ x y))
-                (+ a (sum x 5))))
-
-(define test-proc-body (cddr test-proc))
-
-(collect-defines test-proc-body)
-
-(transform-body test-proc-body)
-
 ;;
 ;; c.
 ;;
 
 (define (make-procedure parameters body env)
+  ;; this is incompatible with the analyzing version
   ;; (list 'procedure parameters (transform-body body) env))
-  (list 'procedure parameters body env))
-
-(define procedure (make-procedure parameters body '()))
+  (list 'procedure parameters                 body  env))
 
 
 ;;

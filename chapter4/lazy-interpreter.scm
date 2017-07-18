@@ -15,7 +15,7 @@
         ((and?   exp)          (eval-and exp env))
         ((let?   exp)          (eval. (let->application  exp) env))
         ((let*?  exp)          (eval. (let*->nested-lets exp) env))
-        ((while? exp)          (eval. (transform-while   exp) env))
+        ;; ((while? exp)          (eval. (transform-while   exp) env))
         ((application? exp)    (apply. (eval. (operator exp) env)
                                       (list-of-values (operands exp) env)))
         (else                  (error "Unknown expression-type: EVAL" exp))))
