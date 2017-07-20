@@ -13,7 +13,6 @@
         ((or?    exp)          (eval-or  exp env))
         ((and?   exp)          (eval-and exp env))
         ((let?   exp)          (eval. (let->application  exp) env))
-        ((let*?  exp)          (eval. (let*->nested-lets exp) env))
         ((application? exp)    (apply. (actual-value (operator exp) env)
                                        (operands exp)
                                        env))
@@ -498,3 +497,37 @@
 (define the-global-environment (setup-environment))
 
 ;; (driver-loop)
+
+(define prog
+  '(begin
+     (define (cons x y) (lambda (m) (m x y)))
+     (define (car    z) (z (lambda (p q) p)))
+     (define (cdr    z) (z (lambda (p q) q)))
+
+     (define (list-ref items n)
+       (if (= n 0)
+         (car items)
+         (list-ref (cdr items) (- n 1))))
+
+     (define (map proc items)
+       (if (null? items)
+         '()
+         (cons (proc (car items))
+               (map proc (cdr items)))))
+
+     (define (scale-list items factor)
+       (map (lambda (x) (* x factor)) items))
+
+     (define (add-lists list1 list2)
+       (cond ((null? list1) list2)
+             ((null? list2) list1)
+             (else (cons (+ (car list1) (car list2))
+                         (add-lists (cdr list1) (cdr list2))))))
+
+     (define ones (cons 1 ones))
+     (define integers (cons 1 (add-lists ones integers)))
+     (newline)
+     (display (list-ref integers 17))
+     ))
+
+(eval. prog the-global-environment)
