@@ -14,23 +14,55 @@
         ((and?   exp)          (eval-and exp env))
         ((let?   exp)          (eval. (let->application  exp) env))
         ((let*?  exp)          (eval. (let*->nested-lets exp) env))
-        ((application? exp)    (apply. (eval. (operator exp) env)
-                                      (list-of-values (operands exp) env)))
+        ((application? exp)    (apply. (actual-value (operator exp) env)
+                                       (operands exp)
+                                       env))
         (else                  (error "Unknown expression-type: EVAL" exp))))
 
 (define apply-in-underlying-scheme apply) ;; we'll need it later
 
-(define (apply. procedure arguments)
+(define (actual-value exp env)
+  (force-it (eval. exp env)))
+
+(define (apply. procedure arguments env)
   (cond ((primitive-procedure? procedure)
-         (apply-primitive-procedure procedure arguments))
+         (apply-primitive-procedure
+           procedure
+           (list-of-arg-values arguments env))) ;; primitives are strict
         ((compound-procedure? procedure)
          (eval-sequence (procedure-body procedure)
                         (extend-environment
                           (procedure-parameters procedure)
-                          arguments
+                          (list-of-delayed-args arguments env)
                           (procedure-environment procedure))))
         (else (error "Unknown procedure type: APPLY" procedure))))
 
+;;
+;; representing thunks
+;;
+
+(define (thunk? obj)
+  (tagged-list? obj 'thunk))
+(define (delay-it exp env)
+  (list 'thunk exp env))
+(define (thunk-exp thunk) (cadr thunk))
+(define (thunk-env thunk) (caddr thunk))
+
+(define (evaluated-thunk? obj)
+  (tagged-list? obj 'evaluated-thunk))
+(define (thunk-value evaluated-thunk)
+  (cadr evaluated-thunk))
+
+(define (force-it obj)
+  (cond ((thunk? obj) (let ((result (actual-value (thunk-exp obj)
+                                                  (thunk-env obj))))
+                        (set-car! obj 'evaluated-thunk)
+                        (set-car! (cdr obj) result)
+                        (set-cdr! (cdr obj) '())
+                        result))
+        ((evaluated-thunk? obj) (thunk-value obj))
+        (else obj)))
+           
 
 (define (list-of-values exps env)
   (if (no-operands? exps)
@@ -38,11 +70,22 @@
     (cons (eval. (first-operand exps) env)
           (list-of-values (rest-operands exps) env))))
 
+(define (list-of-arg-values exps env)
+  (if (no-operands? exps)
+    '()
+    (cons (actual-value (first-operand exps) env)
+          (list-of-arg-values (rest-operands exps) env))))
+
+(define (list-of-delayed-args exps env)
+  (if (no-operands? exps)
+    '()
+    (cons (delay-it (first-operand exps) env)
+          (list-of-delayed-args (rest-operands exps) env))))
+
 (define (eval-if exp env)
-  (if (true? (eval. (if-predicate exp) env))
+  (if (true? (actual-value (if-predicate exp) env))
     (eval. (if-consequent  exp) env)
     (eval. (if-alternative exp) env)))
-
 
 (define (eval-sequence exps env)
   (cond ((last-exp? exps) (eval. (first-exp exps) env))
@@ -425,15 +468,15 @@
   (apply-in-underlying-scheme
     (primitive-implementation proc) args))
 
-(define  input-prompt ";;; M-Eval input:")
-(define output-prompt ";;; M-Eval value:")
+(define  input-prompt ";;; L-Eval input:")
+(define output-prompt ";;; L-Eval value:")
 
 (define the-global-environment (setup-environment))
 
 (define (driver-loop)
   (prompt-for-input input-prompt)
   (let ((input (read)))
-    (let ((output (eval. input the-global-environment)))
+    (let ((output (actual-value input the-global-environment)))
       (announce-output output-prompt)
       (user-print output)))
   (driver-loop))
