@@ -8,4 +8,4 @@ and wouldn't run.
 second pass through Chapter 4.1 and seems less buggy and sometimes
 does what expected.
 
-'lazy-interpreter.scm` is second pass through Chapter 4.2
+`lazy-interpreter.scm` is second pass through Chapter 4.2
