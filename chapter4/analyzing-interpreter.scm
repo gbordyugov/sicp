@@ -1,3 +1,4 @@
+
 (define (eval. exp env)
   (cond ((self-evaluating? exp) exp)
         ((variable? exp)       (lookup-variable-value exp env))
@@ -10,7 +11,11 @@
                                                env))
         ((begin? exp)          (eval-sequence (begin-actions exp) env))
         ((cond?  exp)          (eval. (cond->if exp) env))
+        ((or?    exp)          (eval-or  exp env))
+        ((and?   exp)          (eval-and exp env))
         ((let?   exp)          (eval. (let->application  exp) env))
+        ((let*?  exp)          (eval. (let*->nested-lets exp) env))
+        ((while? exp)          (eval. (transform-while   exp) env))
         ((application? exp)    (apply. (eval. (operator exp) env)
                                       (list-of-values (operands exp) env)))
         (else                  (error "Unknown expression-type: EVAL" exp))))
@@ -67,6 +72,10 @@
 
 
 ;;
+;; 4.1.2 Representing Expressions
+;;
+
+;;
 ;; the only self-evaluating expressions are numbers and strings
 ;;
 (define (self-evaluating? exp)
@@ -77,13 +86,17 @@
 ;;
 ;; variables are symbols
 ;;
-(define (variable? exp) (symbol? exp))
+(define (variable? exp)
+  (symbol? exp))
 
 ;;
 ;; quotations in the form of (quote a)
 ;;
-(define (quoted? exp) (tagged-list? exp 'quote))
-(define (text-of-quotation exp) (cadr exp))
+(define (quoted? exp)
+  (tagged-list? exp 'quote))
+
+(define (text-of-quotation exp)
+  (cadr exp))
 
 ;;
 ;; a little helper function
@@ -95,15 +108,25 @@
 
 ;;
 ;; assignments in the form of (set! <var> <value>)
-(define (assignment? exp) (tagged-list? exp 'set!))
-(define (assignment-variable exp) (cadr exp))
-(define (assignment-value exp) (caddr exp))
+(define (assignment? exp)
+  (tagged-list? exp 'set!))
+
+(define (assignment-variable exp)
+  (cadr exp))
+
+(define (assignment-value exp)
+  (caddr exp))
 
 ;;
-;; definitions
+;; definitions have the form
+;; (define <var> <value>)
+;; or the form
+;; (define (<var> <p1> <p2> ... <pn>) <body>)
+;; which is syntactic sugar for
+;; (define <var> (lambda (<p1> <p2> ... <pn>) <body>))
 ;;
-
-(define (definition? exp) (tagged-list? exp 'define))
+(define (definition? exp)
+  (tagged-list? exp 'define))
 
 (define (definition-variable exp)
   (if (symbol? (cadr exp))
@@ -120,7 +143,6 @@
 ;;
 ;; lambda expressions are lists that begin with the symbol `lambda`
 ;;
-
 (define (lambda? exp)           (tagged-list? exp 'lambda))
 (define (lambda-parameters exp) (cadr exp))
 (define (lambda-body exp)       (cddr exp))
@@ -131,7 +153,6 @@
 ;;
 ;; conditionals
 ;;
-
 (define (if? exp)           (tagged-list? exp 'if))
 (define (if-predicate exp)  (cadr exp))
 (define (if-consequent exp) (caddr exp))
@@ -202,12 +223,24 @@
 ;; exercise 4.6
 ;;
 
-(define (let? exp) (tagged-list? exp 'let))
-(define (let-bindings exp) (cadr exp))
-(define (let-vars exp) (map let-binding-var (let-bindings exp)))
-(define (let-body exp) (cddr exp))
-(define (let-binding-var binding) (car binding))
-(define (let-binding-exp binding) (cadr binding))
+(define (let? exp)
+  (tagged-list? exp 'let))
+
+(define (let-bindings exp)
+  (cadr exp))
+
+(define (let-vars exp)
+  (map let-binding-var (let-bindings exp)))
+
+(define (let-body exp)
+  (cddr exp))
+
+(define (let-binding-var binding)
+  (car binding))
+
+(define (let-binding-exp binding)
+  (cadr binding))
+
 (define (let->application exp)
   (cons (make-lambda (let-vars exp)
                      (let-body exp))
@@ -224,10 +257,6 @@
 ;;
 ;; Representing procedures
 ;;
-
-
-(define (make-procedure parameters body env)
-  (list 'procedure parameters body env))
 
 (define (compound-procedure? p) (tagged-list? p 'procedure))
 (define (procedure-parameters p) (cadr p))
@@ -250,11 +279,9 @@
 (define (make-frame variables values) (cons variables values))
 (define (frame-variables frame) (car frame))
 (define (frame-values frame) (cdr frame))
-
 (define (add-binding-to-frame! var val frame)
   (set-car! frame (cons var (car frame))) ;; not really a data abstraction
   (set-cdr! frame (cons val (cdr frame))))
-
 
 (define (extend-environment vars vals base-env)
   (if (= (length vars) (length vals))
@@ -381,3 +408,222 @@
 (define the-global-environment (setup-environment))
 
 ;; (driver-loop)
+
+
+;;
+;; exercise 4.16
+;;
+
+;;
+;; a.
+;;
+
+(define (lookup-variable-value var env)
+  (define (env-loop env)
+    (define (scan vars vals)
+      (cond ((null? vars) (env-loop (enclosing-environment env)))
+            ((eq? var (car vars))
+             (let ((val (car vals)))
+               (if (eq? val '*unassigned*)
+                 (error "an unassigned variable: LOOKUP-VARIABLE-VALUE:"
+                        var)
+                 val)))
+            (else (scan (cdr vars) (cdr vals)))))
+    (if (eq? env the-empty-environment)
+      (error "Unbound variable: LOOKUP-VARIABLE-VALUE:" var)
+      (let ((frame (first-frame env)))
+        (scan (frame-variables frame)
+              (frame-values    frame)))))
+    (env-loop env))
+
+
+;;
+;; b.
+;;
+
+(define (collect-defines body)
+  """ returns a list of three:
+      - body stripped of defines
+      - list of variables from defines
+      - list of values    from defines """
+  (define (go body)
+    (if (null? body)
+      (list '() '() '())
+      (let* ((head  (car    body))
+             (tail  (cdr    body))
+             (nres  (go     tail))
+             (nbody (car    nres))
+             (nvars (cadr   nres))
+             (nvals (caddr  nres)))
+        (if (tagged-list? head 'define)
+          (let ((var (cadr  head))
+                (val (caddr  head)))
+            (list nbody (cons      var  nvars) (cons val nvals)))
+          (list (cons head nbody) nvars nvals)))))
+  (go body))
+
+
+
+(define (transform-body body)
+  (define (make-set var val)
+    (if (not (pair? var))          ;; variable or proc definition?
+      (list 'set! var val)
+      (let* ((proc-name (car var))
+             (proc-args (cdr var)))
+        (list 'set! proc-name (list 'lambda proc-args val)))))
+  (define (make-let var)
+    (if (not (pair? var))          ;; variable or proc definition?
+      (list      var  ''*unassigned*)
+      (list (car var) ''*unassigned*)))
+  (let* ((new-body-vars-vals (collect-defines body))
+         (new-body           (car             new-body-vars-vals))
+         (vars               (cadr            new-body-vars-vals))
+         (vals               (caddr           new-body-vars-vals)))
+    (if (null? vars)
+      body
+      (let ((sets (map make-set vars vals))
+            (lets (map make-let vars)))
+        (list (cons 'let (cons lets (append sets new-body))))))))
+
+;;
+;; c.
+;;
+
+(define (make-procedure parameters body env)
+  ;; this is incompatible with the analyzing version
+  ;; (list 'procedure parameters (transform-body body) env))
+  (list 'procedure parameters                 body  env))
+
+
+;;
+;; the analyzing part
+;;
+(define (eval. exp env) ((analyze exp) env))
+
+(define (analyze exp)
+  (cond ((self-evaluating? exp) (analyze-self-evaluating   exp))
+        ((quoted?          exp) (analyze-quoted            exp))
+        ((variable?        exp) (analyze-variable          exp))
+        ((assignment?      exp) (analyze-assignment        exp))
+        ((definition?      exp) (analyze-definition        exp))
+        ((let?             exp) (analyze
+                                  (let->application        exp)))
+        ((if?              exp) (analyze-if                exp))
+        ((lambda?          exp) (analyze-lambda            exp))
+        ((begin?           exp) (analyze-sequence 
+                                  (begin-actions           exp)))
+        ((cond?            exp) (analyze
+                                  (cond->if                exp)))
+        ((application?     exp) (analyze-application       exp))
+        (else (error "Unknown expression type: ANALYZE" exp))))
+
+
+(define (analyze-self-evaluating exp)
+  (lambda (env) exp))
+
+
+(define (analyze-quoted exp)
+  (let ((qval (text-of-quotation exp)))
+    (lambda (env) qval)))
+
+
+(define (analyze-variable exp)
+  (lambda (env)
+    (lookup-variable-value exp env)))
+
+
+(define (analyze-assignment exp)
+  (let ((var   (assignment-variable exp))
+        (vproc (analyze (assignment-value exp))))
+    (lambda (env)
+      (set-variable-value! var (vproc env) env)
+      'ok)))
+
+
+(define (analyze-definition exp)
+  (let ((var   (definition-variable exp))
+        (vproc (analyze (definition-value exp))))
+    (lambda (env)
+      (define-variable! var (vproc env) env)
+      'ok)))
+
+
+(define (analyze-if exp)
+  (let ((pproc (analyze (if-predicate   exp)))
+        (cproc (analyze (if-consequent  exp)))
+        (aproc (analyze (if-alternative exp))))
+    (lambda (env)
+      (if (true? (pproc env))
+        (cproc env)
+        (aproc env)))))
+
+
+(define (analyze-lambda exp)
+  (let ((vars  (lambda-parameters exp))
+        (bproc (analyze-sequence (lambda-body exp))))
+    (lambda (env)
+      (make-procedure vars bproc env))))
+
+
+(define (analyze-sequence exps)
+  (define (sequentially proc1 proc2)
+    (lambda (env) (proc1 env) (proc2 env)))
+  (define (loop first-proc rest-procs)
+    (if (null? rest-procs)
+      first-proc
+      (loop (sequentially first-proc (car rest-procs))
+            (cdr rest-procs))))
+  (let ((procs (map analyze exps)))
+    (if (null? procs)
+      (error "Empty sequence: ANALYZE"))
+    (loop (car procs) (cdr procs))))
+
+
+(define (analyze-application exp)
+  (let ((fproc  (analyze (operator exp)))
+        (aprocs (map analyze (operands exp))))
+    (lambda (env)
+      (execute-application
+        (fproc env)
+        (map (lambda (aproc) (aproc env)) aprocs)))))
+
+(define (execute-application proc args)
+  (cond ((primitive-procedure? proc)
+         (apply-primitive-procedure proc args))
+        ((compound-procedure? proc)
+         ((procedure-body proc)
+          (extend-environment (procedure-parameters proc)
+                              args
+                              (procedure-environment proc))))
+        (else
+          (error "Unknown procedure type: EXECUTE-APPLICATION" proc))))
+
+
+;;
+;; exercise 4.24
+;;
+
+;;
+;; in order to run the non-analyzing version, comment out the
+;; definition of analyzing eval above
+;;
+
+(define program
+  '(begin
+    (define (fac n)
+      (if (= n 1)
+        1
+        (* n (fac (- n 1)))))
+    (define start (real-time-clock))
+    (fac 1000)
+    (define end (- (real-time-clock) start))
+    (newline)
+    (display end)
+    (newline)))
+
+(eval. program the-global-environment)
+
+;;
+;; the difference as measured by real-time-clock is 200 msec vs 105
+;; msec
+;;
