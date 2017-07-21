@@ -170,9 +170,9 @@
 ;;
 ;; conditionals
 ;;
-(define (if? exp)           (tagged-list? exp 'if))
-(define (if-predicate exp)  (cadr exp))
-(define (if-consequent exp) (caddr exp))
+(define (if?            exp) (tagged-list? exp 'if))
+(define (if-predicate   exp) (cadr exp))
+(define (if-consequent  exp) (caddr exp))
 (define (if-alternative exp)
   (if (not (null? (cdddr exp)))
     (cadddr exp)
@@ -240,23 +240,12 @@
 ;; exercise 4.6
 ;;
 
-(define (let? exp)
-  (tagged-list? exp 'let))
-
-(define (let-bindings exp)
-  (cadr exp))
-
-(define (let-vars exp)
-  (map let-binding-var (let-bindings exp)))
-
-(define (let-body exp)
-  (cddr exp))
-
-(define (let-binding-var binding)
-  (car binding))
-
-(define (let-binding-exp binding)
-  (cadr binding))
+(define (let? exp) (tagged-list? exp 'let))
+(define (let-bindings exp) (cadr exp))
+(define (let-vars exp) (map let-binding-var (let-bindings exp)))
+(define (let-body exp) (cddr exp))
+(define (let-binding-var binding) (car binding))
+(define (let-binding-exp binding) (cadr binding))
 
 (define (let->application exp)
   (cons (make-lambda (let-vars exp)
