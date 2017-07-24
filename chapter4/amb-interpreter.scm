@@ -41,20 +41,26 @@
 ;;     (lookup-variable-value exp env)))
 
 
-(define (analyze-assignment exp)
-  (let ((var   (assignment-variable exp))
-        (vproc (analyze (assignment-value exp))))
-    (lambda (env)
-      (set-variable-value! var (vproc env) env)
-      'ok)))
+;;
+;; re-implemented below
+;;
+;; (define (analyze-assignment exp)
+;;   (let ((var   (assignment-variable exp))
+;;         (vproc (analyze (assignment-value exp))))
+;;     (lambda (env)
+;;       (set-variable-value! var (vproc env) env)
+;;       'ok)))
 
 
-(define (analyze-definition exp)
-  (let ((var   (definition-variable exp))
-        (vproc (analyze (definition-value exp))))
-    (lambda (env)
-      (define-variable! var (vproc env) env)
-      'ok)))
+;;
+;; re-implemented below
+;;
+;; (define (analyze-definition exp)
+;;   (let ((var   (definition-variable exp))
+;;         (vproc (analyze (definition-value exp))))
+;;     (lambda (env)
+;;       (define-variable! var (vproc env) env)
+;;       'ok)))
 
 
 ;;
@@ -511,3 +517,32 @@
     (if (null? procs)
       (error "Empty sequence: ANALYZE-SEQUENCE"))
     (loop (car procs) (cdr procs))))
+
+
+;;
+;; Definitions and assignments
+;;
+
+(define (analyze-definition exp)
+  (let ((var   (definition-variable exp))
+        (vproc (analyze (definition-value exp))))
+    (lambda (env succeed fail)
+      (vproc env
+             (lambda (val fail2)
+               (define-variable! var val env)
+               (succeed 'ok fail2))
+             fail))))
+
+(define (analyze-assignment exp)
+  (let ((var (assignment-variable exp))
+        (vproc (analyze (assignment-value exp))))
+    (lambda (env succeed fail)
+      (vproc env
+             (lambda (val fail2)
+               (let ((old-value (lookup-variable-value var env)))
+                 (set-variable-value! var val env)
+                 (succeed 'ok
+                          (lambda ()
+                            (set-variable-value! var old-value env)
+                            (fail2)))))
+             fail))))
