@@ -602,7 +602,7 @@
 ;; Evaluating amb expressions
 ;;
 
-(define (analyze-am exp)
+(define (analyze-amb exp)
   (let ((cprocs (map analyze (amb-choices exp))))
     (lambda (env succeed fail)
       (define (try-next choices)
