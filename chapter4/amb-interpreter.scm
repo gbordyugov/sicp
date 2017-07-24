@@ -103,24 +103,30 @@
 ;;     (loop (car procs) (cdr procs))))
 
 
-(define (analyze-application exp)
-  (let ((fproc  (analyze (operator exp)))
-        (aprocs (map analyze (operands exp))))
-    (lambda (env)
-      (execute-application
-        (fproc env)
-        (map (lambda (aproc) (aproc env)) aprocs)))))
+;;
+;; re-implemented below
+;;
+;; (define (analyze-application exp)
+;;   (let ((fproc  (analyze (operator exp)))
+;;         (aprocs (map analyze (operands exp))))
+;;     (lambda (env)
+;;       (execute-application
+;;         (fproc env)
+;;         (map (lambda (aproc) (aproc env)) aprocs)))))
 
-(define (execute-application proc args)
-  (cond ((primitive-procedure? proc)
-         (apply-primitive-procedure proc args))
-        ((compound-procedure? proc)
-         ((procedure-body proc)
-          (extend-environment (procedure-parameters proc)
-                              args
-                              (procedure-environment proc))))
-        (else
-          (error "Unknown procedure type: EXECUTE-APPLICATION" proc))))
+;;
+;; re-implemented below
+;;
+;; (define (execute-application proc args)
+;;   (cond ((primitive-procedure? proc)
+;;          (apply-primitive-procedure proc args))
+;;         ((compound-procedure? proc)
+;;          ((procedure-body proc)
+;;           (extend-environment (procedure-parameters proc)
+;;                               args
+;;                               (procedure-environment proc))))
+;;         (else
+;;           (error "Unknown procedure type: EXECUTE-APPLICATION" proc))))
 
 
 ;;
@@ -546,3 +552,62 @@
                             (set-variable-value! var old-value env)
                             (fail2)))))
              fail))))
+
+;;
+;; Procedure application
+;;
+
+(define (analyze-application exp)
+  (let ((fproc (analyze (operator exp)))
+        (aprocs (map analyze (operands exp))))
+    (lambda (env succeed fail)
+      (fproc env
+             (lambda (proc fail2)
+               (get-args aprocs env
+                         (lambda (args fail3)
+                           (execute-application proc args succeed fail3))
+                         fail2))
+             fail))))
+
+(define (get-args aprocs env succeed fail)
+  (if (null? aprocs)
+    (succeed '() fail)
+    ((car aprocs)
+     env
+     ;; success continuation
+     (lambda (arg fail2)
+       (get-args
+         (cdr aprocs)
+         env
+         (lambda (args fail3)
+           (succeed (cons arg args) fail3))
+         fail2))
+     fail)))
+
+(define (execute-application proc args succeed fail)
+  (cond ((primitive-procedure? proc)
+         (succeed (apply-primitive-procedure proc args) fail))
+        ((compound-procedure? proc)
+         ((procedure-body proc)
+          (extend-environment (procedure-parameters proc)
+                              args
+                              (procedure-environment proc))
+          succeed
+          fail))
+        (else
+          (error "Unknown procedure type: EXECUTE-APPLICATION"
+                 proc))))
+
+;;
+;; Evaluating amb expressions
+;;
+
+(define (analyze-am exp)
+  (let ((cprocs (map analyze (amb-choices exp))))
+    (lambda (env succeed fail)
+      (define (try-next choices)
+        (if (null? choices)
+          (fail)
+          ((car choices) env succeed (lambda ()
+                                       (try-next (cdr choices))))))
+      (try-next cprocs))))
