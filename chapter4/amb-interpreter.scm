@@ -18,18 +18,27 @@
         (else (error "Unknown expression type: ANALYZE" exp))))
 
 
-(define (analyze-self-evaluating exp)
-  (lambda (env) exp))
+;;
+;; re-implemented below
+;;
+;; (define (analyze-self-evaluating exp)
+;;   (lambda (env) exp))
 
 
-(define (analyze-quoted exp)
-  (let ((qval (text-of-quotation exp)))
-    (lambda (env) qval)))
+;;
+;; re-implemented below
+;;
+;; (define (analyze-quoted exp)
+;;   (let ((qval (text-of-quotation exp)))
+;;     (lambda (env) qval)))
 
 
-(define (analyze-variable exp)
-  (lambda (env)
-    (lookup-variable-value exp env)))
+;;
+;; re-implemented below
+;;
+;; (define (analyze-variable exp)
+;;   (lambda (env)
+;;     (lookup-variable-value exp env)))
 
 
 (define (analyze-assignment exp)
@@ -58,11 +67,14 @@
         (aproc env)))))
 
 
-(define (analyze-lambda exp)
-  (let ((vars  (lambda-parameters exp))
-        (bproc (analyze-sequence (lambda-body exp))))
-    (lambda (env)
-      (make-procedure vars bproc env))))
+;;
+;; re-implemented below
+;;
+;; (define (analyze-lambda exp)
+;;   (let ((vars  (lambda-parameters exp))
+;;         (bproc (analyze-sequence (lambda-body exp))))
+;;     (lambda (env)
+;;       (make-procedure vars bproc env))))
 
 
 (define (analyze-sequence exps)
@@ -419,3 +431,39 @@
 (define the-global-environment (setup-environment))
 
 ;; (driver-loop)
+
+(define (amb? exp) (tagged-list? exp 'amb))
+(define (amb-choices exp) (cdr exp))
+
+(define (ambeval exp env succeed fail)
+  ((analyze exp) env succeed fail))
+
+;;
+;; the general form of an execution procedure is
+;;
+;; (lambda (env succeed fail)
+;;   succeed is (lambda (value fail) ...)
+;;   fail is    (lambda () ...)
+;;
+
+;;
+;; Simple expressions
+;;
+
+(define (analyze-self-evaluating exp)
+  (lambda (env succeed fail)
+    (succeed exp fail)))
+
+(define (analyze-quoted exp)
+  (let ((qval (text-of-quotation exp)))
+    (succeed qval fail)))
+
+(define (analyze-variable exp)
+  (lambda (env succeed fail)
+    (succeed (lookup-variable-value exp env) fail)))
+
+(define (analyze-lambda exp)
+  (let ((vars (lambda-parameters exp))
+        (bproc (analyze-sequence (lambda-body exp))))
+    (lambda (env succeed fail)
+      (succeed (make-procedure vars bproc env) fail))))
