@@ -20,114 +20,152 @@
 
 
 ;;
-;; re-implemented below
+;; Simple expressions
 ;;
-;; (define (analyze-self-evaluating exp)
-;;   (lambda (env) exp))
+
+(define (analyze-self-evaluating exp)
+  (lambda (env succeed fail)
+    (succeed exp fail)))
+
+(define (analyze-quoted exp)
+  (let ((qval (text-of-quotation exp)))
+    (succeed qval fail)))
+
+(define (analyze-variable exp)
+  (lambda (env succeed fail)
+    (succeed (lookup-variable-value exp env) fail)))
+
+(define (analyze-lambda exp)
+  (let ((vars (lambda-parameters exp))
+        (bproc (analyze-sequence (lambda-body exp))))
+    (lambda (env succeed fail)
+      (succeed (make-procedure vars bproc env) fail))))
+
+;;
+;; Conditionals and sequences
+;;
+
+(define (analyze-if exp)
+  (let ((pproc (analyze (if-predicate   exp)))
+        (cproc (analyze (if-consequent  exp)))
+        (aproc (analyze (if-alternative exp))))
+    (lambda (env succeed fail)
+      (pproc env
+             ;; success continuation for evaluating the predicate
+             ;; to obtain pred-value
+             (lambda (pred-value fail2)
+               (if (true? pred-value)
+                 (cproc env succeed fail2)
+                 (aproc env succeed fail2)))
+             ;; failure continuation for evaluating the predicate
+             fail))))
+
+(define (analyze-sequence exps)
+  (define (sequentially a b)
+    (lambda (env succeed fail)
+      (a env
+         ;; success continuation for calling a
+         (lambda (a-value fail2)
+           (b env succeed fail2))
+         ;; failure continuation for calling a
+         fail)))
+  (define (loop first-proc rest-procs)
+    (if (null? rest-procs)
+      first-proc
+      (loop (sequentially first-proc (car rest-procs))
+            (cdr rest-procs))))
+  (let ((procs (map analyze exps)))
+    (if (null? procs)
+      (error "Empty sequence: ANALYZE-SEQUENCE"))
+    (loop (car procs) (cdr procs))))
 
 
 ;;
-;; re-implemented below
+;; Definitions and assignments
 ;;
-;; (define (analyze-quoted exp)
-;;   (let ((qval (text-of-quotation exp)))
-;;     (lambda (env) qval)))
 
+(define (analyze-definition exp)
+  (let ((var   (definition-variable exp))
+        (vproc (analyze (definition-value exp))))
+    (lambda (env succeed fail)
+      (vproc env
+             (lambda (val fail2)
+               (define-variable! var val env)
+               (succeed 'ok fail2))
+             fail))))
 
-;;
-;; re-implemented below
-;;
-;; (define (analyze-variable exp)
-;;   (lambda (env)
-;;     (lookup-variable-value exp env)))
-
-
-;;
-;; re-implemented below
-;;
-;; (define (analyze-assignment exp)
-;;   (let ((var   (assignment-variable exp))
-;;         (vproc (analyze (assignment-value exp))))
-;;     (lambda (env)
-;;       (set-variable-value! var (vproc env) env)
-;;       'ok)))
-
-
-;;
-;; re-implemented below
-;;
-;; (define (analyze-definition exp)
-;;   (let ((var   (definition-variable exp))
-;;         (vproc (analyze (definition-value exp))))
-;;     (lambda (env)
-;;       (define-variable! var (vproc env) env)
-;;       'ok)))
-
+(define (analyze-assignment exp)
+  (let ((var (assignment-variable exp))
+        (vproc (analyze (assignment-value exp))))
+    (lambda (env succeed fail)
+      (vproc env
+             (lambda (val fail2)
+               (let ((old-value (lookup-variable-value var env)))
+                 (set-variable-value! var val env)
+                 (succeed 'ok
+                          (lambda ()
+                            (set-variable-value! var old-value env)
+                            (fail2)))))
+             fail))))
 
 ;;
-;; re-implemented below
+;; Procedure application
 ;;
-;; (define (analyze-if exp)
-;;   (let ((pproc (analyze (if-predicate   exp)))
-;;         (cproc (analyze (if-consequent  exp)))
-;;         (aproc (analyze (if-alternative exp))))
-;;     (lambda (env)
-;;       (if (true? (pproc env))
-;;         (cproc env)
-;;         (aproc env)))))
 
+(define (analyze-application exp)
+  (let ((fproc (analyze (operator exp)))
+        (aprocs (map analyze (operands exp))))
+    (lambda (env succeed fail)
+      (fproc env
+             (lambda (proc fail2)
+               (get-args aprocs env
+                         (lambda (args fail3)
+                           (execute-application proc args succeed fail3))
+                         fail2))
+             fail))))
 
-;;
-;; re-implemented below
-;;
-;; (define (analyze-lambda exp)
-;;   (let ((vars  (lambda-parameters exp))
-;;         (bproc (analyze-sequence (lambda-body exp))))
-;;     (lambda (env)
-;;       (make-procedure vars bproc env))))
+(define (get-args aprocs env succeed fail)
+  (if (null? aprocs)
+    (succeed '() fail)
+    ((car aprocs)
+     env
+     ;; success continuation
+     (lambda (arg fail2)
+       (get-args
+         (cdr aprocs)
+         env
+         (lambda (args fail3)
+           (succeed (cons arg args) fail3))
+         fail2))
+     fail)))
 
-
-;;
-;; re-implemented below
-;;
-;; (define (analyze-sequence exps)
-;;   (define (sequentially proc1 proc2)
-;;     (lambda (env) (proc1 env) (proc2 env)))
-;;   (define (loop first-proc rest-procs)
-;;     (if (null? rest-procs)
-;;       first-proc
-;;       (loop (sequentially first-proc (car rest-procs))
-;;             (cdr rest-procs))))
-;;   (let ((procs (map analyze exps)))
-;;     (if (null? procs)
-;;       (error "Empty sequence: ANALYZE"))
-;;     (loop (car procs) (cdr procs))))
-
-
-;;
-;; re-implemented below
-;;
-;; (define (analyze-application exp)
-;;   (let ((fproc  (analyze (operator exp)))
-;;         (aprocs (map analyze (operands exp))))
-;;     (lambda (env)
-;;       (execute-application
-;;         (fproc env)
-;;         (map (lambda (aproc) (aproc env)) aprocs)))))
+(define (execute-application proc args succeed fail)
+  (cond ((primitive-procedure? proc)
+         (succeed (apply-primitive-procedure proc args) fail))
+        ((compound-procedure? proc)
+         ((procedure-body proc)
+          (extend-environment (procedure-parameters proc)
+                              args
+                              (procedure-environment proc))
+          succeed
+          fail))
+        (else
+          (error "Unknown procedure type: EXECUTE-APPLICATION"
+                 proc))))
 
 ;;
-;; re-implemented below
+;; Evaluating amb expressions
 ;;
-;; (define (execute-application proc args)
-;;   (cond ((primitive-procedure? proc)
-;;          (apply-primitive-procedure proc args))
-;;         ((compound-procedure? proc)
-;;          ((procedure-body proc)
-;;           (extend-environment (procedure-parameters proc)
-;;                               args
-;;                               (procedure-environment proc))))
-;;         (else
-;;           (error "Unknown procedure type: EXECUTE-APPLICATION" proc))))
+
+(define (analyze-amb exp)
+  (let ((cprocs (map analyze (amb-choices exp))))
+    (lambda (env succeed fail)
+      (define (try-next choices)
+        (if (null? choices)
+          (fail)
+          ((car choices) env succeed (lambda ()
+                                       (try-next (cdr choices))))))
+      (try-next cprocs))))
 
 
 ;;
@@ -241,6 +279,11 @@
 (define (first-operand ops) (car ops))
 (define (rest-operands ops) (cdr ops))
 
+;;
+;; ambivalent expressions
+;;
+(define (amb? exp) (tagged-list? exp 'amb))
+(define (amb-choices exp) (cdr exp))
 
 ;;
 ;; Derived expressions
@@ -426,197 +469,6 @@
 (define tge (setup-environment))
 
 ;;
-;; re-implemented below
-;;
-;; (define (driver-loop)
-;;   (prompt-for-input input-prompt)
-;;   (let ((input (read)))
-;;     (let ((output (eval. input the-global-environment)))
-;;       (announce-output output-prompt)
-;;       (user-print output)))
-;;   (driver-loop))
-
-(define (prompt-for-input string)
-  (newline) (newline) (display string) (newline))
-
-(define (announce-output string)
-  (newline) (display string) (newline))
-
-(define (user-print object)
-  (if (compound-procedure? object)
-    (display (list 'compound-procedure
-                   (procedure-parameters object)
-                   (procedure-body       object)
-                   '<procedure-env>))
-    (display object)))
-
-(define the-global-environment (setup-environment))
-
-;; (driver-loop)
-
-(define (amb? exp) (tagged-list? exp 'amb))
-(define (amb-choices exp) (cdr exp))
-
-(define (ambeval exp env succeed fail)
-  ((analyze exp) env succeed fail))
-
-;;
-;; the general form of an execution procedure is
-;;
-;; (lambda (env succeed fail)
-;;   succeed is (lambda (value fail) ...)
-;;   fail is    (lambda () ...)
-;;
-
-;;
-;; Simple expressions
-;;
-
-(define (analyze-self-evaluating exp)
-  (lambda (env succeed fail)
-    (succeed exp fail)))
-
-(define (analyze-quoted exp)
-  (let ((qval (text-of-quotation exp)))
-    (succeed qval fail)))
-
-(define (analyze-variable exp)
-  (lambda (env succeed fail)
-    (succeed (lookup-variable-value exp env) fail)))
-
-(define (analyze-lambda exp)
-  (let ((vars (lambda-parameters exp))
-        (bproc (analyze-sequence (lambda-body exp))))
-    (lambda (env succeed fail)
-      (succeed (make-procedure vars bproc env) fail))))
-
-;;
-;; Conditionals and sequences
-;;
-
-(define (analyze-if exp)
-  (let ((pproc (analyze (if-predicate   exp)))
-        (cproc (analyze (if-consequent  exp)))
-        (aproc (analyze (if-alternative exp))))
-    (lambda (env succeed fail)
-      (pproc env
-             ;; success continuation for evaluating the predicate
-             ;; to obtain pred-value
-             (lambda (pred-value fail2)
-               (if (true? pred-value)
-                 (cproc env succeed fail2)
-                 (aproc env succeed fail2)))
-             ;; failure continuation for evaluating the predicate
-             fail))))
-
-(define (analyze-sequence exps)
-  (define (sequentially a b)
-    (lambda (env succeed fail)
-      (a env
-         ;; success continuation for calling a
-         (lambda (a-value fail2)
-           (b env succeed fail2))
-         ;; failure continuation for calling a
-         fail)))
-  (define (loop first-proc rest-procs)
-    (if (null? rest-procs)
-      first-proc
-      (loop (sequentially first-proc (car rest-procs))
-            (cdr rest-procs))))
-  (let ((procs (map analyze exps)))
-    (if (null? procs)
-      (error "Empty sequence: ANALYZE-SEQUENCE"))
-    (loop (car procs) (cdr procs))))
-
-
-;;
-;; Definitions and assignments
-;;
-
-(define (analyze-definition exp)
-  (let ((var   (definition-variable exp))
-        (vproc (analyze (definition-value exp))))
-    (lambda (env succeed fail)
-      (vproc env
-             (lambda (val fail2)
-               (define-variable! var val env)
-               (succeed 'ok fail2))
-             fail))))
-
-(define (analyze-assignment exp)
-  (let ((var (assignment-variable exp))
-        (vproc (analyze (assignment-value exp))))
-    (lambda (env succeed fail)
-      (vproc env
-             (lambda (val fail2)
-               (let ((old-value (lookup-variable-value var env)))
-                 (set-variable-value! var val env)
-                 (succeed 'ok
-                          (lambda ()
-                            (set-variable-value! var old-value env)
-                            (fail2)))))
-             fail))))
-
-;;
-;; Procedure application
-;;
-
-(define (analyze-application exp)
-  (let ((fproc (analyze (operator exp)))
-        (aprocs (map analyze (operands exp))))
-    (lambda (env succeed fail)
-      (fproc env
-             (lambda (proc fail2)
-               (get-args aprocs env
-                         (lambda (args fail3)
-                           (execute-application proc args succeed fail3))
-                         fail2))
-             fail))))
-
-(define (get-args aprocs env succeed fail)
-  (if (null? aprocs)
-    (succeed '() fail)
-    ((car aprocs)
-     env
-     ;; success continuation
-     (lambda (arg fail2)
-       (get-args
-         (cdr aprocs)
-         env
-         (lambda (args fail3)
-           (succeed (cons arg args) fail3))
-         fail2))
-     fail)))
-
-(define (execute-application proc args succeed fail)
-  (cond ((primitive-procedure? proc)
-         (succeed (apply-primitive-procedure proc args) fail))
-        ((compound-procedure? proc)
-         ((procedure-body proc)
-          (extend-environment (procedure-parameters proc)
-                              args
-                              (procedure-environment proc))
-          succeed
-          fail))
-        (else
-          (error "Unknown procedure type: EXECUTE-APPLICATION"
-                 proc))))
-
-;;
-;; Evaluating amb expressions
-;;
-
-(define (analyze-amb exp)
-  (let ((cprocs (map analyze (amb-choices exp))))
-    (lambda (env succeed fail)
-      (define (try-next choices)
-        (if (null? choices)
-          (fail)
-          ((car choices) env succeed (lambda ()
-                                       (try-next (cdr choices))))))
-      (try-next cprocs))))
-
-;;
 ;; driver loop
 ;;
 
@@ -644,3 +496,22 @@
     (lambda ()
       (newline) (display ";;; There is no current problem")
       (driver-loop))))
+
+(define (ambeval exp env succeed fail)
+  ((analyze exp) env succeed fail))
+
+(define (prompt-for-input string)
+  (newline) (newline) (display string) (newline))
+
+(define (announce-output string)
+  (newline) (display string) (newline))
+
+(define (user-print object)
+  (if (compound-procedure? object)
+    (display (list 'compound-procedure
+                   (procedure-parameters object)
+                   (procedure-body       object)
+                   '<procedure-env>))
+    (display object)))
+
+(define the-global-environment (setup-environment))
