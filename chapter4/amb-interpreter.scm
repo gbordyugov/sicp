@@ -14,8 +14,9 @@
                                   (begin-actions           exp)))
         ((cond?            exp) (analyze
                                   (cond->if                exp)))
+        ((amb?             exp) (analyze-amb               exp))
         ((application?     exp) (analyze-application       exp))
-        (else (error "Unknown expression type: ANALYZE" exp))))
+        (else (error "Unknown expression type: ANALYZE"    exp))))
 
 
 ;;
