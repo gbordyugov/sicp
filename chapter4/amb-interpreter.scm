@@ -424,13 +424,16 @@
 
 (define tge (setup-environment))
 
-(define (driver-loop)
-  (prompt-for-input input-prompt)
-  (let ((input (read)))
-    (let ((output (eval. input the-global-environment)))
-      (announce-output output-prompt)
-      (user-print output)))
-  (driver-loop))
+;;
+;; re-implemented below
+;;
+;; (define (driver-loop)
+;;   (prompt-for-input input-prompt)
+;;   (let ((input (read)))
+;;     (let ((output (eval. input the-global-environment)))
+;;       (announce-output output-prompt)
+;;       (user-print output)))
+;;   (driver-loop))
 
 (define (prompt-for-input string)
   (newline) (newline) (display string) (newline))
@@ -611,3 +614,32 @@
           ((car choices) env succeed (lambda ()
                                        (try-next (cdr choices))))))
       (try-next cprocs))))
+
+;;
+;; driver loop
+;;
+
+(define input-prompt   ";;; Amb-Eval input:")
+(define output-prompt  ";;; Amb-Eval value:")
+
+(define (driver-loop)
+  (define (internal-loop try-again)
+    (prompt-for-input input-prompt)
+    (let ((input (read)))
+      (if (eq? input 'try-again)
+        (try-again)
+        (begin
+          (newline) (display ";;; Starting a new problem ")
+          (ambeval input the-global-environment
+                   (lambda (val next-alternative)
+                     (announce-output output-prompt)
+                     (user-print val)
+                     (internal-loop next-alternative))
+                   (lambda ()
+                     (announce-output ";;; There are no more vlaues of")
+                     (user-print input)
+                     (driver-loop)))))))
+  (internal-loop
+    (lambda ()
+      (newline) (display ";;; There is no current problem")
+      (driver-loop))))
