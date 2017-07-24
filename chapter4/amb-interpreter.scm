@@ -57,14 +57,17 @@
       'ok)))
 
 
-(define (analyze-if exp)
-  (let ((pproc (analyze (if-predicate   exp)))
-        (cproc (analyze (if-consequent  exp)))
-        (aproc (analyze (if-alternative exp))))
-    (lambda (env)
-      (if (true? (pproc env))
-        (cproc env)
-        (aproc env)))))
+;;
+;; re-implemented below
+;;
+;; (define (analyze-if exp)
+;;   (let ((pproc (analyze (if-predicate   exp)))
+;;         (cproc (analyze (if-consequent  exp)))
+;;         (aproc (analyze (if-alternative exp))))
+;;     (lambda (env)
+;;       (if (true? (pproc env))
+;;         (cproc env)
+;;         (aproc env)))))
 
 
 ;;
@@ -77,18 +80,21 @@
 ;;       (make-procedure vars bproc env))))
 
 
-(define (analyze-sequence exps)
-  (define (sequentially proc1 proc2)
-    (lambda (env) (proc1 env) (proc2 env)))
-  (define (loop first-proc rest-procs)
-    (if (null? rest-procs)
-      first-proc
-      (loop (sequentially first-proc (car rest-procs))
-            (cdr rest-procs))))
-  (let ((procs (map analyze exps)))
-    (if (null? procs)
-      (error "Empty sequence: ANALYZE"))
-    (loop (car procs) (cdr procs))))
+;;
+;; re-implemented below
+;;
+;; (define (analyze-sequence exps)
+;;   (define (sequentially proc1 proc2)
+;;     (lambda (env) (proc1 env) (proc2 env)))
+;;   (define (loop first-proc rest-procs)
+;;     (if (null? rest-procs)
+;;       first-proc
+;;       (loop (sequentially first-proc (car rest-procs))
+;;             (cdr rest-procs))))
+;;   (let ((procs (map analyze exps)))
+;;     (if (null? procs)
+;;       (error "Empty sequence: ANALYZE"))
+;;     (loop (car procs) (cdr procs))))
 
 
 (define (analyze-application exp)
@@ -467,3 +473,39 @@
         (bproc (analyze-sequence (lambda-body exp))))
     (lambda (env succeed fail)
       (succeed (make-procedure vars bproc env) fail))))
+
+;;
+;; Conditionals and sequences
+;;
+
+(define (analyze-if exp)
+  (let ((pproc (analyze (if-predicate   exp)))
+        (cproc (analyze (if-consequent  exp)))
+        (aproc (analyze (if-alternative exp))))
+    (lambda (env succeed fail)
+      (pproc env
+             ;; success continuation for evaluating the predicate
+             ;; to obtain pred-value
+             (lambda (pred-value fail2)
+               (if (true? pred-value)
+                 (cproc env succeed fail2)
+                 (aproc env succeed fail2)))
+             ;; failure continuation for evaluating the predicate
+             fail))))
+
+(define (analyze-sequence exps)
+  (define (sequentially a b)
+    (lambda (env succeed fail)
+      (a env
+         (lambda (a-value fail2)
+           (b env succeed fail2))
+         fail)))
+  (define (loop first-proc rest-procs)
+    (if (null? rest-procs)
+      first-proc
+      (loop (sequentially first-proc (car rest-procs))
+            (cdr rest-procs))))
+  (let ((procs (map analyze exps)))
+    (if (null? procs)
+      (error "Empty sequence: ANALYZE-SEQUENCE"))
+    (loop (car procs) (cdr procs))))
