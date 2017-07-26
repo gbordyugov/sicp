@@ -29,7 +29,8 @@
 
 (define (analyze-quoted exp)
   (let ((qval (text-of-quotation exp)))
-    (succeed qval fail)))
+    (lambda (env succeed fail)
+      (succeed qval fail))))
 
 (define (analyze-variable exp)
   (lambda (env succeed fail)
@@ -431,6 +432,12 @@
 (define (primitive-implementation proc)
   (cadr proc))
 
+(define (distinct? items)
+  (cond ((null? items) true)
+        ((null? (cdr items)) true)
+        ((memq (car items) (cdr items)) false)
+        (else (distinct? (cdr items)))))
+
 (define primitive-procedures
   (list (list 'car             car)
         (list 'cdr             cdr)
@@ -442,10 +449,15 @@
         (list '/               /)
         (list '=               =)
         (list 'eq?             eq?)
+        (list '>               >)
+        (list '<               <)
+        (list 'not             not)
+        (list 'abs             abs)
         (list 'real-time-clock real-time-clock)
         (list 'newline         newline)
         (list 'display         display)
         (list 'list            list)
+        (list 'distinct?       distinct?)
         ;; ... more primitives))
         ))
 
@@ -513,7 +525,10 @@
 (define tge (setup-environment))
 
 (define (gambeval exp)
-  (ambeval exp
-           the-global-environment
-           (lambda (value fail) value)
-           (lambda () 'failed)))
+  (let ((new-exp (list 'begin
+                       '(define (require p) (if (not p) (amb)))
+                       exp)))
+    (ambeval new-exp
+             the-global-environment
+             (lambda (value fail) value)
+             (lambda () 'failed))))
