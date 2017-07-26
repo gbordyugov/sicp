@@ -445,6 +445,7 @@
         (list 'real-time-clock real-time-clock)
         (list 'newline         newline)
         (list 'display         display)
+        (list 'list            list)
         ;; ... more primitives))
         ))
 
@@ -461,12 +462,6 @@
   (apply-in-underlying-scheme
     (primitive-implementation proc) args))
 
-(define  input-prompt ";;; M-Eval input:")
-(define output-prompt ";;; M-Eval value:")
-
-(define the-global-environment (setup-environment))
-
-(define tge (setup-environment))
 
 ;;
 ;; driver loop
@@ -515,3 +510,4 @@
     (display object)))
 
 (define the-global-environment (setup-environment))
+(define tge (setup-environment))
