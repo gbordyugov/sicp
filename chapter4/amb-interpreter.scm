@@ -514,5 +514,6 @@
 
 (define (gambeval exp)
   (ambeval exp
+           the-global-environment
            (lambda (value fail) value)
            (lambda () 'failed)))
