@@ -135,8 +135,28 @@
 ;; just remove the string with
 ;; (require (not (= (abs (- smith  fletcher)) 1)))
 ;;
-;; if I'd had an interpreter at this point of time, it would have
-;; shown that there were 5 solutions ;-)
+(define (require p) (if (not p) (amb)))
+(define (multiple-dwelling)
+  (let ((baker    (amb 1 2 3 4 5))
+        (cooper   (amb 1 2 3 4 5))
+        (fletcher (amb 1 2 3 4 5))
+        (miller   (amb 1 2 3 4 5))
+        (smith    (amb 1 2 3 4 5)))
+    (require (distinct? (list baker cooper fletcher miller smith)))
+    (require (not (= baker    5)))
+    (require (not (= cooper   1)))
+    (require (not (= fletcher 5)))
+    (require (not (= fletcher 1)))
+    (require (> miller cooper))
+    (require (not (= (abs (- fletcher cooper)) 1)))
+    (list (list 'baker    baker)
+          (list 'cooper   cooper)
+          (list 'fletcher fletcher)
+          (list 'miller   miller)
+          (list 'smith    smith))))
+
+;;
+;; five solutions are found
 ;;
 
 
