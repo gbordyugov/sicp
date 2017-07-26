@@ -511,3 +511,8 @@
 
 (define the-global-environment (setup-environment))
 (define tge (setup-environment))
+
+(define (gambeval exp)
+  (ambeval exp
+           (lambda (value fail) value)
+           (lambda () 'failed)))
