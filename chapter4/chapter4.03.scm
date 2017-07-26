@@ -45,12 +45,23 @@
 ;;
 
 
-(define (a-pythagorean-triple)
-  (let ((i (an-integer-starting-from 1)))
-    (let ((j (an-integer-between 1 i)))
-      (let ((k (an-integer-between 1 (+ i j))))
-        (require (= (* k k) (+ (* i i) (* j j))))
-        (list i j k)))))
+(load "amb-interpreter.scm")
+
+(gambeval
+  '(begin
+     (define (an-integer-starting-from n)
+       (amb n (an-integer-starting-from (+ n 1))))
+     (define (an-integer-between low hi)
+       (require (<= low hi))
+       (amb low (an-integer-between (+ 1 low) hi)))
+     (define (a-pythagorean-triple)
+       (let ((i (an-integer-starting-from 1)))
+         (let ((j (an-integer-between 1 i)))
+           (let ((k (an-integer-between 1 (+ i j))))
+             (require (= (* k k) (+ (* i i) (* j j))))
+             (list i j k)))))
+     (newline)
+     (display (a-pythagorean-triple))))
 
 
 ;;
