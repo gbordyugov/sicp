@@ -7,9 +7,21 @@
 ;; exercise 4.35
 ;;
 
-(define (an-integer-between low hi)
-  (require (<= low hi))
-  (amb low (an-integer-between (+ 1 low) hi)))
+(load "amb-interpreter.scm")
+
+(gambeval
+  '(begin
+     (define (an-integer-between low hi)
+       (require (<= low hi))
+       (amb low (an-integer-between (+ 1 low) hi)))
+     (define (a-pythagorean-triple-between low high)
+       (let ((i (an-integer-between low high))
+             (j (an-integer-between low high))
+             (k (an-integer-between low high)))
+         (require (= (+ (* i i) (* j j)) (* k k)))
+         (list i j k)))
+     (newline)
+     (display (a-pythagorean-triple-between 1 10))))
 
 
 ;;
