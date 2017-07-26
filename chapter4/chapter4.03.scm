@@ -47,6 +47,12 @@
 
 (load "amb-interpreter.scm")
 
+(define (require p) (if (not p) (amb)))
+
+;;
+;; to have more values, I copy-paste the definitions into
+;; (driver-loop)
+;;
 (gambeval
   '(begin
      (define (an-integer-starting-from n)
