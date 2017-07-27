@@ -441,6 +441,7 @@
 (define primitive-procedures
   (list (list 'car             car)
         (list 'cdr             cdr)
+        (list 'cadr            cadr)
         (list 'cons            cons)
         (list 'null?           null?)
         (list 'integer?        integer?)
@@ -500,7 +501,7 @@
                      (user-print val)
                      (internal-loop next-alternative))
                    (lambda ()
-                     (announce-output ";;; There are no more vlaues of")
+                     (announce-output ";;; There are no more values of")
                      (user-print input)
                      (driver-loop)))))))
   (internal-loop
