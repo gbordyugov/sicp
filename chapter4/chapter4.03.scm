@@ -102,7 +102,7 @@
 
 ;; (define (distinct? items)
 ;;   (cond ((null? items) true)
-;;         ((null (cdr items) true))
+;;         ((null? (cdr items) true))
 ;;         ((member (car items) (cdr items)) false)
 ;;         (else (distinct? (cdr items)))))
 
@@ -224,3 +224,41 @@
                 (list 'fletcher fletcher)
                 (list 'miller   miller)
                 (list 'smith    smith)))))))
+
+
+;;
+;; exercise 4.41
+;;
+
+
+(define (multiple-dwelling)
+(define (distinct? items)
+  (cond ((null? items) true)
+        ((null? (cdr items)) true)
+        ((member (car items) (cdr items)) false)
+        (else (distinct? (cdr items)))))
+  (define (check baker cooper fletcher miller smith)
+    (and (distinct? (list baker cooper fletcher miller smith))
+         (not (= baker    5))
+         (not (= cooper   1))
+         (not (= fletcher 5))
+         (not (= fletcher 1))
+         (> miller cooper)
+         (not (= (abs (- smith  fletcher)) 1))
+         (not (= (abs (- fletcher cooper)) 1))))
+  (let ((rooms (list 1 2 3 4 5)))
+    (map (lambda (baker)
+           (map (lambda (cooper)
+                  (map (lambda (fletcher)
+                         (map (lambda (miller)
+                                (map (lambda (smith)
+                                       (if (check baker cooper fletcher miller smith)
+                                         (begin
+                                           (newline)
+                                           (display (list baker cooper fletcher miller smith)))))
+                                     rooms))
+                              rooms))
+                       rooms))
+                rooms))
+         rooms)
+    'ok))
