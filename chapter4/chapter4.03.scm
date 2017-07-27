@@ -232,11 +232,11 @@
 
 
 (define (multiple-dwelling)
-(define (distinct? items)
-  (cond ((null? items) true)
-        ((null? (cdr items)) true)
-        ((member (car items) (cdr items)) false)
-        (else (distinct? (cdr items)))))
+  (define (distinct? items)
+    (cond ((null? items) true)
+          ((null? (cdr items)) true)
+          ((member (car items) (cdr items)) false)
+          (else (distinct? (cdr items)))))
   (define (check baker cooper fletcher miller smith)
     (and (distinct? (list baker cooper fletcher miller smith))
          (not (= baker    5))
