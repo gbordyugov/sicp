@@ -268,7 +268,6 @@
 ;; exercise 4.42
 ;;
 (load "amb-interpreter.scm")
-
 (define (require p) (if (not p) (amb)))
 (define (five-liars)
   (define (xor a b)
