@@ -316,3 +316,7 @@
           (list 'lorna     lorna)
           (list 'rosalind  rosalind)
           (list 'melissa   melissa))))
+
+;;
+;; exercise 4.44
+;;
