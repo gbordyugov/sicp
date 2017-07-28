@@ -290,3 +290,57 @@
           (list 'j j)
           (list 'k k)
           (list 'm m))))
+
+;;
+;; exercise 4.43
+;;
+
+(define (require p) (if (not p) (amb)))
+(define (yachts)
+  (let ((  moore-d (amb 'mary-ann 'gabriel 'lorna 'rosalind 'melissa))
+        (downing-d (amb 'mary-ann 'gabriel 'lorna 'rosalind 'melissa))
+        (   hall-d (amb 'mary-ann 'gabriel 'lorna 'rosalind 'melissa))
+        (   hood-d (amb 'mary-ann 'gabriel 'lorna 'rosalind 'melissa))
+        ( parker-d (amb 'mary-ann 'gabriel 'lorna 'rosalind 'melissa)))
+    (let ((  moore-y (amb 'mary-ann 'gabriel 'lorna 'rosalind 'melissa))
+          (downing-y (amb 'mary-ann 'gabriel 'lorna 'rosalind 'melissa))
+          (   hall-y (amb 'mary-ann 'gabriel 'lorna 'rosalind 'melissa))
+          (   hood-y (amb 'mary-ann 'gabriel 'lorna 'rosalind 'melissa))
+          ( parker-y (amb 'mary-ann 'gabriel 'lorna 'rosalind 'melissa)))
+      (require (distinct? (list moore-d downing-d hall-d hood-d parker-d)))
+      (require (distinct? (list moore-y downing-y hall-y hood-y parker-y)))
+      (require (eq?   moore-d 'mary-ann))
+      (require (eq?    hood-y 'gabriel))
+      (require (eq?   moore-y 'lorna))
+      (require (eq?    hall-y 'rosalind))
+      (require (eq? downing-y 'melissa))
+      (require (eq?    hood-d 'melissa))
+      (list
+        (list
+          (list   'moore-d   moore-d)
+          (list 'downing-d downing-d)
+          (list    'hall-d    hall-d)
+          (list    'hood-d    hood-d)
+          (list  'parker-d  parker-d))
+        (list
+          (list   'moore-y   moore-y)
+          (list 'downing-y downing-y)
+          (list    'hall-y    hall-y)
+          (list    'hood-y    hood-y)
+          (list  'parker-y  parker-y))))))
+
+(define (require p) (if (not p) (amb)))
+(define (yachts)
+  (let (( mary-ann-f (amb 'moore))
+        (gabrielle-f (amb 'moore 'downing 'hall 'hood 'parker))
+        (    lorna-f (amb 'moore 'downing 'hall 'hood 'parker))
+        ( rosalind-f (amb 'moore 'downing 'hall 'hood 'parker))
+        (  melissa-f (amb 'hood)))
+    (let (( mary-ann-y (amb 'moore 'downing 'hall 'hood 'parker))
+          (gabrielle-y (amb 'hood))
+          (    lorna-y (amb 'moore))
+          ( rosalind-y (amb 'moore 'downing 'hall 'hood 'parker))
+          (  melissa-y (amb 'downing)))
+      (require (distinct? (list mary-ann-f gabrielle-f lorna-f rosalind-f melissa-f)))
+      (require (distinct? (list mary-ann-y gabrielle-y lorna-y rosalind-y melissa-y)))
+      (require (eq? gabrielle-f
