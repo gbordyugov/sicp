@@ -308,6 +308,7 @@
     (require (not (eq? 'hall  rosalind )))
     (require      (eq? 'hood  melissa   ))
     (require
+      ;; this is a hack I borrowed from Eli Bendersky
       (cond ((eq? gabrielle 'downing) (eq? melissa 'parker))
             ((eq? gabrielle 'hall)    (eq? rosalind 'parker))
             (else false)))
