@@ -321,3 +321,9 @@
 ;;
 ;; exercise 4.44
 ;;
+
+(define (attacks? x1 y1 x2 y2)
+  (cond ((= x1 x2)                           true)
+        ((= y1 y2)                           true)
+        ((= (abs (- x1 x2)) (abs (- y1 y2))) true)
+        (else false)))
