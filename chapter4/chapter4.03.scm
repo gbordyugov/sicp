@@ -342,6 +342,12 @@
     (if (or (null? a) (null? b))
       acc
       (go (cdr a) (cdr b) (cons (op (car a) (car b)) acc))))
-  (go a b '()))
+  (define (reverse lst)
+    (define (go lst acc)
+      (if (null? lst)
+        acc
+        (go (cdr lst) (cons (car lst) acc))))
+      (go lst '()))
+  (reverse (go a b '())))
 
 (zip-with list '(1 2 3) '(a b c d))
