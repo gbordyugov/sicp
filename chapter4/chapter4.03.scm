@@ -335,5 +335,13 @@
       (go (cdr items) (+ n 1) (cons n acc))))
   (go items 1 '()))
 
-(enumerate '(1 2 3))
-      
+(enumerate '(a b c d e f))
+
+(define (zip-with op a b)
+  (define (go a b acc)
+    (if (or (null? a) (null? b))
+      acc
+      (go (cdr a) (cdr b) (cons (op (car a) (car b)) acc))))
+  (go a b '()))
+
+(zip-with list '(1 2 3) '(a b c d))
