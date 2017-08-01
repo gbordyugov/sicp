@@ -327,3 +327,13 @@
         ((= y1 y2)                           true)
         ((= (abs (- x1 x2)) (abs (- y1 y2))) true)
         (else false)))
+
+(define (enumerate items)
+  (define (go items n acc)
+    (if (null? items)
+      acc
+      (go (cdr items) (+ n 1) (cons n acc))))
+  (go items 1 '()))
+
+(enumerate '(1 2 3))
+      
