@@ -355,7 +355,26 @@
 (define (require p) (if (not p) (amb)))
 (define (eight-queens)
   (define (ok-position? columns rows)
-    true)
+    (define (this-ok? c r cs rs)
+      (define (attacks? x1 y1 x2 y2)
+        (cond ((= x1 x2)                           true)
+              ((= y1 y2)                           true)
+              ((= (abs (- x1 x2)) (abs (- y1 y2))) true)
+              (else false)))
+      (if (null? cs)
+        true
+        (if (attacks? c r (car cs) (car rs))
+          false
+          (this-ok? c r (cdr cs) (cdr rs)))))
+    (if (null? columns)
+      true
+      (let ((rest-columns (cdr columns))
+            (rest-rows    (cdr rows)))
+        (if (not (ok-position? rest-columns rest-rows))
+          false
+          (let ((this-column (car columns))
+                (this-row    (car rows)))
+            (this-ok? this-column this-row rest-columns rest-rows))))))
   (let ((q1 (amb 1 2 3 4 5 6 7 8))
         (q2 (amb 1 2 3 4 5 6 7 8))
         (q3 (amb 1 2 3 4 5 6 7 8))
@@ -368,3 +387,28 @@
           (rows    (list  1  2  3  4  5  6  7  8)))
       (require (ok-position? columns rows))
       (list q1 q2 q3 q4 q5 q6 q7 q8))))
+
+(define (ok-position? columns rows)
+  (define (this-ok? c r cs rs)
+    (define (attacks? x1 y1 x2 y2)
+      (cond ((= x1 x2)                           true)
+            ((= y1 y2)                           true)
+            ((= (abs (- x1 x2)) (abs (- y1 y2))) true)
+            (else false)))
+    (if (null? cs)
+      true
+      (if (attacks? c r (car cs) (car rs))
+        false
+        (this-ok? c r (cdr cs) (cdr rs)))))
+  (if (null? columns)
+    true
+    (let ((rest-columns (cdr columns))
+          (rest-rows    (cdr rows)))
+      (if (not (ok-position? rest-columns rest-rows))
+        false
+        (let ((this-column (car columns))
+              (this-row    (car rows)))
+          (this-ok? this-column this-row rest-columns rest-rows))))))
+
+(ok-position? '(1 3) '(3 2))
+
