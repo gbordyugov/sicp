@@ -354,18 +354,18 @@
 
 (define (require p) (if (not p) (amb)))
 (define (eight-queens)
+  (define (attacks? x1 y1 x2 y2)
+    (cond ((= x1 x2)                           true)
+          ((= y1 y2)                           true)
+          ((= (abs (- x1 x2)) (abs (- y1 y2))) true)
+          (else false)))
+  (define (this-ok? c r cs rs)
+    (if (null? cs)
+      true
+      (if (attacks? c r (car cs) (car rs))
+        false
+        (this-ok? c r (cdr cs) (cdr rs)))))
   (define (ok-position? columns rows)
-    (define (this-ok? c r cs rs)
-      (define (attacks? x1 y1 x2 y2)
-        (cond ((= x1 x2)                           true)
-              ((= y1 y2)                           true)
-              ((= (abs (- x1 x2)) (abs (- y1 y2))) true)
-              (else false)))
-      (if (null? cs)
-        true
-        (if (attacks? c r (car cs) (car rs))
-          false
-          (this-ok? c r (cdr cs) (cdr rs)))))
     (if (null? columns)
       true
       (let ((rest-columns (cdr columns))
@@ -388,6 +388,9 @@
       (require (ok-position? columns rows))
       (list q1 q2 q3 q4 q5 q6 q7 q8))))
 
+;;
+;; prototype of the functions above
+;;
 (define (ok-position? columns rows)
   (define (this-ok? c r cs rs)
     (define (attacks? x1 y1 x2 y2)
