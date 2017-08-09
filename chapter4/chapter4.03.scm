@@ -423,3 +423,27 @@
 
 (ok-position? '(1 3) '(3 2))
 
+;;
+;; new approach
+;;
+
+(define (safe-horizontal? q rest)
+  (not (member q rest)))
+
+(define (safe-diagonal? q rest)
+  (define (go q counter rest)
+    (if (null? rest)
+      #t
+      (and (not (= (abs (- q (car rest)))
+                   counter))
+           (go q (+ 1 counter) (cdr rest)))))
+  (go q 1 rest))
+
+
+(define (safe? k positions)
+  (if (null? positions)
+    #t
+    (let ((queen (car positions))
+          (rest  (cdr positions)))
+      (and (safe-horizontal? queen rest)
+           (  safe-diagonal? queen rest)))))
