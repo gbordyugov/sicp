@@ -526,7 +526,7 @@
                           (enumerate-interval 1 (- i 1))))
                    (enumerate-interval 1 n))))
 
-(what 4)
+;; (what 4)
 
 (define (flatmap proc seq)
   (accumulate append '() (map proc seq)))
@@ -534,7 +534,7 @@
 (define (prime-sum? pair)
   (prime? (+ (car pair) (cadr pair))))
 
-(prime-sum? '(1 4))
+;; (prime-sum? '(1 4))
 
 (define (make-pair-sum pair)
   (let ((a (car pair))
@@ -551,7 +551,7 @@
                                    (enumerate-interval 1 (- i 1))))
                             (enumerate-interval 1 n)))))
 
-(prime-sum-pairs 13)
+;; (prime-sum-pairs 13)
 
 (define (permutations s)
   (if (null? s)
@@ -582,7 +582,7 @@
 (define (prime-sum-pairs n)
   (map make-pair-sum (filter prime-sum? (unique-pairs n))))
 
-(prime-sum-pairs 13)
+;; (prime-sum-pairs 13)
 
 
 ;;
@@ -739,9 +739,9 @@
 ;; wave :: Painter
 
 ;; wave2 :: Painter
-(define wave2 (beside wave (flip-vert wave)))
+;; (define wave2 (beside wave (flip-vert wave)))
 ;; wave4 :: Painter
-(define wave4 (below wave2 wave2))
+;; (define wave4 (below wave2 wave2))
 
 ;; flipped-pairs :: Painter -> Painter
 (define (flipped-pairs painter)
@@ -749,7 +749,7 @@
     (below painter2 painter2)))
 
 ;; wave4 :: Painter
-(define wave4 (flipped-pairs wave))
+;; (define wave4 (flipped-pairs wave))
 
 ;; right-split :: Painter -> Int -> Painter
 (define (right-split painter n)
@@ -838,10 +838,6 @@
     (let ((smaller (up-split painter (- n 1))))
       (below painter (beside smaller smaller)))))
 
-;; ...should be expressed as...
-(define right-split (split beside below ))
-(define up-split    (split below  beside))
-
 ;; ...by using...
 ;; split :: (Painter -> Painter)
 ;;       -> (Painter -> Painter)
@@ -853,6 +849,11 @@
       (let ((smaller ((split a b) painter (- n 1))))
         (a painter (b smaller smaller))))))
 ;; that seems to be a valid solution to exercise 2.45!
+
+;; ...should be expressed as...
+;; (define right-split (split beside below ))
+;; (define up-split    (split below  beside))
+
 
 ;;
 ;; Frames
