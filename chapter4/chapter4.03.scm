@@ -429,6 +429,11 @@
 
 (define (require p) (if (not p) (amb)))
 
+(define (and a b)
+  (if a
+    (if b true false)
+    false))
+
 (define (safe-horizontal? q rest)
   (not (member q rest)))
 
@@ -466,4 +471,6 @@
       (let ((pos (list-amb (enumerate-interval 1 board-size)))
             (prev (queens-iter (- k 1))))
         (require (safe? (cons pos prev)))
-        (cons pos prev)))))
+        (cons pos prev))))
+  (queens-iter board-size))
+
