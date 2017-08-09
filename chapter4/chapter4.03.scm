@@ -427,23 +427,43 @@
 ;; new approach
 ;;
 
+(define (require p) (if (not p) (amb)))
+
 (define (safe-horizontal? q rest)
   (not (member q rest)))
 
 (define (safe-diagonal? q rest)
   (define (go q counter rest)
     (if (null? rest)
-      #t
+      true
       (and (not (= (abs (- q (car rest)))
                    counter))
            (go q (+ 1 counter) (cdr rest)))))
   (go q 1 rest))
 
-
-(define (safe? k positions)
+(define (safe? positions)
   (if (null? positions)
-    #t
+    true
     (let ((queen (car positions))
           (rest  (cdr positions)))
       (and (safe-horizontal? queen rest)
            (  safe-diagonal? queen rest)))))
+
+(define (enumerate-interval low high)
+  (if (> low high)
+    '()
+    (cons low (enumerate-interval (+ low 1) high))))
+
+(define (list-amb items)
+  (if (null? items)
+    (amb)
+    (amb (car items) (list-amb (cdr items)))))
+
+(define (queens board-size)
+  (define (queens-iter k)
+    (if (= k 0)
+      (list '())
+      (let ((pos (list-amb (enumerate-interval 1 board-size)))
+            (prev (queens-iter (- k 1))))
+        (require (safe? (cons pos prev)))
+        (cons pos prev)))))
