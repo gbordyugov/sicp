@@ -424,6 +424,8 @@
 (ok-position? '(1 3) '(3 2))
 
 ;;
+;; exercise 4.44
+;;
 ;; new approach
 ;;
 
@@ -467,7 +469,7 @@
 (define (queens board-size)
   (define (queens-iter k)
     (if (= k 0)
-      (list '())
+      '()
       (let ((pos (list-amb (enumerate-interval 1 board-size)))
             (prev (queens-iter (- k 1))))
         (require (safe? (cons pos prev)))
