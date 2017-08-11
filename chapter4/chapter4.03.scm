@@ -547,3 +547,10 @@
 (parse '(the student with the cat sleeps in the class))
 
 (parse '(the professor lectures to the student with the cat))
+
+;;
+;; exercise 4.45
+;;
+
+(parse '(the professor lectures to the student
+             in the class with the cat))
