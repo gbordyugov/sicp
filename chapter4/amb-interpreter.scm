@@ -463,6 +463,7 @@
         (list 'display         display)
         (list 'list            list)
         (list 'member          member)
+        (list 'memq            memq)
         (list 'distinct?       distinct?)
         ;; ... more primitives))
         ))
