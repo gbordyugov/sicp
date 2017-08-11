@@ -511,6 +511,8 @@
   (let ((sent (parse-sentence)))
     (require (null? *unparsed*)) sent))
 
+(parse '(the cat eats))
+
 ;;
 ;; extension
 ;;
@@ -590,3 +592,24 @@
           (parse-word articles)
           (parse-word adjectives)
           (parse-word nouns))))
+
+;;
+;; exercise 4.49
+;;
+
+;;
+;; the needed change to parse-word
+;;
+(define (parse-word word-list)
+  (list (car word-list)
+        (list-amb (cdr word-list))))
+
+;;
+;; together with
+;;
+(define (list-amb items)
+  (if (null? items)
+    (amb)
+    (amb (car items) (list-amb (cdr items)))))
+
+
