@@ -554,3 +554,12 @@
 
 (parse '(the professor lectures to the student
              in the class with the cat))
+
+;;
+;; exercise 4.46
+;;
+
+;;
+;; it's down to how the parser propagates through *unparsed*, namely,
+;; from left to right
+;;
