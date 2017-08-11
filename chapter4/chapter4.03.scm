@@ -563,3 +563,14 @@
 ;; it's down to how the parser propagates through *unparsed*, namely,
 ;; from left to right
 ;;
+
+;;
+;; exercise 4.47
+;;
+
+;;
+;; yes, it's working this way too
+;;
+;; interchanging the order of expressions in the amb causes an
+;; infinite loop
+;;
