@@ -649,3 +649,23 @@
                  (set-variable-value! var val env)
                  (succeed 'ok fail2)))
              fail))))
+
+;;
+;; exercise 4.52
+;;
+
+(define (if-fail? exp)
+  (tagged-list? exp 'if-fail)))
+
+(define (if-fail-predicate   exp) ( cadr exp))
+(define (if-fail-alternative exp) (caddr exp))
+
+(define (analyze-if-fail exp)
+  (let ((pproc (analyze (if-fail-predicate   exp)))
+        (aproc (analyze (if-fail-alternative exp))))
+    (lambda (env succeed fail)
+      (pproc env
+             (lambda (x fail2)
+               (succeed x fail2))
+             (lambda ()
+               (aproc env succeed fail))))))
