@@ -630,3 +630,22 @@
 
 (define (shuffle-list items)
   (sort items (lambda (x y) (= 0 (random 2)))))
+
+;;
+;; exercise 4.51
+;;
+
+;; ((permanent-assignment?      exp) (analyze-permanent-assignment        exp))
+
+(define (permanent-assignment? exp) (tagged-list? exp 'permanent-set!))
+
+(define (analyze-permanent-assignment exp)
+  (let ((var (assignment-variable exp))
+        (vproc (analyze (assignment-value exp))))
+    (lambda (env succeed fail)
+      (vproc env
+             (lambda (val fail2)
+               (let ((old-value (lookup-variable-value var env)))
+                 (set-variable-value! var val env)
+                 (succeed 'ok fail2)))
+             fail))))
