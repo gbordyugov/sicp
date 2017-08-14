@@ -613,3 +613,20 @@
     (amb (car items) (list-amb (cdr items)))))
 
 
+
+;;
+;; exercise 4.50
+;;
+
+;; addition to analyze:
+
+;; ((ramb? exp) (analyze-amb (ramb->amb exp)))
+
+(define (ramb? exp)
+  (tagged-list? exp 'ramb))
+
+(define (ramb->amb exp)
+  (cons 'ramb (shuffle-list (amb-choices exp))))
+
+(define (shuffle-list items)
+  (sort items (lambda (x y) (= 0 (random 2)))))
