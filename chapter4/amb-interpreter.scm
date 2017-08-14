@@ -1,21 +1,23 @@
 (define (eval. exp env) ((analyze exp) env))
 
 (define (analyze exp)
-  (cond ((self-evaluating? exp) (analyze-self-evaluating   exp))
-        ((quoted?          exp) (analyze-quoted            exp))
-        ((variable?        exp) (analyze-variable          exp))
-        ((assignment?      exp) (analyze-assignment        exp))
-        ((definition?      exp) (analyze-definition        exp))
-        ((let?             exp) (analyze
-                                  (let->application        exp)))
-        ((if?              exp) (analyze-if                exp))
-        ((lambda?          exp) (analyze-lambda            exp))
-        ((begin?           exp) (analyze-sequence
-                                  (begin-actions           exp)))
-        ((cond?            exp) (analyze
-                                  (cond->if                exp)))
-        ((amb?             exp) (analyze-amb               exp))
-        ((application?     exp) (analyze-application       exp))
+  (cond ((self-evaluating?      exp) (analyze-self-evaluating             exp))
+        ((quoted?               exp) (analyze-quoted                      exp))
+        ((variable?             exp) (analyze-variable                    exp))
+        ((assignment?           exp) (analyze-assignment                  exp))
+        ((permanent-assignment? exp) (analyze-permanent-assignment        exp))
+        ((definition?           exp) (analyze-definition                  exp))
+        ((let?                  exp) (analyze
+                                       (let->application                  exp)))
+        ((if?                   exp) (analyze-if                          exp))
+        ((if-fail?              exp) (analyze-if-fail                     exp))
+        ((lambda?               exp) (analyze-lambda                      exp))
+        ((begin?                exp) (analyze-sequence
+                                       (begin-actions                     exp)))
+        ((cond?                 exp) (analyze
+                                       (cond->if                          exp)))
+        ((amb?                  exp) (analyze-amb                         exp))
+        ((application?          exp) (analyze-application                 exp))
         (else (error "Unknown expression type: ANALYZE"    exp))))
 
 
@@ -465,6 +467,7 @@
         (list 'member          member)
         (list 'memq            memq)
         (list 'distinct?       distinct?)
+        (list 'remainder       remainder)
         ;; ... more primitives))
         ))
 
@@ -539,3 +542,44 @@
              the-global-environment
              (lambda (value fail) value)
              (lambda () 'failed))))
+
+
+;;
+;; from exercise 4.51
+;;
+
+(define (permanent-assignment? exp) (tagged-list? exp 'permanent-set!))
+(define (permanent-assignment-variable exp) ( cadr exp))
+(define (permanent-assignment-value    exp) (caddr exp))
+
+(define (analyze-permanent-assignment exp)
+  (let ((var            (permanent-assignment-variable exp))
+        (vproc (analyze (permanent-assignment-value exp))))
+    (lambda (env succeed fail)
+      (vproc env
+             (lambda (val fail2)
+               (let ((old-value (lookup-variable-value var env)))
+                 (set-variable-value! var val env)
+                 (succeed 'ok fail2)))
+             fail))))
+
+
+;;
+;; from exercise 4.52
+;;
+
+(define (if-fail? exp)
+  (tagged-list? exp 'if-fail))
+
+(define (if-fail-predicate   exp) ( cadr exp))
+(define (if-fail-alternative exp) (caddr exp))
+
+(define (analyze-if-fail exp)
+  (let ((pproc (analyze (if-fail-predicate   exp)))
+        (aproc (analyze (if-fail-alternative exp))))
+    (lambda (env succeed fail)
+      (pproc env
+             (lambda (x fail2)
+               (succeed x fail2))
+             (lambda ()
+               (aproc env succeed fail))))))
