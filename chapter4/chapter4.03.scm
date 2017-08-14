@@ -710,3 +710,18 @@
 ;;
 ;; Value 2: ((8 35) (3 110) (3 20))
 ;;
+
+
+;;
+;; exercise 4.54
+;;
+
+(define (analyze-require exp)
+  (let ((pproc (analyze (require-predicate exp))))
+    (lambda (env succeed fail)
+      (pproc env
+             (lambda (pred-value fail2)
+               (if (not (true? pred-value))
+                   (fail)
+                   (succeed 'ok fail2)))
+             fail))))
