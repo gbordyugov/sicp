@@ -89,3 +89,14 @@
      (salary      ?p1 ?salary-p1)
      (salary      ?p2 ?salary-p2)
      (lisp-value > ?salaray-p2 ?salary-p1))
+
+
+;;
+;; exercise 4.58
+;;
+
+(rule (big-shot ?person ?division)
+      (and (job ?person (?division . ?x))
+           (or (not (supervisor ?person ?anyone))
+               (and (supervisor ?person ?supervisor)
+                    (not (job ?supervisor (?division . ?y)))))))
