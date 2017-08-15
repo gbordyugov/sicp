@@ -100,3 +100,31 @@
            (or (not (supervisor ?person ?anyone))
                (and (supervisor ?person ?supervisor)
                     (not (job ?supervisor (?division . ?y)))))))
+
+
+;;
+;; exercise 4.59
+;;
+
+;;
+;; a.
+;;
+
+(meeting ?team (Friday ?time))
+
+
+;;
+;; b.
+;;
+
+(rule (meeting-time ?person ?day-and-time)
+      (or (meeting whole-company ?day-and-time)
+          (and (meeting ?dept ?day-and-time)
+               (job     ?person (?dept . ?x)))))
+
+;;
+;; c.
+;;
+
+(and (meeting-time (Hacker Allysa P) (Wednesday . ?time))
+     (meeting ?dept (Wednesday . ?time)))
