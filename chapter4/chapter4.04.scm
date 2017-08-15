@@ -29,3 +29,32 @@
 ;;
 
 (address ?name (Slummerville . ?address))
+
+;;
+;; exercise 4.56
+;;
+
+;;
+;; a. the names of all people who are supervised by BB together with
+;; their addresses
+
+(and (supervisor ?name (Bitdiddle Ben))
+     (address    ?name ?address))
+
+;;
+;; b. all people whose salary is less than BB's together with their
+;; salary and BB's salary
+;;
+
+(and (salary (Bitdiddle Ben) ?bb-salary)
+     (salary ?name           ?salary)
+     (lisp-value < ?salary ?bb-salary))
+
+;;
+;; c. all people who are supervised by someone who is not in the
+;; computer division, together with the supervisor's name and job
+;;
+
+(and (supervisor ?supervisee ?supervisor)
+     (not (job ?supervisor (computer ?job)))
+     (job ?supervisor ?supervisor-job))
