@@ -128,3 +128,14 @@
 
 (and (meeting-time (Hacker Allysa P) (Wednesday . ?time))
      (meeting ?dept (Wednesday . ?time)))
+
+
+;;
+;; exercise 4.60
+;;
+
+;;
+;; a rotation of a pair still satisfies the `lives-near` rule
+;;
+;; yes, by additionaly implying an ordering on pairs
+;;
