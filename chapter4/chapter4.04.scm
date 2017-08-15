@@ -8,6 +8,7 @@
 ;; use smth similar for our KPI queries?
 ;;
 
+
 ;;
 ;; exercise 4.55
 ;;
@@ -29,6 +30,7 @@
 ;;
 
 (address ?name (Slummerville . ?address))
+
 
 ;;
 ;; exercise 4.56
@@ -58,3 +60,32 @@
 (and (supervisor ?supervisee ?supervisor)
      (not (job ?supervisor (computer ?job)))
      (job ?supervisor ?supervisor-job))
+
+
+;;
+;; exercise 4.57
+;;
+
+(rule (can-replace ?p1 ?p2)
+      (and (or (and (job ?p1 ?job)
+                    (job ?p2 ?job))
+               (and (job ?p1 ?job)
+                    (job ?x  ?job)
+                    (job ?p2 ?job))) ;; TODO double-check this line
+           (not (same ?p1 ?p2))))
+
+;;
+;; a. all people who can replace Cy D. Fect
+;;
+
+(can-replace ?x (Fect Cy D))
+
+;;
+;; b. all people who can replace someone who is being paid more than
+;; they are, together with they salaries
+;;
+
+(and (can-replace ?p1 ?p2)
+     (salary      ?p1 ?salary-p1)
+     (salary      ?p2 ?salary-p2)
+     (lisp-value > ?salaray-p2 ?salary-p1))
