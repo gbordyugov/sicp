@@ -69,9 +69,9 @@
 (rule (can-replace ?p1 ?p2)
       (and (or (and (job ?p1 ?job)
                     (job ?p2 ?job))
-               (and (job ?p1 ?job)
-                    (job ?x  ?job)
-                    (job ?p2 ?job))) ;; TODO double-check this line
+               (and (job ?p1 ?j1)
+                    (job ?p2 ?j2)
+                    (can-do-job ?j1 ?j2)))
            (not (same ?p1 ?p2))))
 
 ;;
