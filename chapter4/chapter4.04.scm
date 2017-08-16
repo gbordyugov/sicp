@@ -139,3 +139,15 @@
 ;;
 ;; yes, by additionaly implying an ordering on pairs
 ;;
+
+
+;;
+;; exercise 4.61
+;;
+
+;; (2 3) next-to 4
+;; 1 next-to (2 3)
+
+
+;; 3 next-to 1
+;; 2 next-to 1
