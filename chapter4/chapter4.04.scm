@@ -160,3 +160,16 @@
 (rule (last-pair (?a) (?a)))
 (rule (last-pair (?x . ?rest) (?pair))
       (last-pair ?rest (?pair)))
+
+
+;;
+;; exercise 4.63
+;;
+
+(rule (grandfather ?gf ?gs)
+      (and (son         ?gf ?f)
+           (son         ?f  ?gs)))
+
+(rule (son ?m ?s)
+      (and (wife ?m ?w)
+           (son  ?w ?s)))
