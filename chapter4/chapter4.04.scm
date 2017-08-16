@@ -151,3 +151,12 @@
 
 ;; 3 next-to 1
 ;; 2 next-to 1
+
+
+;;
+;; exercise 4.62
+;;
+
+(rule (last-pair (?a) (?a)))
+(rule (last-pair (?x . ?rest) (?pair))
+      (last-pair ?rest (?pair)))
