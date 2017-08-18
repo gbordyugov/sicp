@@ -135,3 +135,54 @@
 ;; (b ?y) in the resulting frame. If ?y is determined later, the
 ;; corresponding ?x would refer to the corresponding value of (b ?y)
 ;;
+
+
+;;
+;; Applying rules
+;;
+
+;;
+;; evaluating
+;;
+;; (lives-near ?x (Hacker Alyssa P))                               (*)
+;;
+;; results in trying to unify the above pattern with the conclusion of
+;; each rule, matching the rule
+;;
+;; (rule (lives-near ?person-1 ?person-2)
+;;       (and (address ?person-1 (?town . ?rest-1))
+;;            (address ?person-2 (?town . ?rest-2))
+;;            (not (same ?person-1 ?person-2))))
+;;
+;; unifying creates/extends a frame by binding ?person-2 to (Hacker
+;; Alyssa P)
+;;
+;; relative to this new frame, the body of the rule is evaluated.
+;; Successful matches will extend this frame by providing a binding
+;; for ?person-1, and consequently a value for ?x which enters the
+;; original query patter (*)
+;;
+
+;;
+;; The method fo applying a rule
+;;
+;; 1. Unify the query with the conclusion of the rule to form an
+;; extension of the original frame
+;;
+;; 2. Relative to the extended frame, evaluate the query formed by the
+;; body of the rule
+;;
+
+;;
+;; is quite similar to the rules for applying a procedure in the
+;; `normal` Lisp
+;;
+
+;;
+;; procedure definitions are the means of abstractions in Lisp
+;; rules definitions are the means of abstractions in the query
+;; language
+;;
+;; the abstraction is unwinded by creating appropriate bindings and
+;; evaluating the rule or procedure body relative to these
+;;
