@@ -33,3 +33,25 @@
 ;; Pattern matching is the only mechanism needed to process simple
 ;; queries
 ;;
+
+
+;;
+;; Streams of frames
+;;
+
+;;
+;; given a single frame, the matching process runs through the DB
+;; entries one by one. For each entry, the matcher generates either a
+;; mismach or an extension to the frame
+;;
+;; the results (frames? frame extensions?) are collected into a stream
+;; which goes through a filter to drop mismatches
+;;
+
+;;
+;; a query takes an input stream of frames
+;; for each frame, it runs the matcher against DB result in possibly
+;; new frames
+;; for each frame from the input stream of frames, the output frames
+;; are combined into one big stream
+;;
