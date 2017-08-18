@@ -55,3 +55,42 @@
 ;; for each frame from the input stream of frames, the output frames
 ;; are combined into one big stream
 ;;
+
+
+;;
+;; Compound queries
+;;
+
+;;
+;; compound queries are formed by AND, OR, and NOT operations.
+;;
+
+;;
+;; AND queries
+;;
+
+;;
+;; (and Q1 Q2) first produces a stream of frames for query Q1 and than
+;; uses this stream as an input for query Q2
+;;
+
+;;
+;; OR queries
+;;
+
+;;
+;; (or Q1 Q2) produces in parallel a stream of frames for query Q1 and
+;; a stream of frames for query Q2 and then merges both streams
+;;
+
+;;
+;; NOT queries
+;;
+
+;; (not Q1) removes from the input stream all frames for which Q1 is
+;; satisfied
+;;
+
+;;
+;; lisp-value works in a similar way
+;;
