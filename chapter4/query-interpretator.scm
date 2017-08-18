@@ -94,3 +94,44 @@
 ;;
 ;; lisp-value works in a similar way
 ;;
+
+
+
+;;
+;; Unification
+;;
+
+;;
+;; unification is a generalization of pattern matching to the extent
+;; that both the piece of data and the pattern may contain variables
+;;
+
+;;
+;; for example, unifying (?x a ?y) and (?y ?z a) will result in a
+;; frame where all ?x, ?y, and ?z are bound to `a`.
+;;
+;; On the other hand, unifying (?x ?y a) and (?x b ?y) would fail,
+;; since there is no way to satisfy ?y = b and a = ?y simultaneously
+;;
+
+;;
+;; the unifier is an equation-solver
+;;
+
+;;
+;; for example, unifying (?x ?x) and ((a ?y c) (a b ?z)) must result
+;; in ?z = c, ?y = b anx ?x = (a b c)
+;;
+
+;;
+;; consider the unification of (?x a) and ((b ?y) ?z)
+;;
+;; we can deduce that
+;; ?x = (b ?y)
+;; a  = ?z
+;;
+;; whereas ?z has been found, ?x and ?y are open up to the functional
+;; dependency between them. The unifier would bin ?x to the expression
+;; (b ?y) in the resulting frame. If ?y is determined later, the
+;; corresponding ?x would refer to the corresponding value of (b ?y)
+;;
