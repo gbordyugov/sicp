@@ -229,3 +229,37 @@
 ;; why streams and not lists: the output can be possibly infinitely
 ;; long
 ;;
+
+
+;;
+;; 4.4.3 Is Logic Programming Mathematical Logic?
+;;
+
+;;
+;; (spoiler: not really)
+;;
+
+;;
+;; Infinite loops
+;;
+;; (assert! (married Minnie Mickey))
+;; (assert! (rule (married ?x ?y) (married ?y ?x)))
+;;
+;; then (married Mickey ?who) will produce an infinite loop
+;;
+
+;;
+;; Problems with `not`
+;;
+
+;;
+;; The following two queries are not equivalent:
+;;
+;; (and (supervisor ?x ?y)
+;;      (not (job ?x (computer programmer))))
+;;
+;; and
+;;
+;; (and (not (job ?x (computer programmer)))
+;;      (supervisor ?x ?y))
+;;
