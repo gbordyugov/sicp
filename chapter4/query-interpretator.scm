@@ -213,3 +213,19 @@
 ;; ways that the given pattern can be satisfied consistent with the
 ;; original frame.
 ;;
+
+
+;;
+;; The query evaluator and the driver loop
+;;
+
+;;
+;; (assert! ...)
+;;
+;; adds an assertion or rule to the database
+;;
+
+;;
+;; why streams and not lists: the output can be possibly infinitely
+;; long
+;;
