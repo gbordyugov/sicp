@@ -263,3 +263,6 @@
 ;; (and (not (job ?x (computer programmer)))
 ;;      (supervisor ?x ?y))
 ;;
+;;
+;; Remark 78 (about (not (baseball-fan (Bitdiddle Ben)))) is awesome
+;;
