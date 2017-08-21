@@ -186,3 +186,30 @@
 ;; the abstraction is unwinded by creating appropriate bindings and
 ;; evaluating the rule or procedure body relative to these
 ;;
+
+
+;;
+;; Simple queries
+;;
+
+;;
+;; before: simple queries in absence of rules
+;;
+;; now that we know how to evaluate rules, we can describe how to
+;; evaluate simple queries by using both rules and assertions
+;;
+
+;;
+;; Given the query pattern and a stream of frames, we produce, for
+;; each frame in the input stream, two streams:
+;;
+;; 1. A stream of extended frames obtained by matching the patter
+;; against all assertions in the DB (using the pattern matcher), and
+;;
+;; 2. A stream of extened frames obtained by applying all possible
+;; rules (using the unifier).
+;;
+;; Appending both streams produces a stream that consist of all the
+;; ways that the given pattern can be satisfied consistent with the
+;; original frame.
+;;
