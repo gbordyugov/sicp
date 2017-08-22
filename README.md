@@ -13,3 +13,5 @@ Open/skipped exercises
  - 2.95
  - 4.10 (is a larger project)
  - 4.31
+ - 4.67 (on the first pass before Section 4.4.4 where the system is
+   implemented)

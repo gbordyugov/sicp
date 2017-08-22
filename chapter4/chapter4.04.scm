@@ -216,3 +216,10 @@
 ;; uniqueness check - duplicates should be weeded from the resulting
 ;; stream of frames
 ;;
+
+
+;;
+;; exercise 4.67
+;;
+;; I'm not there yet, skipped
+;;
