@@ -200,3 +200,10 @@
 ;;
 ;; the order of arguments to the `and` operator is important!
 ;;
+
+
+;;
+;; exercise 4.65
+;; 
+;; because the dude is listed four times!
+;;
