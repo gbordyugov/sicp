@@ -183,3 +183,21 @@
       (or (supervisor ?staff-person ?boss)
           (and (outranked-by ?middle-manager ?boss)
                (supervisor ?staff-person ?middle-manager))))
+
+;;
+;; the same problem as with Mickey and Minnie in the text:
+;;
+;; (outranked-by (Bitdiddle Ben) ?who)) is unified with the conclusion
+;; of the rule above, binding ?staff-person to (Bitdiddle Ben) and
+;; ?who to ?boss
+;;
+;; the first leg of or works findind a binding for ?boss and then
+;; (outranked-by ?middle-manager ?boss) kicks in, trying to find
+;; ?middle-manager
+;;
+;; once a ?middle-manager has been found, it would again try to find
+;; another ?boss
+;;
+;; and so on
+;;
+;; 
