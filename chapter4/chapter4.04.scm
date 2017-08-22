@@ -207,3 +207,12 @@
 ;; 
 ;; because the dude is listed four times!
 ;;
+
+
+;;
+;; exercise 4.66
+;;
+;; Ben has just realized that hes functionality is lacking a
+;; uniqueness check - duplicates should be weeded from the resulting
+;; stream of frames
+;;
