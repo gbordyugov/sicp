@@ -198,6 +198,5 @@
 ;; once a ?middle-manager has been found, it would again try to find
 ;; another ?boss
 ;;
-;; and so on
+;; the order of arguments to the `and` operator is important!
 ;;
-;; 
