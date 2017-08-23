@@ -223,3 +223,12 @@
 ;;
 ;; I'm not there yet, skipped
 ;;
+
+
+;;
+;; exercise 4.68
+;;
+
+(rule (reverse '() '()))
+
+(rule (reverse (?a . ?ar) (?b . ?br))
