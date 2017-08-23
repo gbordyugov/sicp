@@ -229,6 +229,8 @@
 ;; exercise 4.68
 ;;
 
-(rule (reverse '() '()))
-
-(rule (reverse (?a . ?ar) (?b . ?br))
+(rule (reverse () ()))
+(rule (reverse ?a ?b)
+      (and (append-to-form (?cara) ?cdra  ?a)
+           (append-to-form  ?carb (?cara) ?b)
+           (reverse ?cdra ?carb)))
