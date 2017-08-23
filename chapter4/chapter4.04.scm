@@ -234,3 +234,11 @@
       (and (append-to-form (?cara) ?cdra  ?a)
            (append-to-form  ?carb (?cara) ?b)
            (reverse ?cdra ?carb)))
+
+
+;;
+;; exercise 4.69
+;;
+
+(rule (ends-in-son 
+(rule ((great . ?rel) ?x ?y)
