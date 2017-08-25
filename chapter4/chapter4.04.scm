@@ -240,5 +240,10 @@
 ;; exercise 4.69
 ;;
 
-(rule (ends-in-son 
-(rule ((great . ?rel) ?x ?y)
+(rule (ends-in-grandson ?x)
+      (append-to-form ?head (grandson) ?x))
+
+(rule ((great . ?rel) x y)
+      (and (ends-in-grandson ?rel)
+           (?rel ?z ?y)
+           (son ?x ?z)))
