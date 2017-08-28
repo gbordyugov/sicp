@@ -294,13 +294,17 @@
             (display-stream
               (stream-map
                 (lambda (frame)
-                  (instantiate
+                  (instantiate ;; this instantiates query by variable bindings from frames
                     q frame
                     (lambda (v f)
                       (contract-question-mark v))))
                 (qeval q (singleton-stream '()))))
             (query-driver-loop)))))
 
+;;
+;; accepts an expression, a frame with bindings plus a function to
+;; call when a binding cannot be found in the frame
+;;
 (define (instantiate exp frame unbound-var-handler)
   (define (copy exp)
     (cond ((var? exp)
