@@ -325,6 +325,10 @@
       (simple-query query frame-stream))))
 
 
+;;
+;; simple queries
+;;
+
 (define (simple-query query-pattern frame-stream)
   (stream-flatmap
     (lambda (frame)
@@ -332,3 +336,23 @@
         (find-assertions query-pattern frame)
         (delay (apply-rules query-pattern frame))))
     frame-stream))
+
+
+;;
+;; compound queries
+;;
+
+;;
+;; conjoin takes care of `and` queries
+;;
+;; conjoin takes as inputs the conjucts and the frame stream and the
+;; stream of extended frames
+;;
+
+(define (conjoin conjuncts frame-stream)
+  (if (empty-conjunction? conjuncts)
+    frame-stream
+    (conjoin (rest-conjuncts conjuncts)
+             (qeval (first-conjunct conjuncts) frame-stream))))
+
+;; (put 'and 'qeval conjoin)
