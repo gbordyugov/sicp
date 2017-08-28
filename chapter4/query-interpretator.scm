@@ -135,3 +135,7 @@
 
 (define (always-true ignore frame-stream) frame-stream)
 ;; (put 'always-true 'qeval always-true)
+
+;;
+;; continue on 4.4.4.3 Finding Assertions by Pattern Matching
+;;
