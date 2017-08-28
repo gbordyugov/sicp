@@ -354,7 +354,6 @@
     frame-stream
     (conjoin (rest-conjuncts conjuncts)
              (qeval (first-conjunct conjuncts) frame-stream))))
-
 ;; (put 'and 'qeval conjoin)
 
 
@@ -368,5 +367,19 @@
     (interleave-delayed
       (qeval (first-disjunct disjuncts) frame-stream)
       (delay (disjoin (rest-disjuncts disjuncts) frame-stream)))))
-
 ;; (put 'or 'qeval disjoin
+
+
+;;
+;; filters take care of `not` queries
+;;
+
+(define (negate operands frame-stream)
+  (stream-flatmap
+    (lambda (frame)
+      (if (stream-null?
+            (qeval (negated-query operands) (singleton-stream frame)))
+        (singleton-stream frame)
+        the-empty-stream))
+    frame-stream))
+;; (put 'not 'qeval negate)
