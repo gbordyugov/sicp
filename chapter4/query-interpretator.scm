@@ -32,8 +32,11 @@
             (query-driver-loop)))))
 
 ;;
-;; accepts an expression, a frame with bindings plus a function to
+;; accepts an expression and a frame with bindings plus a function to
 ;; call when a binding cannot be found in the frame
+;;
+;; the expression is copied and the variables are replaced by their
+;; values
 ;;
 (define (instantiate exp frame unbound-var-handler)
   (define (copy exp)
