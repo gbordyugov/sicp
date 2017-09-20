@@ -193,6 +193,58 @@
 
 
 ;;
+;; 4.4.4.7 Query Syntax Procedures
+;;
+
+;;
+;; accessors
+;;
+(define (type exp)
+  (if (pair? exp)
+    (car exp)
+    (error "Unknown expression TYPE" exp)))
+
+(define (contentes exp)
+  (if (pair? exp)
+    (cdr exp)
+    (error "Unknown expression CONTENTS" exp)))
+
+
+;;
+;; those are used by query-driver-loop, Section 4.4.4.1
+;;
+
+(define (assertion-to-be-added? exp)
+  (eq? (type exp) 'assert!))
+
+;; just the body of assertions
+(define (add-assertion-body exp)
+  (car (contents exp)))
+
+(define (empty-conjunction? exps) (null? exps))
+(define (first-conjunct     exps) (car   exps))
+(define ( rest-conjuncts    exps) (cdr   exps))
+
+(define (empty-disjunction? exps) (null? exps))
+(define (first-disjunct     exps) (car   exps))
+(define ( rest-disjuncts    exps) (car   exps))
+
+(define (negated-query exps) (car exps))
+(define (predicate exps) (car exps))
+(define (args exps) (cdr exps))
+
+(define (rule? statement)
+  (tagged-list? statement 'rule))
+
+(define (conclusion rule)
+  (cadr rule))
+
+(define (rule-body rule)
+  (if (null? (cddr rule))
+    '(always-true)
+    (caddr rule)))
+
+;;
 ;; 4.4.4.8 Frames and Bindings
 ;;
 
