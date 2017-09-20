@@ -32,7 +32,7 @@
             (query-driver-loop)))))
 
 ;;
-;; accepts an expression and a frame with bindings plus a function to
+;; accepts an expression, a frame with bindings, and a function to
 ;; call when a binding cannot be found in the frame
 ;;
 ;; the expression is copied and the variables are replaced by their
@@ -43,13 +43,23 @@
     (cond ((var? exp)
            (let ((binding (binding-in-frame exp frame)))
              (if binding
+               ;; binding-value seems to be an accessor of binding
+               ;; note the recursive call, since bindings can have the
+               ;; form of ?x -> ?y -> 5
                (copy (binding-value binding))
                (unbound-var-handler exp frame))))
-          ((pair? exp)
-           (cons (copy (car exp)) (copy (cdr exp))))
+          ((pair? exp) (cons (copy (car exp)) (copy (cdr exp))))
           (else exp)))
   (copy exp))
 
+;;
+;; bindings with their constructors and accessors are defined in
+;; Section 4.4.4.8
+;;
+
+;;
+;; query evaluator
+;;
 
 (define (qeval query frame-stream)
   (let ((qproc (get (type query) 'qeval)))
@@ -57,17 +67,24 @@
       (qproc (contents query) frame-stream)
       (simple-query query frame-stream))))
 
+;;
+;; query type and contents are defined in Section 4.4.4.7
+;;
+
 
 ;;
 ;; simple queries
 ;;
 
 (define (simple-query query-pattern frame-stream)
+  ;; note the use of flatmap
+  ;; the lambda produces a stream of frames
+  ;; and the stream of those streams is flattened into just one stream
   (stream-flatmap
     (lambda (frame)
-      (stream-append-delayed
-        (find-assertions query-pattern frame)
-        (delay (apply-rules query-pattern frame))))
+      (stream-append-delayed                          ;; Section 4.4.4.6
+        (find-assertions query-pattern frame)         ;; Section 4.4.4.3
+        (delay (apply-rules query-pattern frame))))   ;; Section 4.4.4.4
     frame-stream))
 
 
