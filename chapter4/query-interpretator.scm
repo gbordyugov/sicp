@@ -162,6 +162,45 @@
 
 
 ;;
+;; 4.4.4.5 Maintaining the Data Base
+;;
+
+(define THE-ASSERTIONS the-empty-stream)
+
+(define (fetch-assertions pattern frame)
+  (if (use-index? pattern)
+    (get-indexed-assertions pattern)
+    (get-all-asertions)))
+
+(define (get-all-assertions) THE-ASSERTIONS)
+
+(define (get-indexed-assertions pattern)
+  ;; index-key-of returns the index key of a pattern (is an
+  ;; abstraction here)
+  (get-stream (index-key-of pattern) 'assertion-stream))
+
+(define (get-stream key1 key2)
+  (let ((s (get key1 key2)))
+    (if s s the-empty-stream)))
+
+(define THE-RULES the-empty-stream)
+
+(define (fetch-rules pattern frame)
+  (if (use-index? pattern)
+    (get-indexed-rules pattern)
+    (get-all-rules)))
+
+(define (get-all-rules) THE-RULES)
+
+(define (get-indexed-rules pattern)
+  (stream-append
+    (get-stream (index-key-of pattern) 'rule-stream)
+    (get-stream '? 'rule-stream)))
+
+
+
+
+;;
 ;; 4.4.4.6 Stream Operations
 ;;
 
