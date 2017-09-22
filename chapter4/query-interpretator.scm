@@ -239,6 +239,16 @@
 (define (use-index? pat)
   (constant-symbol? (car pat)))
 
+;;
+;; Exercise 4.70
+;;
+
+;;
+;; without 'let', assertions would be defined as an infinite stream,
+;; consisting of the same assertion, analogous to the stream of ones
+;; of the hint
+;;
+
 
 
 ;;
