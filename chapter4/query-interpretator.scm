@@ -157,8 +157,38 @@
 ;; (put 'always-true 'qeval always-true)
 
 ;;
-;; continue on 4.4.4.3 Finding Assertions by Pattern Matching
+;; 4.4.4.3 Finding Assertions by Pattern Matching
 ;;
+
+(define (find-assertions pattern frame)
+  (stream-flatmap
+    (lambda (datum) (check-an-assertion datum pattern frame))
+    (fetch-assertions pattern frame)))
+
+
+(define (check-an-assertion assertion query-pat query-frame)
+  (let ((mathc-result (pattern-match query-pat assertion query-frame)))
+    (if (eq? match-result 'failed)
+      the-empty-stream
+      (singleton-stream match-result))))
+
+
+(define (pattern-match pat dat frame)
+  (cond ((eq? frame 'failed) 'failed)
+        ((equal? pat dat) frame)
+        ((var? pat) (extend-if-consistent pat dat frame))
+        ((and (pair? pat) (pair? dat))
+         (pattern-match (cdr pat) (cdr dat)
+                        (pattern-match (car pat) (car dat) frame)))
+        (else 'failed)))
+
+
+(define (extend-if-consistent var dat frame)
+  (let ((bindign (binding-in-the frame var frame)))
+    (if binding
+      (pattern-match (binding-value binding) dat frame)
+      (extend var dat frame))))
+
 
 
 ;;
