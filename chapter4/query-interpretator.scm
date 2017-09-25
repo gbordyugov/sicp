@@ -180,6 +180,28 @@
         (qeval (rule-body clean-rule)
                (singleton-stream unify-result))))))
 
+(define (rename-variables-in rule)
+  (let ((rule-application-id (new-rule-application-id)))
+    (define (tree-walk exp)
+      (cond ((var? exp) (make-new-variable exp rule-application-id))
+            ((pair? exp) (cons (tree-walk (car exp))
+                               (tree-walk (cdr exp))))
+            (else exp)))
+    (tree-walk rule)))
+
+(define (unify-match p1 p2 frame)
+  (cond ((eq? frame 'failed) 'failed)
+        ((equal? p1 p2) frame)
+        ((var? p1) (extend-if-possible p1 p2 frame))
+        ((var? p2) (extend-if-possible p2 p1 frame))
+        ((and (pair? p1) (pair? p2)) (unify-match (cdr p1)
+                                                  (cdr p2)
+                                                  (unify-match (car p1)
+                                                               (car p2)
+                                                               frame)))
+        (else 'failed)))
+
+
 ;;
 ;; 4.4.4.5 Maintaining the Data Base
 ;;
