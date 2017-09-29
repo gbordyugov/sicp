@@ -2,6 +2,7 @@
 ;; 4.4.4 Implementing the Query System
 ;;
 
+(load "hash-table.scm")
 ;;
 ;; a little helper function
 ;;
@@ -73,10 +74,6 @@
 ;; 4.4.4.2 The Evaluator
 ;;
 
-;;
-;; TODO: implement put and get
-;;
-
 (define (qeval query frame-stream)
   (let ((qproc (get (type query) 'qeval)))
     (if qproc
@@ -120,7 +117,8 @@
     frame-stream
     (conjoin (rest-conjuncts conjuncts)
              (qeval (first-conjunct conjuncts) frame-stream))))
-;; (put 'and 'qeval conjoin)
+
+(put 'and 'qeval conjoin)
 
 
 ;;
@@ -133,7 +131,8 @@
     (interleave-delayed
       (qeval (first-disjunct disjuncts) frame-stream)
       (delay (disjoin (rest-disjuncts disjuncts) frame-stream)))))
-;; (put 'or 'qeval disjoin
+
+(put 'or 'qeval disjoin)
 
 
 ;;
@@ -148,7 +147,8 @@
         (singleton-stream frame)
         the-empty-stream))
     frame-stream))
-;; (put 'not 'qeval negate)
+
+(put 'not 'qeval negate)
 
 
 (define (lisp-value call frame-stream)
@@ -163,14 +163,16 @@
         (singletone-stream frame)
         the-empty-stream))
     frame-stream))
-;; (put 'lisp-value 'qeval lisp-value)
+
+(put 'lisp-value 'qeval lisp-value)
 
 (define (execute exp)
   (apply (eval (predicate exp) user-initial-environment)
          (args exp)))
 
 (define (always-true ignore frame-stream) frame-stream)
-;; (put 'always-true 'qeval always-true)
+
+(put 'always-true 'qeval always-true)
 
 ;;
 ;; 4.4.4.3 Finding Assertions by Pattern Matching
