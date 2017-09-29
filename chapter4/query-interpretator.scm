@@ -185,7 +185,7 @@
 
 
 (define (check-an-assertion assertion query-pat query-frame)
-  (let ((mathc-result (pattern-match query-pat assertion query-frame)))
+  (let ((match-result (pattern-match query-pat assertion query-frame)))
     (if (eq? match-result 'failed)
       the-empty-stream
       (singleton-stream match-result))))
@@ -202,7 +202,7 @@
 
 
 (define (extend-if-consistent var dat frame)
-  (let ((bindign (binding-in-the frame var frame)))
+  (let ((binding (binding-in-frame var frame)))
     (if binding
       (pattern-match (binding-value binding) dat frame)
       (extend var dat frame))))
@@ -370,6 +370,17 @@
 ;;
 ;; 4.4.4.6 Stream Operations
 ;;
+
+(define (display-stream s)
+  (stream-for-each display-line s))
+
+(define (display-line x) (newline) (display x))
+
+(define (stream-for-each proc s)
+  (if (stream-null? s)
+    'done
+    (begin (proc (stream-car s))
+           (stream-for-each proc (stream-cdr s)))))
 
 
 (define (stream-append-delayed s1 delayed-s2)
