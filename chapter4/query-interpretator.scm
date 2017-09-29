@@ -2,9 +2,18 @@
 ;; 4.4.4 Implementing the Query System
 ;;
 
+;;
+;; a little helper function
+;;
+(define (tagged-list? exp tag)
+  (if (pair? exp)
+    (eq? (car exp) tag)
+    false))
+
+
 
 ;;
-;; The Driver Loop and Insatantiation
+;; 4.4.4.1 The Driver Loop and Insatantiation
 ;;
 
 (define  input-prompt ";;; Query input:")
@@ -30,6 +39,9 @@
                       (contract-question-mark v))))
                 (qeval q (singleton-stream '()))))
             (query-driver-loop)))))
+
+(define (prompt-for-input string)
+  (newline) (newline) (display string) (newline))
 
 ;;
 ;; accepts an expression, a frame with bindings, and a function to
@@ -58,7 +70,11 @@
 ;;
 
 ;;
-;; query evaluator
+;; 4.4.4.2 The Evaluator
+;;
+
+;;
+;; TODO: implement put and get
 ;;
 
 (define (qeval query frame-stream)
@@ -297,8 +313,8 @@
 
 (define  (add-rule-or-assertion! assertion)
   (if (rule? assertion)
-    (add-rule!       assertion)
-    (add-assertiont! assertion)))
+    (add-rule!      assertion)
+    (add-assertion! assertion)))
 
 (define (add-assertion! assertion)
   (store-assertion-in-index assertion)
@@ -392,7 +408,7 @@
     (car exp)
     (error "Unknown expression TYPE" exp)))
 
-(define (contentes exp)
+(define (contents exp)
   (if (pair? exp)
     (cdr exp)
     (error "Unknown expression CONTENTS" exp)))
