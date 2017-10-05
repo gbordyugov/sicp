@@ -286,7 +286,7 @@
 (define (fetch-assertions pattern frame)
   (if (use-index? pattern)
     (get-indexed-assertions pattern)
-    (get-all-asertions)))
+    (get-all-assertions)))
 
 (define (get-all-assertions) THE-ASSERTIONS)
 
