@@ -31,7 +31,7 @@
 ;; 3. the names and addresses of all ppl who live in Slumerville
 ;;
 
-(address ?name (Slummerville . ?address))
+(address ?name (Slumerville . ?address))
 
 
 ;;
