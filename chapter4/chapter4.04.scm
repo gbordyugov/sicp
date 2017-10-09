@@ -33,6 +33,15 @@
 
 (address ?name (Slumerville . ?address))
 
+;;
+;; Compound queries
+;;
+
+(and (job ?person (computer programmer))
+     (address ?person ?where))
+
+(or (supervisor ?x (Bitdiddle Ben))
+    (supervisor ?x (Hacker Allysa P)))
 
 ;;
 ;; exercise 4.56
