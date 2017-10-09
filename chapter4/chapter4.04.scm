@@ -8,7 +8,6 @@
 ;; use smth similar for our KPI queries?
 ;;
 
-(load "query-interpretator.scm")
 
 
 

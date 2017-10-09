@@ -4,6 +4,7 @@
 ;; todo: how to add them in a nice manner?
 ;;
 ;;
+
 (define db
   '((address     (Bitdiddle Ben)   (Slumerville (Ridge Road) 10))
     (job         (Bitdiddle Ben)   (computer wizard))
@@ -53,3 +54,15 @@
     (can-do-job (computer wizard)          (computer technician))
     (can-do-job (computer programmer)      (computer programmer trainee))
     (can-do-job (administration secretary) (administration big wheel))))
+
+(define (load-db db)
+  (if (null? db)
+    'ok
+    (begin
+      (add-rule-or-assertion! (car db))
+      (load-db (cdr db)))))
+
+(load "query-interpretator.scm")
+
+(load-db db)
+(query-driver-loop)
