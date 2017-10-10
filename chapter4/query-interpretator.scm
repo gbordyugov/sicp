@@ -444,7 +444,7 @@
 
 (define (empty-disjunction? exps) (null? exps))
 (define (first-disjunct     exps) (car   exps))
-(define ( rest-disjuncts    exps) (car   exps))
+(define ( rest-disjuncts    exps) (cdr   exps))
 
 (define (negated-query exps) (car exps))
 (define (predicate exps) (car exps))

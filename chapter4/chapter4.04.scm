@@ -40,6 +40,8 @@
 (and (job ?person (computer programmer))
      (address ?person ?where))
 
+(supervisor ?x (Bitdiddle Ben))
+
 (or (supervisor ?x (Bitdiddle Ben))
     (supervisor ?x (Hacker Allysa P)))
 
