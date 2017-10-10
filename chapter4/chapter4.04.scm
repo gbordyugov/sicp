@@ -85,13 +85,16 @@
 ;; exercise 4.57
 ;;
 
-(rule (can-replace ?p1 ?p2)
-      (and (or (and (job ?p1 ?job)
-                    (job ?p2 ?job))
-               (and (job ?p1 ?j1)
-                    (job ?p2 ?j2)
-                    (can-do-job ?j1 ?j2)))
-           (not (same ?p1 ?p2))))
+(assert! (rule (same ?x ?x)))
+
+(assert!
+  (rule (can-replace ?p1 ?p2)
+        (and (or (and (job ?p1 ?job)
+                      (job ?p2 ?job))
+                 (and (job ?p1 ?j1)
+                      (job ?p2 ?j2)
+                      (can-do-job ?j1 ?j2)))
+             (not (same ?p1 ?p2)))))
 
 ;;
 ;; a. all people who can replace Cy D. Fect
