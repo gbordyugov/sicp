@@ -160,7 +160,7 @@
               frame
               (lambda (v f)
                 (error "Unknown pat var: LISP-VALUE" v))))
-        (singletone-stream frame)
+        (singleton-stream frame)
         the-empty-stream))
     frame-stream))
 
