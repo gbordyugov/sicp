@@ -70,9 +70,15 @@
 ;; computer division, together with the supervisor's name and job
 ;;
 
+(and (job ?who ?job)
+     (not (job ?who (computer . ?res))))
+
 (and (supervisor ?supervisee ?supervisor)
-     (not (job ?supervisor (computer ?job)))
+     (not (job ?supervisor (computer . ?job)))
      (job ?supervisor ?supervisor-job))
+
+;; interestingly enough, ?job is not calculated (not needed?)
+;; consistent with Eli Bendersky's solution
 
 
 ;;
