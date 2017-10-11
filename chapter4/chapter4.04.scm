@@ -110,7 +110,7 @@
 (and (can-replace ?p1 ?p2)
      (salary      ?p1 ?salary-p1)
      (salary      ?p2 ?salary-p2)
-     (lisp-value > ?salaray-p2 ?salary-p1))
+     (lisp-value > ?salaray-p2 ?salary-p1)) ;; this one is not working
 
 
 ;;
