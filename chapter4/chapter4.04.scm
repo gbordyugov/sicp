@@ -80,12 +80,22 @@
 ;; interestingly enough, ?job is not calculated (not needed?)
 ;; consistent with Eli Bendersky's solution
 
+(assert! (rule (same ?x ?x)))
+
+(assert!
+  (rule (lives-near ?p1 ?p2)
+        (and (address ?p1 (?town . ?r1))
+             (address ?p2 (?town . ?r2))
+             (not (same ?p1 ?p2)))))
+
+(and (lives-near ?x ?y)
+     (address ?x ?add1)
+     (address ?y ?add2))
+
 
 ;;
 ;; exercise 4.57
 ;;
-
-(assert! (rule (same ?x ?x)))
 
 (assert!
   (rule (can-replace ?p1 ?p2)
