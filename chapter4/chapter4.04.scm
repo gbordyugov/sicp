@@ -133,6 +133,14 @@
 ;; exercise 4.59
 ;;
 
+(assert! (meeting accounting     (Monday     9am)))
+(assert! (meeting administration (Monday    10am)))
+(assert! (meeting computer       (Wednesday 10am)))
+(assert! (meeting administration (Friday     1pm)))
+
+(assert! (meeting whole-company  (Wednesday     4pm)))
+
+
 ;;
 ;; a.
 ;;
