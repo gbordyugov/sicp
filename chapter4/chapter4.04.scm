@@ -152,10 +152,13 @@
 ;; b.
 ;;
 
-(rule (meeting-time ?person ?day-and-time)
-      (or (meeting whole-company ?day-and-time)
-          (and (meeting ?dept ?day-and-time)
-               (job     ?person (?dept . ?x)))))
+(assert!
+  (rule (meeting-time ?person ?day-and-time)
+        (or (meeting whole-company ?day-and-time)
+            (and (meeting ?dept ?day-and-time)
+                 (job     ?person (?dept . ?x))))))
+
+(meeting-time (hacker alyssa p) ?time)
 
 ;;
 ;; c.
