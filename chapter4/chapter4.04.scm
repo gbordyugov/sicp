@@ -117,11 +117,16 @@
 ;; exercise 4.58
 ;;
 
-(rule (big-shot ?person ?division)
-      (and (job ?person (?division . ?x))
-           (or (not (supervisor ?person ?anyone))
-               (and (supervisor ?person ?supervisor)
-                    (not (job ?supervisor (?division . ?y)))))))
+(assert!
+  (rule (big-shot ?person ?division)
+        (and (job ?person (?division . ?x))
+             (or (not (supervisor ?person ?anyone))
+                 (and (supervisor ?person ?supervisor)
+                      (not (job ?supervisor (?division . ?y))))))))
+
+(big-shot ?who ?where)
+
+(big-shot ?person computer)
 
 
 ;;
