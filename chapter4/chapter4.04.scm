@@ -92,6 +92,8 @@
      (address ?x ?add1)
      (address ?y ?add2))
 
+(lives-near ?x (Bitdiddle Ben))
+
 
 ;;
 ;; exercise 4.57
@@ -192,6 +194,16 @@
 ;;
 ;; exercise 4.61
 ;;
+
+(assert!
+  (rule (?x next-to ?y in (?x ?y . ?u))))
+(assert!
+  (rule (?x next-to ?y in (?v . ?z))
+        (?x next-to ?y in ?z)))
+
+(?x next-to ?y in (1 (2 3) 4))
+
+(?x next-to  1 in (2 1 3 1))
 
 ;; (2 3) next-to 4
 ;; 1 next-to (2 3)
