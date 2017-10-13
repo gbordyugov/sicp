@@ -217,10 +217,21 @@
 ;; exercise 4.62
 ;;
 
-(rule (last-pair (?a) (?a)))
-(rule (last-pair (?x . ?rest) (?pair))
-      (last-pair ?rest (?pair)))
+(assert!
+  (rule (last-pair (?a) (?a))))
 
+(assert!
+  (rule (last-pair (?x . ?rest) (?pair))
+        (last-pair ?rest (?pair))))
+
+(last-pair (3) ?x)
+
+(last-pair (1 2 3) ?x)
+
+(last-pair (1 ?x) (3))
+
+;; this one doesn't have a unique solution
+;; (last-pair ?x (3))
 
 ;;
 ;; exercise 4.63
