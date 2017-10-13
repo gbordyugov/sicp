@@ -233,17 +233,34 @@
 ;; this one doesn't have a unique solution
 ;; (last-pair ?x (3))
 
+
 ;;
 ;; exercise 4.63
 ;;
 
-(rule (grandfather ?gf ?gs)
-      (and (son         ?gf ?f)
-           (son         ?f  ?gs)))
+(assert! (son Adam Cain))
+(assert! (son Cain Enoch))
+(assert! (son Enoch Irad))
+(assert! (son Enoch Mehujael))
+(assert! (son Mehujael Lamech))
+(assert! (wife Lamech Ada))
+(assert! (son Ada Jabal))
+(assert! (son Ada Jubal))
 
-(rule (son ?m ?s)
-      (and (wife ?m ?w)
-           (son  ?w ?s)))
+(assert!
+  (rule (grandfather ?gf ?gs)
+        (and (son         ?gf ?f)
+             (son         ?f  ?gs))))
+
+(assert!
+  (rule (son ?m ?s)
+        (and (wife ?m ?w)
+             (son  ?w ?s))))
+
+(son ?f ?s)
+
+(grandfather ?gf ?gs)
+
 
 
 ;;
