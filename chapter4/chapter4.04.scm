@@ -345,10 +345,28 @@
 ;; exercise 4.69
 ;;
 
-(rule (ends-in-grandson ?x)
-      (append-to-form ?head (grandson) ?x))
+(assert! (son Adam Cain))
+(assert! (son Cain Enoch))
+(assert! (son Enoch Irad))
+(assert! (son Enoch Mehujael))
+(assert! (son Mehujael Lamech))
+(assert! (wife Lamech Ada))
+(assert! (son Ada Jabal))
+(assert! (son Ada Jubal))
 
-(rule ((great . ?rel) x y)
-      (and (ends-in-grandson ?rel)
-           (?rel ?z ?y)
-           (son ?x ?z)))
+(assert!
+  (rule (append-to-form () ?y ?y)))
+(assert!
+  (rule (append-to-form (?u . ?v) ?y (?u . ?z))
+        (append-to-form ?v ?y ?z)))
+
+(assert!
+  (rule (ends-in-grandson ?x)
+        (append-to-form ?head (grandson) ?x)))
+(assert!
+  (rule ((great . ?rel) x y)
+        (and (ends-in-grandson ?rel)
+             (?rel ?z ?y)
+             (son ?x ?z))))
+
+((great grandson) ?g ?ggs)
