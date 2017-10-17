@@ -319,16 +319,31 @@
 ;; exercise 4.68
 ;;
 
-(rule (reverse () ()))
-(rule (reverse ?a ?b)
-      (and (append-to-form (?cara) ?cdra  ?a)
-           (append-to-form  ?carb (?cara) ?b)
-           (reverse ?cdra ?carb)))
+(assert!
+  (rule (append-to-form () ?y ?y)))
+(assert!
+  (rule (append-to-form (?u . ?v) ?y (?u . ?z))
+        (append-to-form ?v ?y ?z)))
 
+(append-to-form (a b) (c d) ?z)
 
-;;
-;; exercise 4.69
-;;
+(append-to-form (a b) ?y (a b c d))
+
+(assert!
+  (rule (reverse () ())))
+(assert!
+  (rule (reverse ?a ?b)
+        (and (append-to-form (?cara) ?cdra  ?a)
+             (append-to-form  ?carb (?cara) ?b)
+             (reverse ?cdra ?carb))))
+
+(reverse (1 2 3) ?x)
+
+(reverse ?x (1 2 3))
+
+  ;;
+  ;; exercise 4.69
+  ;;
 
 (rule (ends-in-grandson ?x)
       (append-to-form ?head (grandson) ?x))
