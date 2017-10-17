@@ -341,9 +341,9 @@
 
 (reverse ?x (1 2 3)) ;; this one is working
 
-  ;;
-  ;; exercise 4.69
-  ;;
+;;
+;; exercise 4.69
+;;
 
 (rule (ends-in-grandson ?x)
       (append-to-form ?head (grandson) ?x))
