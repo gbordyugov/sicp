@@ -337,9 +337,9 @@
              (append-to-form  ?carb (?cara) ?b)
              (reverse ?cdra ?carb))))
 
-(reverse (1 2 3) ?x)
+(reverse (1 2 3) ?x) ;; this one produces an infinite loop
 
-(reverse ?x (1 2 3))
+(reverse ?x (1 2 3)) ;; this one is working
 
   ;;
   ;; exercise 4.69
