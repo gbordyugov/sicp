@@ -367,4 +367,8 @@
              (?rel ?z ?y)
              (son ?x ?z))))
 
+(append-to-form (a b) (c d) ?z)
+(append-to-form (a b) ?y (a b c d))
+(append-to-form ?x (c d) (a b c d))
+
 ((great grandson) ?g ?ggs)
