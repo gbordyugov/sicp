@@ -166,6 +166,9 @@
 
 (put 'lisp-value 'qeval lisp-value)
 
+;;
+;; eval is used by lisp-value
+;;
 (define (execute exp)
   (apply (eval (predicate exp) user-initial-environment)
          (args exp)))
