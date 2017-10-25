@@ -111,6 +111,9 @@
 ;; conjoin takes as inputs the conjucts and the frame stream and the
 ;; stream of extended frames
 ;;
+;; here, conjuncts are given by contents (cdr) of the query (i.e.
+;; everything but the `and` keyword
+;;
 
 (define (conjoin conjuncts frame-stream)
   (if (empty-conjunction? conjuncts)
@@ -123,6 +126,9 @@
 
 ;;
 ;; disjoin takes care of `or` queries
+;;
+;; here, disjuncts are given by the contents (cdr) of the query (i.e.
+;; everything but the `or` keyword
 ;;
 
 (define (disjoin disjuncts frame-stream)
@@ -138,6 +144,9 @@
 ;;
 ;; filters take care of `not` queries
 ;;
+;; here, operands are given by the contents (cdr) of the query (i.e.
+;; everything but the `not` keyword
+;;
 
 (define (negate operands frame-stream)
   (stream-flatmap
@@ -151,6 +160,9 @@
 (put 'not 'qeval negate)
 
 
+;;
+;; call is the contents (cdr) of the query, i.e. what follows the
+;; `lisp-value` keyword
 ;;
 ;; example: (and (salary ?person ?amount)
 ;;               (lisp-value > ?amount 30000))
