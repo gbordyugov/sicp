@@ -151,6 +151,10 @@
 (put 'not 'qeval negate)
 
 
+;;
+;; example: (and (salary ?person ?amount)
+;;               (lisp-value > ?amount 30000))
+;;
 (define (lisp-value call frame-stream)
   (stream-flatmap
     (lambda (frame)
