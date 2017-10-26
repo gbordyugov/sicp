@@ -151,9 +151,12 @@
 (define (negate operands frame-stream)
   (stream-flatmap
     (lambda (frame)
+      ;; try to eval query on that frame
       (if (stream-null?
             (qeval (negated-query operands) (singleton-stream frame)))
+        ;; it the result is null, return the frame
         (singleton-stream frame)
+        ;; otherwise return the empty stream
         the-empty-stream))
     frame-stream))
 
