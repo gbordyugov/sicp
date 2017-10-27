@@ -22,6 +22,7 @@
 
 (define (query-driver-loop)
   (prompt-for-input input-prompt)
+  ;; map variables to pairs, i.e. ?x => (? x)
   (let ((q (query-syntax-process (read))))
     (cond ((assertion-to-be-added? q)
            (add-rule-or-assertion! (add-assertion-body q))
@@ -36,6 +37,7 @@
                 (lambda (frame)
                   (instantiate ;; this instantiates query by variable bindings from frames
                     q frame
+                    ;; this is the unbound-var-handler below
                     (lambda (v f)
                       (contract-question-mark v))))
                 (qeval q (singleton-stream '()))))
@@ -49,7 +51,9 @@
 ;; call when a binding cannot be found in the frame
 ;;
 ;; the expression is copied and the variables are replaced by their
-;; values
+;; values found in the data frame, the unbound variables are handed
+;; over to unbound-var-handler, the result of the call being put in
+;; their (unbound variables') place
 ;;
 (define (instantiate exp frame unbound-var-handler)
   (define (copy exp)
@@ -75,9 +79,14 @@
 ;;
 
 (define (qeval query frame-stream)
+  ;; look up in the database of evaluators whether there is an
+  ;; evaluator for this type of query
   (let ((qproc (get (type query) 'qeval)))
     (if qproc
+      ;; if there is, call it
       (qproc (contents query) frame-stream)
+      ;; otherwise assume it's a 'simple' query and call the simple
+      ;; query evaluator (next function)
       (simple-query query frame-stream))))
 
 ;;
