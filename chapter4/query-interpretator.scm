@@ -210,6 +210,13 @@
 ;; 4.4.4.3 Finding Assertions by Pattern Matching
 ;;
 
+;;
+;; goes through the database of assertions and tries to match the
+;; pattern against them
+;;
+;; usees fetch-assertion to pre-filter data-base entries (assertions)
+;; to minimize the number of calls of check-an-assertion/pattern-match
+;;
 (define (find-assertions pattern frame)
   (stream-flatmap
     (lambda (datum)
@@ -219,6 +226,12 @@
     (fetch-assertions pattern frame)))
 
 
+;;
+;; try to match the query pattern against just one assertion
+;;
+;; returns either an empty stream (if there is no match)
+;; or a stream consisting just of one frame (match-result)
+;;
 (define (check-an-assertion assertion query-pat query-frame)
   (let ((match-result (pattern-match query-pat assertion query-frame)))
     (if (eq? match-result 'failed)
@@ -226,10 +239,23 @@
       (singleton-stream match-result))))
 
 
+;;
+;; the core pattern matching procedure
+;;
+;; pat - the pattern, like (job ?who ?what)
+;; dat - the datum,   like (job me   schemer)
+;; frame - contains previous bindings, like ?x ->5, ?name -> Grisha
 (define (pattern-match pat dat frame)
-  (cond ((eq? frame 'failed) 'failed)
+  (cond ((eq? frame 'failed) 'failed) ;; fail fast
+        ;; no new bindings, just return the input frame
         ((equal? pat dat) frame)
+        ;; if pattern is a variable, check if the variable already has
+        ;; a binding the frame and the new and the old bindings are
+        ;; not in conflict
         ((var? pat) (extend-if-consistent pat dat frame))
+        ;; the actual tree recursion
+        ;; note that the resutl of pattern-match of cars is used as
+        ;; an input frame for pattern matching of cdrs
         ((and (pair? pat) (pair? dat))
          (pattern-match (cdr pat) (cdr dat)
                         (pattern-match (car pat) (car dat) frame)))
