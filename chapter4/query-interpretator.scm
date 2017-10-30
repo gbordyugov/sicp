@@ -212,7 +212,10 @@
 
 (define (find-assertions pattern frame)
   (stream-flatmap
-    (lambda (datum) (check-an-assertion datum pattern frame))
+    (lambda (datum)
+      (check-an-assertion datum pattern frame))
+    ;; fetch-assertions deals with optimizing the search in the DB
+    ;; using indexing
     (fetch-assertions pattern frame)))
 
 
@@ -315,6 +318,10 @@
 
 (define THE-ASSERTIONS the-empty-stream)
 
+;;
+;; fetch-assertion aims at optimizing the search (by indexing, for
+;; instaince
+;;
 (define (fetch-assertions pattern frame)
   (if (use-index? pattern)
     (get-indexed-assertions pattern)
