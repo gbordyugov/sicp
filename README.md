@@ -15,3 +15,4 @@ Open/skipped exercises
  - 4.31
  - 4.67 (on the first pass before Section 4.4.4 where the system is
    implemented)
+ - 4.69 needs to be revisited after Section 4.4.4 is done
