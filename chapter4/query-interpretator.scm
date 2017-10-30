@@ -106,6 +106,7 @@
     (lambda (frame)
       (stream-append-delayed                          ;; Section 4.4.4.6
         (find-assertions query-pattern frame)         ;; Section 4.4.4.3
+        ;; question: why using delay here?
         (delay (apply-rules query-pattern frame))))   ;; Section 4.4.4.4
     frame-stream))
 
