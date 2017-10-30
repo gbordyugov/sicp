@@ -319,6 +319,8 @@
 
 
 (define (rename-variables-in rule)
+  ;; each rule application gets its unique id, i.e. all its variables
+  ;; would have the same suffix (like x-113)
   (let ((rule-application-id (new-rule-application-id)))
     (define (tree-walk exp)
       (cond ((var? exp) (make-new-variable exp rule-application-id))
@@ -328,10 +330,16 @@
     (tree-walk rule)))
 
 
+;;
+;; the logic is not really different from the pattern matcher
+;; except that we expect variables on the right-hand side (i.e. p2) of
+;; the equation
+;;
 (define (unify-match p1 p2 frame)
   (cond ((eq? frame 'failed) 'failed)
         ((equal? p1 p2) frame)
         ((var? p1) (extend-if-possible p1 p2 frame))
+        ;; that's the main difference from the pattern matcher
         ((var? p2) (extend-if-possible p2 p1 frame))
         ((and (pair? p1) (pair? p2)) (unify-match (cdr p1)
                                                   (cdr p2)
