@@ -106,7 +106,7 @@
     (lambda (frame)
       (stream-append-delayed                          ;; Section 4.4.4.6
         (find-assertions query-pattern frame)         ;; Section 4.4.4.3
-        ;; question: why using delay here?
+        ;; TODO: why using delay here?
         (delay (apply-rules query-pattern frame))))   ;; Section 4.4.4.4
     frame-stream))
 
@@ -262,9 +262,20 @@
         (else 'failed)))
 
 
+;;
+;; check if var is already bound in frame
+;; if not, extend the frame and return it
+;; if yes and the binding is     the same, return the frame
+;; if yes and the binding is not the same, fail
 (define (extend-if-consistent var dat frame)
   (let ((binding (binding-in-frame var frame)))
     (if binding
+      ;; TODO: why additional pattern-match here?
+      ;; answer, as in text: without rules, it's only values to
+      ;; compare
+      ;; however, with rules the stored variable can contain pattern
+      ;; variables coming from the right-hand sides of unifications
+      ;; and they have to be pattern-matched against data
       (pattern-match (binding-value binding) dat frame)
       (extend var dat frame))))
 
