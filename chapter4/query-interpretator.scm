@@ -285,19 +285,35 @@
 ;; 4.4.4.4 Rules and Unification
 ;;
 
+;;
+;; applies all rules from the data base, similar to find-assertions
+;; above
+;;
 (define (apply-rules pattern frame)
   (stream-flatmap (lambda (rule)
                     (apply-a-rule rule pattern frame))
                   (fetch-rules pattern frame)))
 
 
+;;
+;; applies a single rule
+;; tries to resolve possible name collisions by renaming variables in
+;; the rule by appending a number to them
+;; otherwise it can happen that two rules use the same variable name
+;; ?x and extending a frame using those rules would result in a
+;; collision
+;;
 (define (apply-a-rule rule query-pattern query-frame)
   (let ((clean-rule (rename-variables-in rule)))
+    ;; unify query with the conclusion of the rule
     (let ((unify-result (unify-match query-pattern
                                      (conclusion clean-rule)
                                      query-frame)))
       (if (eq? unify-result 'failed)
+        ;; if unification fails, just return the empty stream
         the-empty-stream
+        ;; othewise queval the body of the rule with respect to the
+        ;; frame produced by unification
         (qeval (rule-body clean-rule)
                (singleton-stream unify-result))))))
 
