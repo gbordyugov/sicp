@@ -371,3 +371,16 @@
 ((grandson) ?g ?ggs)
 
 ((great grandson) ?g ?ggs)
+
+
+;;
+;; exercise 4.70
+;;
+
+;;
+;; cons-stream doesn't evaluate its second argument
+;;
+;; let (being an application of lambda under the hood) on contrary
+;; does, thus avoiding producing an infinite stream consisting of the
+;; same element
+;;
