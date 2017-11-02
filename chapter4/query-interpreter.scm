@@ -360,15 +360,25 @@
 
 (define (extend-if-possible var val frame)
   (let ((binding (binding-in-frame var frame)))
-    ;; if there is a binding, unify-match its rhs with the value and
-    ;; return the new frame
-    (cond (binding (unify-match (binding-value binding) val frame))
-          ((var? val) (let ((binding (binding-in-frame val frame)))
-                        (if binding
-                          (unify-match var (binding-value binding) frame)
-                          (extend var val frame))))
-          ((depends-on? val var frame) 'failed)
-          (else (extend var val frame)))))
+    (cond
+      ;; if there is a binding, unify-match its rhs with val
+      (binding
+        (unify-match (binding-value binding) val frame))
+      ;; now value happens to be a variable, too
+      ((var? val)
+       (let ((binding (binding-in-frame val frame)))
+         (if binding
+           ;; if this variable is already bound, unify var with the
+           ;; rhs of the binding, note the recursion
+           (unify-match var (binding-value binding) frame)
+           ;; otherwise just extend the original frame by the binding
+           (extend var val frame))))
+      ;; in general, we give up unifying ?x with arbitrary f(?x)
+      ((depends-on? val var frame)
+       'failed)
+      ;; the easiest case, just extend the frame
+      (else
+        (extend var val frame)))))
 
 (define (depends-on? exp var frame)
   (define (tree-walk e)
