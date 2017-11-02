@@ -359,6 +359,7 @@
 
 
 (define (extend-if-possible var val frame)
+  ;; try to find an existing binding for var
   (let ((binding (binding-in-frame var frame)))
     (cond
       ;; if there is a binding, unify-match its rhs with val
