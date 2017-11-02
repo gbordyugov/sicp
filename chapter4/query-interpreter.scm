@@ -381,17 +381,31 @@
       (else
         (extend var val frame)))))
 
+;;
+;; the purpose of this function is to detect whether expression `exp`
+;; contains variable `var` in a non-trivial way. If it happens to be
+;; the case, the above extend-possible function will give up unifying
+;;
 (define (depends-on? exp var frame)
   (define (tree-walk e)
-    (cond ((var? e) (if (equal? var e)
-                      true
-                      (let ((b (binding-in-frame e frame)))
-                        (if b
-                          (tree-walk (binding-value b))
-                          false))))
-          ((pair? e) (or (tree-walk (car e))
-                         (tree-walk (cdr e))))
-          (else false)))
+    (cond
+      ;; is e a variable, i.e. has the form of (? variable-name)?
+      ((var? e)
+       (if (equal? var e)
+         ;; yes, give up
+         true
+         ;; otherwise lookup the value of e in frame
+         (let ((b (binding-in-frame e frame)))
+           (if b
+             ;; recurse
+             (tree-walk (binding-value b))
+             ;; if no binding is found, exp doesn't depend on var
+             false))))
+      ;; recurse on tree
+      ((pair? e)
+       (or (tree-walk (car e)) (tree-walk (cdr e))))
+      ;; no, exp doesn't depend on e
+      (else false)))
   (tree-walk exp))
 
 
