@@ -62,7 +62,7 @@
       (add-rule-or-assertion! (car db))
       (load-db (cdr db)))))
 
-(load "query-interpretator.scm")
+(load "query-interpreter.scm")
 
 (load-db db)
 (query-driver-loop)

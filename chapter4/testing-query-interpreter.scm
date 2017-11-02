@@ -1,4 +1,4 @@
-(load "query-interpretator.scm")
+(load "query-interpreter.scm")
 
 (pattern-match '((? x) a (? y)) '(z a z) '())
 
