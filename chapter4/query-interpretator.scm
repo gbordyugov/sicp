@@ -350,11 +350,11 @@
     ;; note the reversed order of p1 and p2 in the call of
     ;; extend-if-possible
     ((var? p2) (extend-if-possible p2 p1 frame))
-    ((and (pair? p1) (pair? p2)) (unify-match (cdr p1)
-                                              (cdr p2)
-                                              (unify-match (car p1)
-                                                           (car p2)
-                                                           frame)))
+    ;; recurse on both trees, using unify-mathc on cars as the input
+    ;; frame to unify-match on cdrs
+    ((and (pair? p1) (pair? p2))
+     (unify-match (cdr p1) (cdr p2)
+                  (unify-match (car p1) (car p2) frame)))
     (else 'failed)))
 
 
