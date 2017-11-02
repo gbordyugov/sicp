@@ -246,20 +246,22 @@
 ;; dat - the datum,   like (job me   schemer)
 ;; frame - contains previous bindings, like ?x ->5, ?name -> Grisha
 (define (pattern-match pat dat frame)
-  (cond ((eq? frame 'failed) 'failed) ;; fail fast
-        ;; no new bindings, just return the input frame
-        ((equal? pat dat) frame)
-        ;; if pattern is a variable, check if the variable already has
-        ;; a binding the frame and the new and the old bindings are
-        ;; not in conflict
-        ((var? pat) (extend-if-consistent pat dat frame))
-        ;; the actual tree recursion
-        ;; note that the resutl of pattern-match of cars is used as
-        ;; an input frame for pattern matching of cdrs
-        ((and (pair? pat) (pair? dat))
-         (pattern-match (cdr pat) (cdr dat)
-                        (pattern-match (car pat) (car dat) frame)))
-        (else 'failed)))
+  (cond
+    ;; fail fast
+    ((eq? frame 'failed) 'failed)
+    ;; no new bindings, just return the input frame
+    ((equal? pat dat) frame)
+    ;; if pattern is a variable, check if the variable already has
+    ;; a binding the frame and the new and the old bindings are
+    ;; not in conflict
+    ((var? pat) (extend-if-consistent pat dat frame))
+    ;; the actual tree recursion
+    ;; note that the resutl of pattern-match of cars is used as
+    ;; an input frame for pattern matching of cdrs
+    ((and (pair? pat) (pair? dat))
+     (pattern-match (cdr pat) (cdr dat)
+                    (pattern-match (car pat) (car dat) frame)))
+    (else 'failed)))
 
 
 ;;
@@ -272,10 +274,9 @@
     (if binding
       ;; TODO: why additional pattern-match here?
       ;; answer, as in text: without rules, it's only values to
-      ;; compare
-      ;; however, with rules the stored variable can contain pattern
-      ;; variables coming from the right-hand sides of unifications
-      ;; and they have to be pattern-matched against data
+      ;; compare however, with rules the stored variable can contain
+      ;; pattern variables coming from the right-hand sides of
+      ;; unifications and they have to be pattern-matched against data
       (pattern-match (binding-value binding) dat frame)
       (extend var dat frame))))
 
@@ -336,23 +337,31 @@
 ;; the equation
 ;;
 (define (unify-match p1 p2 frame)
-  (cond ((eq? frame 'failed) 'failed)
-        ((equal? p1 p2) frame)
-        ((var? p1) (extend-if-possible p1 p2 frame))
-        ;; that's the main difference from the pattern matcher
-        ((var? p2) (extend-if-possible p2 p1 frame))
-        ((and (pair? p1) (pair? p2)) (unify-match (cdr p1)
-                                                  (cdr p2)
-                                                  (unify-match (car p1)
-                                                               (car p2)
-                                                               frame)))
-        (else 'failed)))
+  (cond
+    ;; fail fast
+    ((eq? frame 'failed) 'failed)
+    ;; no new information, just return the frame
+    ((equal? p1 p2) frame)
+    ;; ok, p1 is a variable (like (? x)), try to extend the frame
+    ((var? p1) (extend-if-possible p1 p2 frame))
+    ;; that's the main difference from the pattern matcher
+    ;; p1 is not a variable (otherwise it's caught by the last case)
+    ;; p2 is a variable
+    ;; note the reversed order of p1 and p2 in the call of
+    ;; extend-if-possible
+    ((var? p2) (extend-if-possible p2 p1 frame))
+    ((and (pair? p1) (pair? p2)) (unify-match (cdr p1)
+                                              (cdr p2)
+                                              (unify-match (car p1)
+                                                           (car p2)
+                                                           frame)))
+    (else 'failed)))
 
 
 (define (extend-if-possible var val frame)
   (let ((binding (binding-in-frame var frame)))
-    ;; if there is a binding, match its rhs with the value and return
-    ;; the new frame
+    ;; if there is a binding, unify-match its rhs with the value and
+    ;; return the new frame
     (cond (binding (unify-match (binding-value binding) val frame))
           ((var? val) (let ((binding (binding-in-frame val frame)))
                         (if binding
