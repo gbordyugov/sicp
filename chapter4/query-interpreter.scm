@@ -448,6 +448,11 @@
   (let ((s (get key1 key2)))
     (if s s the-empty-stream)))
 
+;;
+;; this essentially duplicates the assertions functionality
+;; for rules, we use car of the conclusion as index
+;;
+
 (define THE-RULES the-empty-stream)
 
 (define (fetch-rules pattern frame)
@@ -462,6 +467,9 @@
     (get-stream (index-key-of pattern) 'rule-stream)
     (get-stream '? 'rule-stream)))
 
+;;
+;; here are the add-methods
+;;
 (define  (add-rule-or-assertion! assertion)
   (if (rule? assertion)
     (add-rule!      assertion)
