@@ -17,3 +17,5 @@
 (assert!
   (rule (married ?x ?y)
         (married ?y ?x)))
+
+(married Mickey ?who)

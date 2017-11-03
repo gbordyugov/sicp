@@ -413,6 +413,19 @@
 ;; 4.4.4.5 Maintaining the Data Base
 ;;
 
+;;
+;; all assertions are stored in one big stream
+;;
+;; all assertions whose cars are constant symbols are stored in
+;; separate streams, in a table indexed by the symbol.
+;;
+
+;; to fetch an assertion that may match a pattern, we first check to
+;; see if the car of the pattern is a constant symbol. If so, we
+;; return all stored assertions that have the same car. Otherwise we
+;; return all the stored assertions.
+;;
+
 (define THE-ASSERTIONS the-empty-stream)
 
 ;;
