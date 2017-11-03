@@ -635,15 +635,24 @@
 ;; procedures to map ?x => (? x)
 ;;
 
+;;
+;; the high-level interface
+;;
 (define (query-syntax-process exp)
   (map-over-symbols expand-question-mark exp))
 
+;;
+;; the tree walker
+;;
 (define (map-over-symbols proc exp)
   (cond ((pair? exp) (cons (map-over-symbols proc (car exp))
                            (map-over-symbols proc (cdr exp))))
         ((symbol? exp) (proc exp))
         (else exp)))
 
+;;
+;; the actual mapping function that expands ?x => (? x)
+;;
 (define (expand-question-mark symbol)
   (let ((chars (symbol->string symbol)))
     (if (string=? (substring chars 0 1) "?")
