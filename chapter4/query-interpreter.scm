@@ -531,7 +531,9 @@
 (define (display-stream s)
   (stream-for-each display-line s))
 
-(define (display-line x) (newline) (display x))
+(define (display-line x)
+  (newline)
+  (display x))
 
 (define (stream-for-each proc s)
   (if (stream-null? s)
@@ -540,12 +542,20 @@
            (stream-for-each proc (stream-cdr s)))))
 
 
+;;
+;; this one is the same as stream-append except that it takes a
+;; delayed argument and forces it once the other argument is exhausted
+;;
 (define (stream-append-delayed s1 delayed-s2)
   (if (stream-null? s1)
     (force delayed-s2)
     (cons-stream (stream-car s1) (stream-append-delayed (stream-cdr s1)
                                                         delayed-s2))))
 
+;;
+;; this one is the same as interleave except that it takes a
+;; delayed argument and forces it once the other argument is exhausted
+;;
 (define (interleave-delayed s1 delayed-s2)
   (if (stream-null? s1)
     (force delayed-s2)
@@ -553,6 +563,9 @@
                  (interleave-delayed (force delayed-s2)
                                      (delay (stream-cdr s1))))))
 
+;;
+;; that's a clever flatmap for streams
+;;
 (define (stream-flatmap proc s)
   (flatten-stream (stream-map proc s)))
 
