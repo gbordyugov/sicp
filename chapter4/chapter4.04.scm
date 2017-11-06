@@ -408,3 +408,12 @@
 ;; one if the first stream is infinitely large. Interleaving guaratees
 ;; that we produce pieces of both streams
 ;;
+
+
+;;
+;; exercise 4.73
+;;
+
+;;
+;; the same reason again - the streams can be infinite
+;;
