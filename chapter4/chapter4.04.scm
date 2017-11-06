@@ -384,3 +384,17 @@
 ;; does, thus avoiding producing an infinite stream consisting of the
 ;; same element
 ;;
+
+;;
+;; exercise 4.71
+;;
+
+;;
+;; hmm, that's a good question why the results of rule applications
+;; are delayed
+;;
+;; one possibility is that assertions provide immediate results, but
+;; rules on contrary can cause infinite loops. It's better first to
+;; show at least something (the results of finding matching
+;; assertions) before discending into potentially buggy rules
+;;
