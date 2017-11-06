@@ -398,3 +398,13 @@
 ;; show at least something (the results of finding matching
 ;; assertions) before discending into potentially buggy rules
 ;;
+
+;;
+;; exercise 4.72
+;;
+
+;;
+;; appending two streams can never reach the elements of the second
+;; one if the first stream is infinitely large. Interleaving guaratees
+;; that we produce pieces of both streams
+;;
