@@ -417,3 +417,33 @@
 ;;
 ;; the same reason again - the streams can be infinite
 ;;
+
+
+;;
+;; exercise 4.74
+;;
+
+;;
+;; the old version:
+;;
+
+(define (stream-flatmap proc s)
+  (flatten-stream (stream-map proc s)))
+
+(define (flatten-stream stream)
+  (if (stream-null? stream)
+    the-empty-stream
+    (interleave-delayed (stream-car stream)
+                        (delay (flatten-stream (stream-cdr stream))))))
+
+;;
+;; the new version:
+;;
+
+(define (simple-stream-flatmap proc )
+  (simple-flatten (stream-map proc s)))
+
+(define (simple-flatten stream)
+  (stream-map stream-car
+              (stream-filter (lambda (s) (not (stream-null s)))
+                             stream)))
