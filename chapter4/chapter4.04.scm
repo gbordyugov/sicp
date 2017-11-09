@@ -267,6 +267,11 @@
 ;; exercise 4.64
 ;;
 
+(assert! (married Minnie Mickey))
+(assert! (rule (married ?x ?y) (married ?y ?x)))
+
+(married Mickey ?who) ;; will produce an infinite loop
+
 (assert!
   (rule (outranked-by ?staff-person ?boss)
         (or (supervisor ?staff-person ?boss)
