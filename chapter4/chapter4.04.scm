@@ -361,24 +361,25 @@
 (assert! (wife Lamech Ada))
 (assert! (son Ada Jabal))
 (assert! (son Ada Jubal))
-
 (assert!
   (rule (ends-in-grandson (grandson))))
 (assert!
   (rule (ends-in-grandson (?head . ?rest))
         (ends-in-grandson ?rest)))
-
 (assert!
   (rule ((great . ?rel) ?x ?y)
         (and (ends-in-grandson ?rel)
              (?rel ?z ?y)
              (son ?x ?z))))
 
-(ends-in-grandson (grandson))
+(append-to-form (a b) (c d)  ?z)
+(append-to-form (a b)  ?y   (a b c d))
+(append-to-form  ?x   (c d) (a b c d))
 
-(ends-in-grandson (great grandson))
+((grandson) ?g ?ggs)
 
-(ends-in-grandson (great littlesn))
+((great grandson) ?g ?ggs)
+
 
 ;;
 ;; exercise 4.70

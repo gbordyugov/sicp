@@ -30,9 +30,6 @@
 
 (define *history* (make-hash-table))
 
-(define (reset-history!)
-  (set! *history* (make-hash-table)))
-
 (define (history-put key)
   (hash-table/put! *history* key #t))
 
