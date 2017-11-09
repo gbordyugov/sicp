@@ -267,10 +267,13 @@
 ;; exercise 4.64
 ;;
 
-(rule (outranked-by ?staff-person ?boss)
-      (or (supervisor ?staff-person ?boss)
-          (and (outranked-by ?middle-manager ?boss)
-               (supervisor ?staff-person ?middle-manager))))
+(assert!
+  (rule (outranked-by ?staff-person ?boss)
+        (or (supervisor ?staff-person ?boss)
+            (and (outranked-by ?middle-manager ?boss)
+                 (supervisor ?staff-person ?middle-manager)))))
+
+(outranked-by (Bitdiddle Ben) ?who)
 
 ;;
 ;; the same problem as with Mickey and Minnie in the text:
