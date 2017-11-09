@@ -295,6 +295,10 @@
                     (apply-a-rule rule pattern frame))
                   (fetch-rules pattern frame)))
 
+;;
+;; the idea of the loop detector below comes from
+;; https://wizardbook.wordpress.com/2011/06/22/exercise-4-67/
+;;
 
 ;;
 ;; this one is used in the loop detector
@@ -321,10 +325,26 @@
       (if (eq? unify-result 'failed)
         ;; if unification fails, just return the empty stream
         the-empty-stream
-        ;; othewise queval the body of the rule with respect to the
-        ;; frame produced by unification
-        (qeval (rule-body clean-rule)
-               (singleton-stream unify-result))))))
+        ;; have we seen this instance before?
+        (let ((instance (instantiate query-pattern query-frame
+                                     (lambda (v f)
+                                       (canonical-name v)))))
+          (if (history-get instance)
+            (loop-detected instance)
+            ;; othewise queval the body of the rule with respect to the
+            ;; frame produced by unification
+            (begin
+              (history-put instance)
+              (qeval (rule-body clean-rule)
+                     (singleton-stream unify-result)))))))))
+
+(define (loop-detected instance)
+  (newline)
+  (display "loop detected:")
+  (newline)
+  (display instance)
+  (newline)
+  the-empty-stream)
 
 
 (define (rename-variables-in rule)
@@ -345,11 +365,11 @@
 ;; the equation
 ;;
 (define (unify-match p1 p2 frame)
-  (newline)
-  (display "unifying ")
-  (display p1) (display " with ") (display p2)
-  (display " in the frame ") (display frame)
-  (newline)
+  ;; (newline))
+  ;; (display "unifying ")
+  ;; (display p1) (display " with ") (display p2)
+  ;; (display " in the frame ") (display frame)
+  ;; (newline)
   (cond
     ;; fail fast
     ((eq? frame 'failed) 'failed)

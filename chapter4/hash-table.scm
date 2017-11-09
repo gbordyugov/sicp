@@ -19,6 +19,12 @@
 
 
 ;;
+;; the idea of the loop detector below comes from
+;; https://wizardbook.wordpress.com/2011/06/22/exercise-4-67/
+;;
+
+
+;;
 ;; those are needed for loop detection
 ;;
 
