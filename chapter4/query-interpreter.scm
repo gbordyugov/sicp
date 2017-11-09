@@ -297,6 +297,14 @@
 
 
 ;;
+;; this one is used in the loop detector
+;;
+(define (canonical-name var)
+  (if (number? (car (cdr var)))
+    (cons (car var) (cddr var))
+    var))
+
+;;
 ;; applies a single rule
 ;; tries to resolve possible name collisions by renaming variables in
 ;; the rule by appending a number to them
