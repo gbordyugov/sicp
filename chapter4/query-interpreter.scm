@@ -21,6 +21,7 @@
 (define output-prompt ";;; Query results:")
 
 (define (query-driver-loop)
+  (reset-history!)
   (prompt-for-input input-prompt)
   ;; map variables to pairs, i.e. ?x => (? x)
   (let ((q (query-syntax-process (read))))
