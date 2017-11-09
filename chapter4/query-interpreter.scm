@@ -337,6 +337,11 @@
 ;; the equation
 ;;
 (define (unify-match p1 p2 frame)
+  (newline)
+  (display "unifying ")
+  (display p1) (display " with ") (display p2)
+  (display " in the frame ") (display frame)
+  (newline)
   (cond
     ;; fail fast
     ((eq? frame 'failed) 'failed)
