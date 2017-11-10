@@ -36,5 +36,8 @@
 (define (history-put key)
   (hash-table/put! *history* key #t))
 
+(define (history-erase key)
+  (hash-table/put! *history* key #f))
+
 (define (history-get key)
   (hash-table/get *history* key #f))

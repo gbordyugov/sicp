@@ -330,14 +330,20 @@
         (let ((instance (instantiate query-pattern query-frame
                                      (lambda (v f)
                                        (canonical-name v)))))
+          ;; have we seen this instance before?
           (if (history-get instance)
+            ;; yes, we have
             (loop-detected instance)
             ;; othewise queval the body of the rule with respect to the
             ;; frame produced by unification
             (begin
               (history-put instance)
-              (qeval (rule-body clean-rule)
-                     (singleton-stream unify-result)))))))))
+              (let ((result (qeval (rule-body clean-rule)
+                                   (singleton-stream unify-result))))
+                ;; once we're done with evaluating the rule, we don't
+                ;; need to keep the instance in the history anymore
+                (history-erase instance)
+                result))))))))
 
 (define (loop-detected instance)
   (newline)

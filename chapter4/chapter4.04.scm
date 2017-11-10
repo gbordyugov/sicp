@@ -363,8 +363,8 @@
 (assert! (son Ada Jubal))
 
 (assert!
-  (ends-in-grandson (grandson)))
-  ;; (rule (ends-in-grandson (grandson))))
+  ;; (ends-in-grandson (grandson)))
+  (rule (ends-in-grandson (grandson))))
 (assert!
   (rule (ends-in-grandson (?head . ?rest))
         (ends-in-grandson ?rest)))
@@ -376,6 +376,8 @@
              (son ?x ?z))))
 
 (ends-in-grandson (grandson))
+
+(ends-in-grandson (grandson son))
 
 (ends-in-grandson (great grandson))
 
