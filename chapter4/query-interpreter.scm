@@ -2,6 +2,8 @@
 ;; 4.4.4 Implementing the Query System
 ;;
 
+(define *debug* #t)
+
 (load "hash-table.scm")
 ;;
 ;; a little helper function
@@ -80,6 +82,10 @@
 ;;
 
 (define (qeval query frame-stream)
+  (if debug
+    (begin
+      (newline) (display "qeval: ") (display query))
+    '())
   ;; look up in the database of evaluators whether there is an
   ;; evaluator for this type of query
   (let ((qproc (get (type query) 'qeval)))
@@ -100,6 +106,10 @@
 ;;
 
 (define (simple-query query-pattern frame-stream)
+  (if debug
+    (begin
+      (newline) (display "simple query ") (display query-pattern))
+    '())
   ;; note the use of flatmap
   ;; the lambda produces a stream of frames
   ;; and the stream of those streams is flattened into just one stream
@@ -338,11 +348,20 @@
             ;; frame produced by unification
             (begin
               (history-put instance)
+              (if debug
+                (begin
+                  (newline)
+                  (display "instance: ")
+                  (display instance))
+                '())
               (let ((result (qeval (rule-body clean-rule)
                                    (singleton-stream unify-result))))
                 ;; once we're done with evaluating the rule, we don't
                 ;; need to keep the instance in the history anymore
                 (history-erase instance)
+                (if debug
+                  (newline) (display "returned") (read)
+                  '())
                 result))))))))
 
 (define (loop-detected instance)
