@@ -328,6 +328,11 @@
 ;; collision
 ;;
 (define (apply-a-rule rule query-pattern query-frame)
+  (if debug
+    (begin
+      (newline) (display "apply-a-rule: ") (display rule)
+      (display " with pattern ") (display query-pattern))
+    '())
   (let ((clean-rule (rename-variables-in rule)))
     ;; unify query with the conclusion of the rule
     (let ((unify-result (unify-match query-pattern
@@ -350,9 +355,7 @@
               (history-put instance)
               (if debug
                 (begin
-                  (newline)
-                  (display "instance: ")
-                  (display instance))
+                  (newline) (display "instance: ") (display instance))
                 '())
               (let ((result (qeval (rule-body clean-rule)
                                    (singleton-stream unify-result))))
@@ -360,7 +363,8 @@
                 ;; need to keep the instance in the history anymore
                 (history-erase instance)
                 (if debug
-                  (newline) (display "returned") (read)
+                  (begin
+                    (newline) (display "returned") (read))
                   '())
                 result))))))))
 
