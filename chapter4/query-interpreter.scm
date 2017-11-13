@@ -82,7 +82,7 @@
 ;;
 
 (define (qeval query frame-stream)
-  (if debug
+  (if *debug*
     (begin
       (newline) (display "qeval: ") (display query))
     '())
@@ -106,7 +106,7 @@
 ;;
 
 (define (simple-query query-pattern frame-stream)
-  (if debug
+  (if *debug*
     (begin
       (newline) (display "simple query ") (display query-pattern))
     '())
@@ -328,7 +328,7 @@
 ;; collision
 ;;
 (define (apply-a-rule rule query-pattern query-frame)
-  (if debug
+  (if *debug*
     (begin
       (newline) (display "apply-a-rule: ") (display rule)
       (display " with pattern ") (display query-pattern))
@@ -353,7 +353,7 @@
             ;; frame produced by unification
             (begin
               (history-put instance)
-              (if debug
+              (if *debug*
                 (begin
                   (newline) (display "instance: ") (display instance))
                 '())
@@ -362,7 +362,7 @@
                 ;; once we're done with evaluating the rule, we don't
                 ;; need to keep the instance in the history anymore
                 (history-erase instance)
-                (if debug
+                (if *debug*
                   (begin
                     (newline) (display "returned") (read))
                   '())
