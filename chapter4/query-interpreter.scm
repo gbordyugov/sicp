@@ -349,9 +349,10 @@
           (if (history-get instance)
             ;; yes, we have
             (loop-detected instance)
-            ;; othewise queval the body of the rule with respect to the
+            ;; othewise qeval the body of the rule with respect to the
             ;; frame produced by unification
             (begin
+              (newline) (display "qevaling body of the rule")
               (history-put instance)
               (if *debug*
                 (begin
