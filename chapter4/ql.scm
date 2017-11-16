@@ -64,8 +64,10 @@
 
 (load "query-interpreter.scm")
 
-(trace-both apply-a-rule)
-(trace-both qeval)
+(trace apply-a-rule)
+(break apply-a-rule)
+(trace qeval)
+(break qeval)
 
 (load-db db)
 (query-driver-loop)
