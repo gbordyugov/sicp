@@ -340,15 +340,15 @@
             ;; frame produced by unification
             (begin
               (history-put instance)
+              ;; one thing to remeber is that result would be a strem
+              ;; with unevaluated tail. my previous attempt to erase
+              ;; history after result has been computed fails because
+              ;; of that
               (let ((result (qeval (rule-body clean-rule)
                                    (singleton-stream unify-result))))
                 ;; once we're done with evaluating the rule, we don't
                 ;; need to keep the instance in the history anymore
-                (history-erase instance)
-                (if *debug*
-                  (begin
-                    (newline) (display "enter smth to continue => ") (read))
-                  '())
+                ;; (history-erase instance)
                 result))))))))
 
 (define (loop-detected instance)
