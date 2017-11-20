@@ -177,6 +177,27 @@
 
 
 ;;
+;; exercise 4.75
+;;
+
+(define (unique-asserted query frame-stream)
+  (stream-flatmap
+    (lambda (frame)
+      (let ((results (qeval (car query) (singleton-stream frame))))
+        (cond
+          ((eq? results '()) the-empty-stream)
+          ((not (singleton-stream? results)) the-empty-stream)
+          (else results))))
+    frame-stream))
+
+(define (singleton-stream? s)
+  (and (stream-car s)
+       (not (stream-cdr s))))
+
+(put 'unique 'qeval unique-asserted)
+
+
+;;
 ;; call is the contents (cdr) of the query, i.e. what follows the
 ;; `lisp-value` keyword
 ;;
