@@ -186,13 +186,13 @@
       (let ((results (qeval (car query) (singleton-stream frame))))
         (cond
           ((eq? results '()) the-empty-stream)
-          ((not (singleton-stream? results)) the-empty-stream)
-          (else results))))
+          ((singleton-stream? results) results)
+          (else the-empty-stream))))
     frame-stream))
 
 (define (singleton-stream? s)
   (and (stream-car s)
-       (not (stream-cdr s))))
+       (eq? '() (stream-cdr s))))
 
 (put 'unique 'qeval unique-asserted)
 
