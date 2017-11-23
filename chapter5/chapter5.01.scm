@@ -33,3 +33,33 @@
 ;;
 ;; decision for (> counter n)
 ;;
+
+;;
+;; 5.1.1 A Language for Describing Register Machines
+;;
+
+;;
+;; data paths are described by registers and operations.
+;;
+;; register: name + set of buttons that control assignment to it
+;;
+;; button: name + source of data that enters the register under the
+;; buttons's control (source being a register, a constant, or an
+;; operation)
+;;
+;; operation: name + inputs (registers or constants)
+;;
+
+;;
+;; controller: sequence of instructions together with labels that
+;; identify entry points
+;;
+;; Instruction can be either:
+;;  - the name of a data-path button to push to assign a value to a
+;;    registers
+;;  - a test instruction that performs a specified test
+;;  - a conditional branch, specified by a controller label, based on
+;;    the results of the previous test
+;;  - an unconditional branch (goto instruction)
+;;
+
