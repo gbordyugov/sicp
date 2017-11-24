@@ -102,5 +102,5 @@
   (assign t (op rem) (reg a) (reg b))
   (assign a (reg b))
   (assign b (reg t))
-  (got (label test-b))
+  (goto (label test-b))
   gcd-done)
