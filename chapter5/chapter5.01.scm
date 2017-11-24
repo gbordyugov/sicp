@@ -90,3 +90,17 @@
   (b<-t)                          ;; button push
   (goto (label test-b))           ;; unconditional branch
   gcd-done)
+
+;;
+;; Simplified GCD machine
+;;
+
+(controller
+  test-b
+  (test (op =) (reg b) (const 0))
+  (branch (label gcd-done))
+  (assign t (op rem) (reg a) (reg b))
+  (assign a (reg b))
+  (assign b (reg t))
+  (got (label test-b))
+  gcd-done)
