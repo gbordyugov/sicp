@@ -183,3 +183,16 @@
       guess
       (sqrt-iter (improve guess))))
   (sqrt-iter 1.0))
+
+(controller (assign guess (const 1.0))
+            test-good-enough
+            (test (op good-enough?) (reg guess))
+            (branch (label sqrt-done))
+            (assign x-by-guess (op /) (reg x) (reg guess))
+            (assign sum (op +) (reg guess) (reg x-by-guess))
+            (assign guess (op /) (reg sum) (const 2.0))
+            (goto (label test-good-enough))
+            sqrt-done)
+
+
+
