@@ -140,3 +140,7 @@
   gcd-done
   (perform (op print) (reg a))
   (goto (label gcd-loop)))
+
+;;
+;; 5.1.2 Abstraction in Machine Design
+;;
