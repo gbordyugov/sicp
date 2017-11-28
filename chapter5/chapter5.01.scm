@@ -144,3 +144,8 @@
 ;;
 ;; 5.1.2 Abstraction in Machine Design
 ;;
+
+(define (remainder n d)
+  (if (< n d)
+    n
+    (remainder (- n d) d)))
