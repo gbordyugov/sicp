@@ -184,6 +184,9 @@
       (sqrt-iter (improve guess))))
   (sqrt-iter 1.0))
 
+;;
+;; simple version with good-enough? as a primitive
+;;
 (controller (assign guess (const 1.0))
             test-good-enough
             (test (op good-enough?) (reg guess))
@@ -194,5 +197,19 @@
             (goto (label test-good-enough))
             sqrt-done)
 
-
-
+;;
+;; more elaborated version with good-enough? coded
+;;
+(controller (assign guess (const 1.0))
+            test-good-enough
+            ;; (test (op good-enough?) (reg guess))
+            (assign squared-guess (op *) (reg guess) (reg guess))
+            (assign squared-guess-minus-x
+                    (op -) (reg squared-guess) (reg x))
+            (test (op <) (reg squared-guess-minus-x) (const 0.001))
+            (branch (label sqrt-done))
+            (assign x-by-guess (op /) (reg x) (reg guess))
+            (assign sum (op +) (reg guess) (reg x-by-guess))
+            (assign guess (op /) (reg sum) (const 2.0))
+            (goto (label test-good-enough))
+            sqrt-done)
