@@ -217,3 +217,24 @@
 ;;
 ;; 5.1.3 Subroutines
 ;;
+
+
+;;
+;; Figure 5.8: two nearly identical GCD machines
+;;
+
+(controller
+  ;; ...
+  gcd-1
+  (test (op = 1) (reg b) (const 0))
+  (branch (label after-gcd-1))
+  (assign t (op rem) (reg a) (reg b))
+  (assign a (reg b))
+  (assign b (reg t))
+  (goto (label gcd-1))
+
+  ;;...
+  gcd-2
+  ;; basically the same code as above
+  )
+
