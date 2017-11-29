@@ -213,3 +213,7 @@
             (assign guess (op /) (reg sum) (const 2.0))
             (goto (label test-good-enough))
             sqrt-done)
+
+;;
+;; 5.1.3 Subroutines
+;;
