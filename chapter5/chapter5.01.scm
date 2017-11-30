@@ -227,14 +227,24 @@
   ;; ...
   gcd-1
   (test (op = 1) (reg b) (const 0))
-  (branch (label after-gcd-1))
+  (branch (label gcd1-done))
   (assign t (op rem) (reg a) (reg b))
   (assign a (reg b))
   (assign b (reg t))
   (goto (label gcd-1))
+  gcd1-done
 
   ;;...
   gcd-2
-  ;; basically the same code as above
+  (test (op = 1) (reg b) (const 0))
+  (branch (label gcd2-done))
+  (assign t (op rem) (reg a) (reg b))
+  (assign a (reg b))
+  (assign b (reg t))
+  (goto (label gcd-2))
+  gcd2-done
   )
 
+;;
+;; the only difference is the entry and exit labels
+;;
