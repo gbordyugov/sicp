@@ -248,3 +248,19 @@
 ;;
 ;; the only difference is the entry and exit labels
 ;;
+
+;;
+;; first solution: introduce a special register called `continue`,
+;; having values 0 or 1, and depending on this register,
+;; we will goto either to gcd1-done or gcd2-done
+;;
+
+(controller
+  ;;
+  ;; rest of the code
+  ;;
+  gcd-done
+  (test (op =) (reg continue) (const 0))
+  (branch (label gcd1-done))
+  (branch (label gcd2-done))
+  )
