@@ -334,3 +334,25 @@
 ;; need of a stack with two opertions:
 ;; - save aka push
 ;; - restore aka pop
+
+(controller
+  (assign continue (label fact-done))
+  (test (op =) (reg n) (const 1))
+  (branch (label base-done))
+  ;;
+  ;; preparing the recursive call
+  ;;
+  (save continue)
+  (save n)
+  (assign n (op -) (reg n) (const 1))
+  (assign continue (label after-fact))
+  (goto (label fact-loop))
+  after-fact
+  (restore n)
+  (restore continue)
+  (assign val (op *) (reg n) (reg val))
+  (got (reg continue))
+  base-case
+  (assign val (const 1))
+  (goto (reg-continue))
+  fact-done)
