@@ -264,3 +264,43 @@
   (branch (label gcd1-done))
   (branch (label gcd2-done))
   )
+
+;;
+;; next idea: `continue` register should be able to hold a label
+;; (a jump address)
+;;
+
+(controller
+  gcd
+  (test (op = ) (reg b) (const 0))
+  (branch (label gcd-done))
+  (assign t (op rem) (reg a) (reg b))
+  (assign a (reg b))
+  (assign b (reg t))
+  (goto (label gcd))
+  gcd-done
+  (goto (reg continue))
+
+  ;;
+  ;; first call of gcd
+  ;;
+  (assign continue (label after-gcd-1))
+  (goto (label gcd))
+  after-gcd-1
+
+  ;;
+  ;; second call of gcd
+  ;;
+  (assign continue (label after-gcd-2))
+  (goto (label gcd))
+  after-gcd-2
+  ;;
+  ;; more code
+  ;;
+  )
+
+;;
+;; different subroutines can use different or the same
+;; continuation register
+;;
+
