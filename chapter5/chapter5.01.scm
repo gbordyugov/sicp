@@ -304,3 +304,33 @@
 ;; continuation register
 ;;
 
+
+;;
+;; 5.1.4 Using a Stack to Implement Recursion
+;;
+
+;;
+;; iterative process: the state of the machine is completely
+;; determined by the IP (instruction pointer) and the contents of the
+;; registers
+;;
+
+;;
+;; both GCD and factorial procedures call themselves, but in GCD the
+;; recursive call is the last thing, and in factorial not
+;;
+;; GCD: the answer to the reduced problem is the answer to the
+;; original problem
+;;
+;; Factorial: the answer of the reduced problem is only part of the
+;; answer to the original problem
+;;
+;; tail recursion!
+;;
+;; in the subproblem, the contents of the register is different from
+;; that in the superproblem
+
+;;
+;; need of a stack with two opertions:
+;; - save aka push
+;; - restore aka pop
