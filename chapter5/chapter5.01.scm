@@ -337,6 +337,7 @@
 
 (controller
   (assign continue (label fact-done))
+  fact-loop
   (test (op =) (reg n) (const 1))
   (branch (label base-done))
   ;;
