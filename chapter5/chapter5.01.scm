@@ -336,10 +336,10 @@
 ;; - restore aka pop
 
 (controller
-  (assign continue (label fact-done))
+  (assign continue (label fact-done)) ; set up final return address
   fact-loop
   (test (op =) (reg n) (const 1))
-  (branch (label base-done))
+  (branch (label base-case))
   ;;
   ;; preparing the recursive call
   ;;
@@ -351,9 +351,9 @@
   after-fact
   (restore n)
   (restore continue)
-  (assign val (op *) (reg n) (reg val))
-  (got (reg continue))
+  (assign val (op *) (reg n) (reg val)) ; val now contains n(n-1)!
+  (got (reg continue))                  ; return to caller
   base-case
-  (assign val (const 1))
-  (goto (reg-continue))
+  (assign val (const 1))                ; base case: 1! = 1
+  (goto (reg-continue))                 ; return to caller
   fact-done)
