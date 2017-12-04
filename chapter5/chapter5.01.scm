@@ -327,7 +327,7 @@
 ;;
 ;; tail recursion!
 ;;
-;; in the subproblem, the contents of the register is different from
+;; in the subproblem, the contents of the registers is different from
 ;; that in the superproblem
 
 ;;
