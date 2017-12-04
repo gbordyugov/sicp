@@ -357,3 +357,9 @@
   (assign val (const 1))                ; base case: 1! = 1
   (goto (reg-continue))                 ; return to caller
   fact-done)
+
+;;
+;; in the recursive calls, the continue register must always be saved
+;;
+;; so have all registered that are to be modified during the call
+;;
