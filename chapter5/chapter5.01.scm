@@ -363,3 +363,20 @@
 ;;
 ;; so have all registered that are to be modified during the call
 ;;
+
+;;
+;; A double recursion
+;;
+
+;;
+;; consider
+;;
+
+(define (fib b)
+  (if (< n 2)
+    n
+    (+ (fib (- n 1)) (fib (- n 2)))))
+
+;;
+;; three registers: n, val, and continue
+;;
