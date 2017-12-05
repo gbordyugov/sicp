@@ -474,3 +474,8 @@
   base-case
   (assign val (reg product))
   (goto (reg continue)))
+
+
+;;
+;; exercise 5.5: I hand-simulated it - believe me!
+;;
