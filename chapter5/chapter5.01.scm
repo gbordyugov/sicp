@@ -382,8 +382,10 @@
 ;;
 
 (controller
+  (save continue)                    ;; from the previous context
   (assign continue (label fib-done)) ;; where to return after we're done
-  fib-loop
+  (goto (label fib-loop))            ;; call the function
+  fib-loop                           ;; entry point to the subroutine
   (test (op <) (reg n) (const 2))
   (branch (label immediate-answer))
   ;; preparing to compute Fib(n-1)
@@ -410,3 +412,4 @@
   immediate-answer
   (assign val (reg n))      ;; base case Fib(n) = n
   (goto (reg continue))
+  )
