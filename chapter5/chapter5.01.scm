@@ -413,3 +413,36 @@
   (assign val (reg n))      ;; base case Fib(n) = n
   (goto (reg continue))
   )
+
+;;
+;; exercise 5.4
+;;
+
+;;
+;; (a)
+;;
+(define (expt b n)
+  (if (= n 0)
+    1
+    (* b (expt b (- n 1)))))
+
+(controller
+  (save continue)
+  (assign continue (label expt-done))
+  (goto (label expt-loop)) ;; the actual call
+  expt-loop ;; input in registers b and n, return value in val
+  (test (op =) (reg n) (const 0))
+  (branch (label base-case))
+  ;; preparing recursive call
+  (save continue)
+  (save n)
+  (assign continue (label after-recursion))
+  (assign n (op -) (reg n) (const 1))
+  (goto (label expt-loop))
+  (restore n)
+  (restore continue)
+  (assign val (op *) (reg b) (reg val))
+  (goto (reg continue))
+  base-case
+  (assign val 1)
+  (goto (reg continue)))
