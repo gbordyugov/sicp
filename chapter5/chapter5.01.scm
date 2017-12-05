@@ -479,3 +479,7 @@
 ;;
 ;; exercise 5.5: I hand-simulated it - believe me!
 ;;
+
+;;
+;; exercise 5.6: lines 399 and 402
+;;
