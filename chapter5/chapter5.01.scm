@@ -383,7 +383,7 @@
 
 (controller
   (save continue)                    ;; from the previous context
-  (assign continue (label fib-done)) ;; where to return after we're done
+  (assign continue (label fib-done)) ;; where to return after we're done, is somewhere else
   (goto (label fib-loop))            ;; call the function
   fib-loop                           ;; entry point to the subroutine
   (test (op <) (reg n) (const 2))
@@ -428,7 +428,7 @@
 
 (controller
   (save continue)
-  (assign continue (label expt-done))
+  (assign continue (label expt-done))      ;; is somewhere else
   (goto (label expt-loop)) ;; the actual call
   expt-loop ;; input in registers b and n, return value in val
   (test (op =) (reg n) (const 0))
@@ -445,4 +445,32 @@
   (goto (reg continue))
   base-case
   (assign val 1)
+  (goto (reg continue)))
+
+
+;;
+;; (b)
+;;
+
+(define (expt b n)
+  (define (expt-iter counter product)
+    (if (= counter 0)
+      product
+      (expt-iter (- counter 1) (* b product))))
+  (expt-iter n 1))
+
+(controller
+  ;; registers: b, n, counter, product, val (for return value)
+  (assign counter (reg n))
+  (assign product (const 1))
+  (assign continue (label expt-done)) ;; is somewhere
+  (goto (label expt-iter))
+  expt-iter
+  (test (op =) (reg counter) (const 0))
+  (branch (label base-case))
+  (assign counter (op -) (reg counter) (const 1))
+  (assign product (op *) (reg b) (reg product))
+  (goto (label expt-iter))
+  base-case
+  (assign val (reg product))
   (goto (reg continue)))
