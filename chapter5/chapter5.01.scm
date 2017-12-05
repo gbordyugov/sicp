@@ -170,7 +170,7 @@
             gcd-done)
 
 ;;
-;; exercise 5.5
+;; exercise 5.3
 ;;
 
 (define (sqrt x)
