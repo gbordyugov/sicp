@@ -483,3 +483,28 @@
 ;;
 ;; exercise 5.6: lines 399 and 402
 ;;
+
+;;
+;; 5.1.5 Instruction sumamry
+;;
+
+(assign <register-name> (reg <register-name>))
+(assign <register_name> (const <constant-value>))
+(assign <register-name>
+        (op <operation-name>)
+        <input1> ... <inputn>)
+(perform (op <operation-name>) <input1> ... <inputn>)
+(test (op <operation-name>) <input1> ... <inputn>)
+(branch (label <label-name>))
+(goto (label <label-name>))
+
+(assign <register-name> (label <label-name>)))
+(goto (reg <register-name>))
+
+(save <register-name>)
+(restore <register-name>)
+
+(const "abc") ;; strings
+(const abc)   ;; symbols
+(const (a b c)) ;; lists
+(const ())      ;; the empty list
