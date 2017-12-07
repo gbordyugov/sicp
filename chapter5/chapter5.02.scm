@@ -71,7 +71,7 @@
         (let ((insts (get-contents pc))) ;; those are the instructions
           (if (null? insts)
             'done
-            (begin ((instruction-execution-proc (car insts)))
+            (begin ((instruction-execution-proc (car insts))) ;; this would modify pc
                    (execute)))))
       (define (dispatch message)
         (cond ((eq? message 'start)
@@ -90,3 +90,17 @@
               (else
                 (error "Unknown request: MACHINE" message))))
       dispatch)))
+
+;;
+;; the interface
+;;
+
+(define (start machine) (machine 'start))
+(define (get-register-contents machine register-name)
+  (get-contents (get-register machine register-name)))
+(define (set-register-contents! machine register-name value)
+  (set-contents! (get-register machine register-name)
+                 vale)
+  'done)
+(define (get-register machine reg-name)
+  ((machine 'get-register) reg-name))
