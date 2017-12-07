@@ -33,3 +33,6 @@
              (goto (label test-b))
              gcd-done)))
 
+;;
+;; exercise 5.7 I don't have the simulator yet
+;; 
