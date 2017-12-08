@@ -139,3 +139,28 @@
 ;;
 ;; 5.2.2 The Assembler
 ;;
+
+;;
+;; The assembler transforms the sequence of controller expressions for
+;; a machine into a corresponding list of machine instructions, each
+;; with its execution procedure
+;;
+
+;;
+;; Before generating instructions, the assembler must scan the labels
+;; in order to find out the addresses of jumps
+;;
+;; those executions procedures seem to be really important!
+;;
+
+;;
+;; note that the assember is parameterized by both the controller AND
+;; the machine
+;;
+
+(define (assemble controller-text machine)
+  (extract-lables
+    controller-text
+    (lambda (insts labels)
+      (update-insts! insts labels machine)
+      insts)))
