@@ -135,3 +135,7 @@
   'done)
 (define (get-register machine reg-name)
   ((machine 'get-register) reg-name))
+
+;;
+;; 5.2.2 The Assembler
+;;
