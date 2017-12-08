@@ -179,7 +179,7 @@
       (cdr text)
       (lambda (insts labels)
         (let ((next-inst (car text)))
-          (if (symbol? next-inst)
+          (if (symbol? next-inst)   ;; is a label?
             (receive insts
                      (cons (make-label-entry next-inst insts) labels))
             (receive (cons (make-instruction next-inst) insts)
