@@ -164,3 +164,23 @@
     (lambda (insts labels)
       (update-insts! insts labels machine)
       insts)))
+
+;;
+;; extract-labels takes as argument the text of the controller plus
+;; the receiver procedure, which is called with two values: list of
+;; instructions `insts` and table `labels`, whicha associates each
+;; label from text with the position in the list `insts` that the
+;; label designates.
+
+(define (extract-labels text receive)
+  (if (null? text)
+    (receive '() '())
+    (extract-labels
+      (cdr text)
+      (lambda (insts labels)
+        (let ((next-inst (car text)))
+          (if (symbol? next-inst)
+            (receive insts
+                     (cons (make-label-entry next-inst insts) labels))
+            (receive (cons (make-instruction next-inst) insts)
+                     labels)))))))
