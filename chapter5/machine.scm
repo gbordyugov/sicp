@@ -224,4 +224,7 @@
     (if val
       (cdr val)
       (error "Undefined label: ASSEMBLE" label-name))))
-           
+
+;;
+;; exercise 5.8 skipped: I don't have the machine still
+;;
