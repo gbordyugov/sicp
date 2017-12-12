@@ -212,3 +212,16 @@
 (define (instruction-execution-proc inst) (cdr inst))
 (define (set-instruction-execution-proc! inst proc)
   (set-cdr! inst proc))
+
+;;
+;; labels and label look-up code
+;;
+(define (make-label-entry label-name insts)
+  (cons label-name insts))
+
+(define (lookup-label labels label-name)
+  (let ((val (assoc label-name labels)))
+    (if val
+      (cdr val)
+      (error "Undefined label: ASSEMBLE" label-name))))
+           
