@@ -205,6 +205,9 @@
 
 ;;
 ;; abstractions for instructions
+;; for each instruction, it's the instruction text together with the
+;; corresponding execution procedure (is not available at the moment
+;; when extract-labels is called, and updated later by update-insts!.
 ;;
 
 (define (make-instruction text) (cons text '()))
