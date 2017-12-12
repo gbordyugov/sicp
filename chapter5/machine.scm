@@ -228,3 +228,8 @@
 ;;
 ;; exercise 5.8 skipped: I don't have the machine still
 ;;
+
+
+;;
+;; 5.2.3 Generating Execution Procedures for Instructions
+;;
