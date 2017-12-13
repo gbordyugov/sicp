@@ -272,3 +272,7 @@
         (set-contents! target (value-proc))
         (advance-pc pc)))))
 
+(define (assign-reg-name assign-instruction)
+  (cadr assign-instruction))
+(define (assign-value-exp assign-instruction)
+  (cddr assign-instruction))
