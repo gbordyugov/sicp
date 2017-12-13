@@ -264,9 +264,15 @@
   (let ((target (get-register machine (assign-reg-name inst)))
         (value-exp (assign-value-exp inst)))
     (let ((value-proc
+            ;; is the value a result of an operation (such as
+            ;; add/sub/div/mul, etc?
             (if (operation-exp? value-exp)
+              ;; yes, make an operation expression
+              ;; see below for the definition of the procedure
               (make-operation-exp value-exp
                                   machine labels operations)
+              ;; no make a primitive expression
+              ;; see below for the definition of the procedure
               (make-primitive-exp (car value-exp) machine labels))))
       (lambda () ;; execution procedure for assign
         (set-contents! target (value-proc))
