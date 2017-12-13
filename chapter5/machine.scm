@@ -236,6 +236,11 @@
 ;;
 ;; 5.2.3 Generating Execution Procedures for Instructions
 ;;
+;; the idea is to dynamically create a procedure (a real Scheme
+;; procedure) for each instruction. During a simulation run, those
+;; procedures get called in the specified order to move things around
+;;
+;;
 
 (define (make-execution-procedure
           inst labels machine pc flag stack ops)
