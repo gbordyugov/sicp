@@ -290,3 +290,22 @@
 
 (define (advance-pc pc)
   (set-contents! pc (cdr (get-contents pc))))
+
+
+;;
+;; make-test
+;;
+
+(define (make-test inst machine labels operations flag pc)
+  (let ((condition (test-condition inst)))
+    (if (operation-exp? condition)
+      (let ((condition-proc (make-operation-exp condition
+                                                machine labels
+                                                operations)))
+        (lambda ()
+          (set-contents! flag (condition-proc))
+          (advance-pc pc)))
+      (error "Bad TEST instruction: ASSEMBLE" inst))))
+
+(define (test-condition test-instruction)
+  (cdr test-condition))
