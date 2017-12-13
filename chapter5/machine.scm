@@ -238,8 +238,8 @@
 ;;
 ;; the idea is to dynamically create a procedure (a real Scheme
 ;; procedure) for each instruction. During a simulation run, those
-;; procedures get called in the specified order to move things around
-;;
+;; procedures (aka execution procedures below) get called in the
+;; specified order to move things around
 ;;
 
 (define (make-execution-procedure
