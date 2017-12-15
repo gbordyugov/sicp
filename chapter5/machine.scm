@@ -359,3 +359,6 @@
     (lambda ()
       (set-contents! reg (pop stack))
       (advance-pc))))
+
+(define (stack-inst-reg-name stack-instruction)
+  (cadr stack-instruction))
