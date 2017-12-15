@@ -348,12 +348,18 @@
 ;; Other instructions
 ;;
 
+;;
+;; make-save
+;;
 (define (make-save inst machine stack pc)
   (let ((reg (get-register machine (stack-inst-reg-name inst))))
     (lambda ()
       (push stack (get-contents reg))
       (advance-pc pc))))
 
+;;
+;; make-restore
+;;
 (define (make-restore inst machine stack pc)
   (let ((reg (get-register machine (stack-inst-reg-name inst))))
     (lambda ()
@@ -363,6 +369,9 @@
 (define (stack-inst-reg-name stack-instruction)
   (cadr stack-instruction))
 
+;;
+;; make-perform
+;;
 (define (make-perform inst machine labels operations pc)
   (let ((action (perform-action inst)))
     (if (operation-exp? action)
