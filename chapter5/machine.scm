@@ -68,7 +68,7 @@
       (set! s '())
       'done)
     (define (dispatch message)
-      (cond ((eq? message 'push) push)
+      (cond ((eq? message 'push) push) ;; returns a procedure
             ((eq? message  'pop)  (pop))
             ((eq? message 'initialize) (initialize))
             (else
@@ -91,30 +91,50 @@
   (let ((pc    (make-register  'pc))
         (flag  (make-register 'flag))
         (stack (make-stack))
+        ;; this one is going to be a list of pairs with first element
+        ;; being a lambda of no arguments - an instruction procedure
+        ;; and the second one being convenience information (source
+        ;; code/line no, etc)
         (the-instruction-sequence '()))
     (let ((the-ops
+            ;; those are the supported operations (such ass
+            ;; add/sub/mul/div)
             (list (list 'initialize-stack
                         (lambda () (stack 'initialize)))))
           (register-table
             (list (list 'pc pc)
                   (list 'flag flag))))
+      ;;
+      ;; add new register
+      ;;
       (define (allocate-register name)
         (if (assoc name register-table)
           (error "Multiply defined register: " name)
           (set! register-table (cons (list name (make-register name))
                                      register-table)))
         'register-allocated)
+      ;;
+      ;; lookup register
+      ;;
       (define (lookup-register name)
         (let ((val (assoc name register-table)))
           (if val
             (cadr val)
             (error "Unknown register: " name))))
+      ;;
+      ;; run simulation
+      ;;
       (define (execute)
         (let ((insts (get-contents pc))) ;; those are the instructions
           (if (null? insts)
             'done
-            (begin ((instruction-execution-proc (car insts))) ;; this would modify pc
-                   (execute)))))
+            (begin
+              ;; note that his one is a function call with no
+              ;; arguments (aka execution procedure). By convention,
+              ;; execution procedure should advace programme counter
+              ;; pc
+              ((instruction-execution-proc (car insts)))
+              (execute)))))
       (define (dispatch message)
         (cond ((eq? message 'start)
                (set-contents! pc the-instruction-sequence)
@@ -124,6 +144,7 @@
                  (set! the-instruction-sequence seq)))
               ((eq? message 'allocate-register) allocate-register)
               ((eq? message 'get-register) lookup-register)
+              ;; this one adds new ops to the existing ones
               ((eq? message 'install-operations)
                (lambda (ops)
                  (set! the-ops (append the-ops ops))))
