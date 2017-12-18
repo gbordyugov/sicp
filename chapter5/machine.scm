@@ -78,7 +78,7 @@
 
 (define (make-new-machine)
   (let ((pc    (make-register  'pc))
-        (flag  (make-register) 'flag)
+        (flag  (make-register 'flag))
         (stack (make-stack))
         (the-instruction-sequence '()))
     (let ((the-ops
