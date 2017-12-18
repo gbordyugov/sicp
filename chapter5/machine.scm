@@ -381,7 +381,7 @@
                                              operations)))
         (lambda ()
           (action-proc)
-          (operations)))
+          (advance-pc pc)))
       (error "Bad PERFORM instruction: ASSEMBLE" inst))))
 
 (define (perform-action-inst) (cdr inst))
