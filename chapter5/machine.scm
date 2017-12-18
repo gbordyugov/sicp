@@ -179,6 +179,14 @@
 ;;
 
 ;;
+;; an execution procedure is a lambda of no arguments that performs
+;; the action, encoded by the corresponding controller expression
+;;
+;; by convention, it is job of execution procedures to advance the
+;; programme counter `pc`
+;;
+
+;;
 ;; Before generating instructions, the assembler must scan the labels
 ;; in order to find out the addresses of jumps
 ;;
