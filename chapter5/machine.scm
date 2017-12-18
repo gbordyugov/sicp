@@ -384,4 +384,4 @@
           (advance-pc pc)))
       (error "Bad PERFORM instruction: ASSEMBLE" inst))))
 
-(define (perform-action-inst) (cdr inst))
+(define (perform-action inst) (cdr inst))
