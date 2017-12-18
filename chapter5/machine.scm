@@ -5,15 +5,21 @@
 ;;
 ;; machines are procedures with local state, able to accept messages
 ;;
+
 (define (make-machine register-names ops controller-text)
+  ;; make-new-machine defined below
   (let ((machine (make-new-machine)))
+    ;; allocate registers
     (for-each
       (lambda (register-name)
         ((machine 'allocate-register) register-name))
       register-names)
+    ;; install operations
     ((machine 'install-operations) ops)
+    ;; assemble and install instruction sequence
     ((machine 'install-instruction-sequence)
      (assemble controller-text machine))
+    ;; return the newly created machine
     machine))
 
 ;;
@@ -34,6 +40,11 @@
             (else
               (error "Unknown request: REGISTER" message))))
   dispatch))
+
+(define (get-contents register)
+  (register 'get))
+(define (set-contents! register value)
+  ((register 'set) value))
 
 
 ;;
