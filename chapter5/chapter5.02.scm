@@ -36,3 +36,23 @@
 ;;
 ;; exercise 5.7 I don't have the simulator yet
 ;; 
+
+;;
+;; exercise 5.8
+;;
+(define (extract-labels text receive)
+  (if (null? text)
+    (receive '() '())
+    (extract-labels
+      (cdr text)
+      ;; we "update" receive by wrapping it in a lambda that updates
+      ;; the lists of instructions and labels depending on (car text)
+      (lambda (insts labels)
+        (let ((next-inst (car text)))
+          (if (symbol? next-inst)   ;; is a label?
+            (if (assoc next-inst labels)
+              (error "ASSEMBLY: label already defined" next-inst)
+              (receive insts
+                       (cons (make-label-entry next-inst insts) labels)))
+            (receive (cons (make-instruction next-inst) insts)
+                     labels)))))))
