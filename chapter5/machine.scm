@@ -494,3 +494,11 @@
     (if val
       (cadr val)
       (error "Unknown operation: ASSEMBLE" symbol))))
+
+;;
+;; a little helper function
+;;
+(define (tagged-list? exp tag)
+  (if (pair? exp)
+    (eq? (car exp) tag)
+    false))
