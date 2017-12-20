@@ -488,3 +488,9 @@
   (cadr (car operation-exp)))
 (define (operation-exp-operands operation-exp)
   (cdr operation-exp))
+
+(define (lookup-prim symbol operations)
+  (let ((val (assoc symbol operations)))
+    (if val
+      (cadr val)
+      (error "Unknown operation: ASSEMBLE" symbol))))
