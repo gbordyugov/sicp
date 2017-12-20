@@ -131,8 +131,7 @@
             (begin
               ;; note that his one is a function call with no
               ;; arguments (aka execution procedure). By convention,
-              ;; execution procedure should advace programme counter
-              ;; pc
+              ;; execution procedure must advace programme counter pc
               ((instruction-execution-proc (car insts)))
               (execute)))))
       (define (dispatch message)
@@ -255,6 +254,7 @@
 ;; when extract-labels is called, and updated later by update-insts!).
 ;;
 
+;; in the beginning there is no execution procedure
 (define (make-instruction text) (cons text '()))
 (define (instruction-text inst) (car inst))
 (define (instruction-execution-proc inst) (cdr inst))
@@ -282,11 +282,15 @@
 ;; 5.2.3 Generating Execution Procedures for Instructions
 ;;
 ;; the idea is to dynamically create a procedure (a real Scheme
-;; procedure) for each instruction. During a simulation run, those
-;; procedures (aka execution procedures below) get called in the
-;; specified order to move things around
+;; procedure with no arguments) for each instruction. During a
+;; simulation run, those procedures (aka execution procedures below)
+;; get called in the specified order to move things around
 ;;
 
+;;
+;; here, argument `inst` is not a whole instruction in the above sense
+;; (text + lambda), buth just text
+;;
 (define (make-execution-procedure
           inst labels machine pc flag stack ops)
   (cond ((eq? (car inst) 'assign)
