@@ -238,6 +238,9 @@
         (ops (machine 'operations)))
     (for-each
       (lambda (inst)
+        ;; initially, there is no execution procedure in those
+        ;; instructions. This loop fills out those missing execution
+        ;; procedures (which are lambdas of no arguments)
         (set-instruction-execution-proc!
           inst
           (make-execution-procedure
@@ -249,7 +252,7 @@
 ;; abstractions for instructions
 ;; for each instruction, it's the instruction text together with the
 ;; corresponding execution procedure (is not available at the moment
-;; when extract-labels is called, and updated later by update-insts!.
+;; when extract-labels is called, and updated later by update-insts!).
 ;;
 
 (define (make-instruction text) (cons text '()))
