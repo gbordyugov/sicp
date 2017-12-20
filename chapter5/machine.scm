@@ -317,6 +317,8 @@
 (define (make-assign inst machine labels operations pc)
   (let ((target (get-register machine (assign-reg-name inst)))
         (value-exp (assign-value-exp inst)))
+    ;; value-proc is a procedure of no arguments that will be called
+    ;; from within the execution procedure below
     (let ((value-proc
             ;; is the value a result of an operation (such as
             ;; add/sub/div/mul, etc?
@@ -348,6 +350,8 @@
 (define (make-test inst machine labels operations flag pc)
   (let ((condition (test-condition inst)))
     (if (operation-exp? condition)
+      ;; condition-proc is a procedure that will be called from the
+      ;; execution procedure (the lambda ()) below
       (let ((condition-proc (make-operation-exp condition
                                                 machine labels
                                                 operations)))
