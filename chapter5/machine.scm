@@ -217,6 +217,8 @@
     (receive '() '())
     (extract-labels
       (cdr text)
+      ;; we "update" receive by wrapping it in a lambda that updates
+      ;; the lists of instructions and labels depending on (car text)
       (lambda (insts labels)
         (let ((next-inst (car text)))
           (if (symbol? next-inst)   ;; is a label?
