@@ -466,3 +466,25 @@
 (define (constant-exp-value exp) (cadr exp))
 (define (label-exp? exp) (tagged-list? exp 'label))
 (define (label-exp-label exp) (cadr exp))
+
+;;
+;; those are used for operations and make use of the operation table
+;; of the machine
+;;
+
+(define (make-operation-exp exp machine labels operations)
+  (let ((op (lookup-prim (operation-exp-op exp)
+                         operations))
+        (aprocs
+          (map (lambda (e)
+                 (make-primitive-exp e machine labels))
+               (operation-exp-operands exp))))
+    (lambda ()
+      (apply op (map (lambda (p) (p)) aprocs)))))
+
+(define (operation-exp? exp)
+  (and (pair? exp) (tagged-list? (car exp) 'op)))
+(define (operation-exp-op opration-exp)
+  (cadr (car operation-exp)))
+(define (operation-exp-operands operation-exp)
+  (cdr operation-exp))
