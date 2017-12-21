@@ -17,4 +17,3 @@ Open/skipped exercises
    implemented)
  - 4.69 needs to be revisited after Section 4.4.4 is done
  - 4.76-4.79 - I think I've spent enough time with the query language
- - 5.7 - I didn't have the simulator yet

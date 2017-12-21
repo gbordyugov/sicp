@@ -23,7 +23,7 @@
 
 (load "machine.scm")
 (define gcd-machine
-  (make-machine 
+  (make-machine
     '(a b t)
     (list (list 'rem remainder) (list '= =)) ;; note the quotes
     '(test-b (test (op =) (reg b) (const 0))
@@ -43,8 +43,47 @@
 (get-register-contents gcd-machine 'a)
 
 ;;
-;; exercise 5.7 I don't have the simulator yet
-;; 
+;; exercise 5.7
+;;
+
+;;
+;; the code
+;;
+(define (expt b n)
+  (define (expt-iter counter product)
+    (if (= counter 0)
+      product
+      (expt-iter (- counter 1) (* b product))))
+  (expt-iter n 1))
+
+(define expt-machine
+  (make-machine
+    ;; registers
+    '(b n counter product val continue)
+    ;; operations
+    (list (list 'rem remainder)
+          (list '=   =)
+          (list '*   *)
+          (list '-   -))
+    ;; registers: b, n, counter, product, val (for return value)
+    '(begin (assign counter (reg n))
+            (assign product (const 1))
+            expt-iter
+            (test (op =) (reg counter) (const 0))
+            (branch (label base-case))
+            (assign counter (op -) (reg counter) (const 1))
+            (assign product (op *) (reg b) (reg product))
+            (goto (label expt-iter))
+            base-case
+            (assign val (reg product))
+            expt-done)))
+
+(set-register-contents! expt-machine 'b 2)
+(set-register-contents! expt-machine 'n 20)
+(start expt-machine)
+
+(get-register-contents expt-machine 'product)
+
 
 ;;
 ;; exercise 5.8
