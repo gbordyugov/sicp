@@ -21,6 +21,7 @@
 ;; an example:
 ;;
 
+(load "machine.scm")
 (define gcd-machine
   (make-machine 
     '(a b t)
@@ -32,6 +33,14 @@
              (assign b (reg t))
              (goto (label test-b))
              gcd-done)))
+
+(set-register-contents! gcd-machine 'a 206)
+
+(set-register-contents! gcd-machine 'b 40)
+
+(start gcd-machine)
+
+(get-register-contents gcd-machine 'a)
 
 ;;
 ;; exercise 5.7 I don't have the simulator yet
