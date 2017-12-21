@@ -478,7 +478,10 @@
         (aprocs
           (map (lambda (e)
                  (make-primitive-exp e machine labels))
-               (operation-exp-operands exp))))
+               ;; exercise 5.9
+               (filter (lambda (x)
+                         (not (operand-label? x)))
+                       (operation-exp-operands exp)))))
     (lambda ()
       (apply op (map (lambda (p) (p)) aprocs)))))
 
@@ -488,6 +491,9 @@
   (cadr (car operation-exp)))
 (define (operation-exp-operands operation-exp)
   (cdr operation-exp))
+;; exercise 5.9
+(define (operand-label? operand)
+  (tagged-list? operand 'label))
 
 (define (lookup-prim symbol operations)
   (let ((val (assoc symbol operations)))

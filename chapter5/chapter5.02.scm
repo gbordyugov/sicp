@@ -56,6 +56,7 @@
       (expt-iter (- counter 1) (* b product))))
   (expt-iter n 1))
 
+(load "machine.scm")
 (define expt-machine
   (make-machine
     ;; registers
@@ -104,3 +105,7 @@
                        (cons (make-label-entry next-inst insts) labels)))
             (receive (cons (make-instruction next-inst) insts)
                      labels)))))))
+
+;;
+;; exercise 5.9: see machine.scm
+;;
