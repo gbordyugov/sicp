@@ -162,7 +162,7 @@
   (get-contents (get-register machine register-name)))
 (define (set-register-contents! machine register-name value)
   (set-contents! (get-register machine register-name)
-                 vale)
+                 value)
   'done)
 (define (get-register machine reg-name)
   ((machine 'get-register) reg-name))
@@ -198,7 +198,7 @@
 ;;
 
 (define (assemble controller-text machine)
-  (extract-lables
+  (extract-labels
     controller-text
     (lambda (insts labels)
       (update-insts! insts labels machine)
@@ -244,7 +244,7 @@
           inst
           (make-execution-procedure
             (instruction-text inst)
-            labels machine pf flag stack ops)))
+            labels machine pc flag stack ops)))
       insts)))
 
 ;;
@@ -361,7 +361,7 @@
       (error "Bad TEST instruction: ASSEMBLE" inst))))
 
 (define (test-condition test-instruction)
-  (cdr test-condition))
+  (cdr test-instruction))
 
 ;;
 ;; make-branch
@@ -484,7 +484,7 @@
 
 (define (operation-exp? exp)
   (and (pair? exp) (tagged-list? (car exp) 'op)))
-(define (operation-exp-op opration-exp)
+(define (operation-exp-op operation-exp)
   (cadr (car operation-exp)))
 (define (operation-exp-operands operation-exp)
   (cdr operation-exp))
