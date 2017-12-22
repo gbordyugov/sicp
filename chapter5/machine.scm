@@ -447,16 +447,22 @@
 ;;
 
 (define (make-primitive-exp exp machine labels)
-  (cond ((constant-exp? exp)
-         (let ((c (constant-exp-value exp)))
-           (lambda () c)))
-        ((label-exp? exp)
-         (let ((insts (lookup-label labels
-                                    (label-exp-label exp))))
-           (lambda () insts)))
-        ((register-exp? exp)
-         (let ((r (get-register machine (register-exp-reg exp))))
-           (lambda () (get-contents r))))
+  (cond
+    ;; if it's a constant, just make a lambda that returns that
+    ;; constant
+    ((constant-exp? exp)
+     (let ((c (constant-exp-value exp)))
+       (lambda () c)))
+    ;; if it's a label, look it up and return it by a lambda
+    ((label-exp? exp)
+     (let ((insts (lookup-label labels
+                                (label-exp-label exp))))
+       (lambda () insts)))
+    ;; if it's a register, fetch the registers and in the lambda,
+    ;; return its contents
+    ((register-exp? exp)
+     (let ((r (get-register machine (register-exp-reg exp))))
+       (lambda () (get-contents r))))
         (else
           (error "Unknown expression type: ASSEMBLE" exp))))
 
