@@ -482,6 +482,11 @@
 ;; of the machine
 ;;
 
+;;
+;; it is assumed that the first element of exp is an operation, like
+;; `(op -)` and the rest elements are the arguments to that operation
+;;
+
 (define (make-operation-exp exp machine labels operations)
   (let ((op (lookup-prim (operation-exp-op exp)
                          operations))
