@@ -334,10 +334,14 @@
         (set-contents! target (value-proc))
         (advance-pc pc)))))
 
+;;
+;; Example:
+;; (assign counter (op -) (reg counter) (const 1))
+;;
 (define (assign-reg-name assign-instruction)
-  (cadr assign-instruction))
+  (cadr assign-instruction)) ;; `counter` in the example before
 (define (assign-value-exp assign-instruction)
-  (cddr assign-instruction))
+  (cddr assign-instruction)) ;; everything starting with `(op -)`
 
 (define (advance-pc pc)
   (set-contents! pc (cdr (get-contents pc))))
