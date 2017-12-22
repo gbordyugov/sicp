@@ -109,3 +109,7 @@
 ;;
 ;; exercise 5.9: see machine.scm
 ;;
+
+;;
+;; exercise 5.10: see machine.scm for `make-nop` ;-)
+;;

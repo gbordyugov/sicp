@@ -131,7 +131,7 @@
             (begin
               ;; note that his one is a function call with no
               ;; arguments (aka execution procedure). By convention,
-              ;; execution procedure must advace programme counter pc
+              ;; execution procedure must advance programme counter pc
               ((instruction-execution-proc (car insts)))
               (execute)))))
       (define (dispatch message)
@@ -307,6 +307,8 @@
          (make-restore inst machine stack pc))
         ((eq? (car inst) 'perform)
          (make-perform inst machine labels ops pc))
+        ((eq? (car inst) 'nop)
+         (make-nop pc))
         (else
           (error "Unknown instruction type: ASSEMBLE" inst))))
 
@@ -446,6 +448,13 @@
 
 (define (perform-action inst) (cdr inst))
 
+;;
+;; to exercise 5.10
+;;
+
+(define (make-nop pc)
+  (lambda ()
+    (advance-pc pc)))
 ;;
 ;; execution procedures for subexpressions
 ;;
