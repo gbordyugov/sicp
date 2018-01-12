@@ -113,3 +113,7 @@
 ;;
 ;; exercise 5.10: see machine.scm for `make-nop` ;-)
 ;;
+
+;;
+;; Happy New Year!
+;;
