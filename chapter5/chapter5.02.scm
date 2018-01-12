@@ -117,3 +117,12 @@
 ;;
 ;; Happy New Year!
 ;;
+
+;;
+;; exercise 5.11 a)
+;;
+
+;;
+;; we can directly (restore n) to obtain Fib(n-1) and add it to (reg
+;; val) to obtain the sum
+;;
