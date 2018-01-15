@@ -137,21 +137,26 @@
 (define (make-save inst machine stack pc)
   (let ((reg (get-register machine (stack-inst-reg-name inst))))
     (lambda ()
+      ;; pass the register along with its contents
       (push stack (get-contents reg) reg)
       (advance-pc pc))))
 
 (define (make-restore inst machine stack pc)
   (let ((reg (get-register machine (stack-inst-reg-name inst))))
     (lambda ()
+      ;; pass the register to pop
       (set-contents! reg (pop stack reg))
       (advance-pc))))
 
 
 (define (make-stack)
+  ;; we push pairs (register value)
   (define (register+value reg val)
     (cons reg val))
+  ;; accessor
   (define (reg x)
     (car x))
+  ;; accessor
   (define (val x)
     (cdr x))
   (let ((s '()))
