@@ -126,3 +126,60 @@
 ;; we can directly (restore n) to obtain Fib(n-1) and add it to (reg
 ;; val) to obtain the sum
 ;;
+
+;;
+;; exercise 5.11 b)
+;;
+
+;;
+;; make-save
+;;
+(define (make-save inst machine stack pc)
+  (let ((reg (get-register machine (stack-inst-reg-name inst))))
+    (lambda ()
+      (push stack (get-contents reg) reg)
+      (advance-pc pc))))
+
+(define (make-restore inst machine stack pc)
+  (let ((reg (get-register machine (stack-inst-reg-name inst))))
+    (lambda ()
+      (set-contents! reg (pop stack reg))
+      (advance-pc))))
+
+
+(define (make-stack)
+  (define (register+value reg val)
+    (cons reg val))
+  (define (reg x)
+    (car x))
+  (define (val x)
+    (cdr x))
+  (let ((s '()))
+    (define (push x register)
+      (let ((to-push (register+value register x)))
+        (set! s (cons to-push s))))
+    (define (pop)
+      (lambda (register)
+        (if (null? s)
+          (error "Empty stack: POP")
+          (let ((top (car s)))
+            (let ((value (val top))
+                  (rgstr (reg top)))
+              (if (eq? rgstr register)
+                (begin
+                  (set! s (cdr s))
+                  top)
+                (error "restoring a different register: POP")))))))
+    (define (initialize)
+      (set! s '())
+      'done)
+    (define (dispatch message)
+      (cond ((eq? message 'push) push) ;; returns a procedure
+            ((eq? message  'pop)  (pop))
+            ((eq? message 'initialize) (initialize))
+            (else
+              (error "Unknown request: STACK" message))))
+    dispatch))
+
+(define (pop stack reg) ((stack 'pop) reg))
+(define (push stack value register) ((stack 'push) value register))
