@@ -283,3 +283,27 @@
               (else
                 (error "Unknown request: MACHINE" message))))
       dispatch)))
+
+(define (get-register-stack machine reg-name)
+  ((machine 'get-register-stack) reg-name))
+
+
+;;
+;; 2.
+;;
+(define (make-save inst machine stack pc)
+  (let* ((reg-name (stack-inst-reg-name inst))
+         (reg (get-register       machine reg-name))
+         (stk (get-register-stack machine reg-name)))
+    (lambda ()
+      (push stk (get-contents reg))
+      (advance-pc pc))))
+
+(define (make-restore inst machine stack pc)
+  (let* ((reg-name (stack-inst-reg-name inst))
+         (reg (get-register       machine reg-name))
+         (stk (get-register-stack machine reg-name)))
+    (lambda ()
+      (set-contents! reg (pop stk))
+      (advance-pc))))
+
