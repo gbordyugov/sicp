@@ -188,3 +188,17 @@
 
 (define (pop stack reg) ((stack 'pop) reg))
 (define (push stack value register) ((stack 'push) value register))
+
+
+;;
+;; exercise 5.11 (c)
+;;
+
+;;
+;; changes to be made:
+;;
+;; 1. keep a separate stack for each register in
+;;    make-new-machine.register-table
+;; 2. make push/pop use the corresponding register stack
+;; 3. update initialize-stack to initialize stacks of all registers
+;;
