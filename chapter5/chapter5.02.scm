@@ -209,17 +209,23 @@
 (define (make-new-machine)
   (let ((pc    (make-register  'pc))
         (flag  (make-register 'flag))
+        ;; no global stack anymore
         ;; (stack (make-stack))
         (the-instruction-sequence '()))
-    (let ((the-ops
-            ;; those are the supported operations (such ass
-            ;; add/sub/mul/div)
-            (list (list 'initialize-stack
-                        ;; TODO!
-                        (lambda () (stack 'initialize)))))
-          (register-table
-            (list (list 'pc pc (make-stack))
-                  (list 'flag flag (make-stack)))))
+    (let* ((the-ops
+             ;; those are the supported operations (such ass
+             ;; add/sub/mul/div)
+             (list (list 'initialize-stack
+                         ;; go through all registers and initialize
+                         ;; their stacks
+                         (lambda ()
+                           (for-each (lambda (x)
+                                       (let ((stack (caddr x)))
+                                         (stack 'initialize)))
+                                     register-table)))))
+           (register-table
+             (list (list 'pc   pc   (make-stack))
+                   (list 'flag flag (make-stack)))))
       ;;
       ;; add new register
       ;;
@@ -228,6 +234,7 @@
           (error "Multiply defined register: " name)
           (set! register-table (cons (list name
                                            (make-register name)
+                                           ;; this is new
                                            (make-stack))
                                      register-table)))
         'register-allocated)
