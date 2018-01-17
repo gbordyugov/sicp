@@ -327,9 +327,18 @@
   (make-stack-list        insts labels machine '())
   (make-source-list       insts labels machine '()))
 
+;;
+;; list of all instructions, with duplicates removed, sorted by
+;; instruction type
+;;
 (define (make-instruction-list insts labels machine acc)
+  (define (compa a b)
+    (cond ((and (symbol? a) (symbol? b)) (symbol<? a b))
+          ((symbol? a) (compa a (car b)))
+          ((symbol? b) (compa (car a) b))
+          (else (compa (car a) (car b)))))
   (if (null? insts)
-    '()
+    (sort acc compa)
     (let ((inst (car insts)))
       (let ((inst-type (car inst)))
         (if (assoc inst acc)
