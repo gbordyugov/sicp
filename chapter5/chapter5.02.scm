@@ -342,5 +342,5 @@
     (let ((inst (car insts)))
       (let ((inst-type (car inst)))
         (if (assoc inst acc)
-          (make-instruction-list insts labels machine acc)
-          (make-instruction-list insts lables machine (cons inst acc)))))))
+          (make-instruction-list (cdr insts) labels machine acc)
+          (make-instruction-list (cdr insts) lables machine (cons inst acc)))))))
