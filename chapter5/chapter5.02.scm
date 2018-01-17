@@ -320,3 +320,18 @@
       (make-statistics insts labels machine)
       (update-insts! insts labels machine)
       insts)))
+
+(define (make-statistics insts labels machine)
+  (make-instruction-list  insts labels machine '())
+  (make-entry-points-list insts labels machine '())
+  (make-stack-list        insts labels machine '())
+  (make-source-list       insts labels machine '()))
+
+(define (make-instruction-list insts labels machine acc)
+  (if (null? insts)
+    '()
+    (let ((inst (car insts)))
+      (let ((inst-type (car inst)))
+        (if (assoc inst acc)
+          (make-instruction-list insts labels machine acc)
+          (make-instruction-list insts lables machine (cons inst acc)))))))
