@@ -344,3 +344,18 @@
         (if (assoc inst acc)
           (make-instruction-list (cdr insts) labels machine acc)
           (make-instruction-list (cdr insts) lables machine (cons inst acc)))))))
+
+;;
+;; list, without duplicates, of the registers tohold entry points,
+;; i.e.  those referenced by goto instructions.
+;;
+(define (make-entry-points-list insts labels machine acc)
+  (if (null? insts)
+    acc
+    (let ((inst (car insts)))
+      (let ((inst-type (car inst))
+            (inst-body (cdr inst)))
+        (if (eq? 'goto inst-type)
+          (let ((label (cadr body)))
+            (make-entry-points-list (cdr insts) labels machine (cons label acc)))
+          (make-entry-points-list (cdr insts) labels machine acc))))))
