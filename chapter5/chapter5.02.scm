@@ -306,3 +306,17 @@
     (lambda ()
       (set-contents! reg (pop stk))
       (advance-pc))))
+
+
+;;
+;; exercise 5.12
+;;
+
+(define (assemble controller-text machine)
+  (extract-labels
+    controller-text
+    (lambda (insts labels)
+      ;; that's where we analyse instructions
+      (make-statistics insts labels machine)
+      (update-insts! insts labels machine)
+      insts)))
