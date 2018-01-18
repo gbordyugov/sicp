@@ -351,6 +351,7 @@
 ;;
 (define (make-entry-points-list insts labels machine acc)
   (if (null? insts)
+    ;; TODO: make set of it
     acc
     (let ((inst (car insts)))
       (let ((inst-type (car inst))
@@ -358,4 +359,21 @@
         (if (eq? 'goto inst-type)
           (let ((label (cadr body)))
             (make-entry-points-list (cdr insts) labels machine (cons label acc)))
+          (make-entry-points-list (cdr insts) labels machine acc))))))
+
+;;
+;; list (without duplicates) of the registers that are saved or
+;; restored
+;;
+(define (make-stack-list insts labels machine acc)
+  (if (null? insts)
+    ;; TODO: make set of it
+    acc
+    (let ((inst (car insts)))
+      (let ((inst-type (car inst))
+            (inst-body (cdr inst)))
+        (if (or (eq? 'save inst-type)
+                (eq? 'restore inst-type))
+          (let ((what (car inst-body)))
+            (make-entry-points-list (cdr insts) labels machine (cons what acc)))
           (make-entry-points-list (cdr insts) labels machine acc))))))
