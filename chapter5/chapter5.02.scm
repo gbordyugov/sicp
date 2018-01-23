@@ -345,6 +345,16 @@
           (make-instruction-list (cdr insts) labels machine acc)
           (make-instruction-list (cdr insts) lables machine (cons inst acc)))))))
 
+(define (make-set lst)
+  (define (iter items set)
+    (if (null? items)
+      set
+      (let ((ele (car items)))
+        (if (member ele set)
+          (iter (cdr items) (cons (ele set)))
+          (iter (cdr items)            set)))))
+  (iter lst '()))
+
 ;;
 ;; list, without duplicates, of the registers tohold entry points,
 ;; i.e.  those referenced by goto instructions.
@@ -352,7 +362,7 @@
 (define (make-entry-points-list insts labels machine acc)
   (if (null? insts)
     ;; TODO: make set of it
-    acc
+    (make-set acc)
     (let ((inst (car insts)))
       (let ((inst-type (car inst))
             (inst-body (cdr inst)))
@@ -368,7 +378,7 @@
 (define (make-stack-list insts labels machine acc)
   (if (null? insts)
     ;; TODO: make set of it
-    acc
+    (make-set acc)
     (let ((inst (car insts)))
       (let ((inst-type (car inst))
             (inst-body (cdr inst)))
