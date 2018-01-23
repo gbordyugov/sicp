@@ -391,3 +391,24 @@
 ;;
 ;; exercise 5.13
 ;;
+
+(define (collect-register-names instructions)
+  (define (extract-register-name operand)
+    (if (and (pair? operand)
+             (eq? (car operand) 'reg))
+      (cadr operand)
+      '()))
+  (define (iter insts registers)
+    (if (null? insts)
+      registers
+      (let* ((inst (car insts))
+             (operands (cdr inst))
+             (reg-names (filter (lambda (x) (not (null? x)))
+                                (extract-register-name operands))))
+        (collect-register-names (cdr insts)
+                                (append reg-names registers)))))
+  (iter instructions '()))
+
+;;
+;; installing them into the machine is trivial
+;;
