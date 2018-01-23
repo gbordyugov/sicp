@@ -377,3 +377,7 @@
           (let ((what (car inst-body)))
             (make-entry-points-list (cdr insts) labels machine (cons what acc)))
           (make-entry-points-list (cdr insts) labels machine acc))))))
+
+;;
+;; exercise 5.13
+;;
