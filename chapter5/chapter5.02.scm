@@ -421,26 +421,39 @@
 ;; I'll here repeat the factorial controller from the text
 ;;
 
-(controller
-  (assign continue (label-fact-done))
-  fact-loop
-  (test (op = ) (reg 1) (const 1))
-  (branch (label base-case))
-  ;;
-  ;; set up for the recursive call by saving n and continue.
-  ;; st up ocontinue so that the computation will continue
-  ;; at after-fact when the subroutine returns.
-  (save continue)
-  (save n)
-  (assign n (op -) (reg n) (const 1))
-  (assign continue (label after-fact))
-  (goto (label fact-loop))
-  after-fact
-  (restore n)
-  (restore continue)
-  (assign val (op *) (reg n) (reg val))  ; val now contains n(n-1)!
-  (goto (reg continue))                  ; return to caller
-  base-case
-  (assign val (const 1))                 ; base case: 1! = 1
-  (goto (reg continue))                  ; return to caller
-  fact-done)
+(load "machine.scm")
+
+(define fact-machine
+  (make-machine
+    '(continue n val)
+    (list (list '- -)
+          (list '* *)
+          (list '= =))
+    '((assign continue (label fact-done))
+      fact-loop
+      (test (op = ) (reg n) (const 1))
+      (branch (label base-case))
+      ;;
+      ;; set up for the recursive call by saving n and continue.
+      ;; st up ocontinue so that the computation will continue
+      ;; at after-fact when the subroutine returns.
+      (save continue)
+      (save n)
+      (assign n (op -) (reg n) (const 1))
+      (assign continue (label after-fact))
+      (goto (label fact-loop))
+      after-fact
+      (restore n)
+      (restore continue)
+      (assign val (op *) (reg n) (reg val))  ; val now contains n(n-1)!
+      (goto (reg continue))                  ; return to caller
+      base-case
+      (assign val (const 1))                 ; base case: 1! = 1
+      (goto (reg continue))                  ; return to caller
+      fact-done)))
+
+(set-register-contents! fact-machine 'n 2)
+
+(start fact-machine)
+
+(get-register-contents fact-machine 'n)
