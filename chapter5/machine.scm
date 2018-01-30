@@ -70,7 +70,7 @@
         (error "Empty stack: POP")
         (let ((top (car s)))
           (set! s (cdr s))
-          (set! current-depth (-1 current-depth 1))
+          (set! current-depth (- current-depth 1))
           top)))
     (define (initialize)
       (set! s '())
