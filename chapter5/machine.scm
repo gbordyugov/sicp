@@ -443,7 +443,7 @@
   (let ((reg (get-register machine (stack-inst-reg-name inst))))
     (lambda ()
       (set-contents! reg (pop stack))
-      (advance-pc))))
+      (advance-pc pc))))
 
 (define (stack-inst-reg-name stack-instruction)
   (cadr stack-instruction))

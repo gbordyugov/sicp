@@ -453,7 +453,6 @@
       fact-done)))
 
 (set-register-contents! fact-machine 'n 2)
-
 (start fact-machine)
 
 (get-register-contents fact-machine 'n)
