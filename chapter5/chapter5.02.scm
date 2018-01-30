@@ -451,6 +451,8 @@
       (goto (reg continue))                  ; return to caller
       fact-done)))
 
-(set-register-contents! fact-machine 'n 5)
+(set-register-contents! fact-machine 'n 20)
 (start fact-machine)
 (get-register-contents fact-machine 'val)
+
+((fact-machine 'stack) 'print-statistics))
