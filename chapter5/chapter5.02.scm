@@ -422,7 +422,6 @@
 ;;
 
 (load "machine.scm")
-
 (define fact-machine
   (make-machine
     '(continue n val)
@@ -452,7 +451,6 @@
       (goto (reg continue))                  ; return to caller
       fact-done)))
 
-(set-register-contents! fact-machine 'n 2)
+(set-register-contents! fact-machine 'n 5)
 (start fact-machine)
-
-(get-register-contents fact-machine 'n)
+(get-register-contents fact-machine 'val)
