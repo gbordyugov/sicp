@@ -1,5 +1,6 @@
 ;;
 ;; Simulator of register machines of Chapter 5.2
+;; extended by instruction counter, as for exercise 5.15
 ;;
 
 ;;
