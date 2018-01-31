@@ -456,3 +456,8 @@
 (get-register-contents fact-machine 'val)
 
 ((fact-machine 'stack) 'print-statistics))
+
+;;
+;; exercise 5.15
+;;
+;; see machine-exercise-5.15.scm
