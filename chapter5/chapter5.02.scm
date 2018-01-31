@@ -462,3 +462,10 @@
 ;;
 ;; see machine-exercise-5.15.scm
 ;;
+
+
+;;
+;; exercise 5.16
+;;
+;; see machine-exercise-5.16.scm
+;;
