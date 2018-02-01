@@ -258,6 +258,10 @@
 ;; label from text with the position in the list `insts` that the
 ;; label designates.
 
+;;
+;; TODO: make extract labels call make-labelled-instruction
+;; when appropriate
+;;
 (define (extract-labels text receive)
   (if (null? text)
     (receive '() '())
