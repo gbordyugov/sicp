@@ -2,6 +2,7 @@
 ;; Simulator of register machines of Chapter 5.2
 ;; extended by instruction counter, as for exercise 5.15
 ;; extended by instruction tracing, as for exercise 5.16
+;; extended by label printing, as for exercise 5.17
 ;;
 
 ;;
