@@ -301,12 +301,35 @@
 ;; when extract-labels is called, and updated later by update-insts!).
 ;;
 
-;; in the beginning there is no execution procedure
-(define (make-instruction text) (cons text '()))
-(define (instruction-text inst) (car inst))
-(define (instruction-execution-proc inst) (cdr inst))
+;;
+;; updated for exercise 5.17
+;;
+;; now instructions are triples:
+;;  - instruction text
+;;  - instruction label
+;;  - execution procedure
+;;
+(define (make-instruction text)
+  (list text '() '()))
+
+(define (make-labelled-instruction text label)
+  (let text label '()))
+
+(define (instruction-text inst)
+  (car inst))
+
+(define (instruction-label inst)
+  (cadr inst))
+
+(define (instruction-execution-proc inst)
+  (caddr inst))
+
+(define (set-instruction-label! inst label)
+  (set-car! (cdr inst) proc))
+
 (define (set-instruction-execution-proc! inst proc)
-  (set-cdr! inst proc))
+  (set-car! (cddr inst) proc))
+
 
 ;;
 ;; labels and label look-up code
