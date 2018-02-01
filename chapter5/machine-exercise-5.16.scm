@@ -253,7 +253,7 @@
 ;;
 ;; extract-labels takes as argument the text of the controller plus
 ;; the receiver procedure, which is called with two values: list of
-;; instructions `insts` and table `labels`, whicha associates each
+;; instructions `insts` and table `labels`, which associates each
 ;; label from text with the position in the list `insts` that the
 ;; label designates.
 
