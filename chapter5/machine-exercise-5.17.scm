@@ -317,7 +317,7 @@
   (list text '() '()))
 
 (define (make-labelled-instruction text label)
-  (let text label '()))
+  (list text label '()))
 
 (define (instruction-text inst)
   (car inst))
