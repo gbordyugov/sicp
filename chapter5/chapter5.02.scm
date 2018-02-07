@@ -475,3 +475,37 @@
 ;;
 ;; see machine-exercise-5.17.scm
 ;;
+
+;;
+;; some playing around
+;;
+
+(load "machine-exercise-5.17.scm")
+
+(define (print-insts-and-labels insts labels)
+  (newline)
+  (display (list 'insts '= insts))
+  (newline)
+  (display (list 'labels '= labels)))
+(define (check-extractor controller-text)
+  (extract-labels
+    controller-text
+    print-insts-and-labels))
+(define (extract-labels text receive)
+  (if (null? text)
+    (receive '() '())
+    (extract-labels
+      (cdr text)
+      (lambda (insts labels)
+        (let ((next-inst (car text)))
+          (if (symbol? next-inst)   ;; is a label?
+            (receive insts
+                     (cons (make-label-entry next-inst insts) labels))
+            (receive (cons (make-instruction next-inst) insts)
+                     labels)))))))
+
+(define text
+  '(label-1
+     (assign bla (op +) (reg b) (reg c))))
+
+(check-extractor text)
