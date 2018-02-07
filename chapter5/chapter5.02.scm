@@ -513,6 +513,8 @@
 
 (define text
   '(label-1
-     (assign bla (op +) (reg b) (reg c))))
+     (assign bla (op +) (reg b) (reg c))
+     label-2
+     (assign blu (op /) (reg d) (reg e))))
 
 (check-extractor text)
