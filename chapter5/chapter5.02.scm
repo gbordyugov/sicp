@@ -482,11 +482,13 @@
 
 
 
+(define (make-labelled-instruction text label)
+  (list text label '()))
 (define (make-label-entry label-name insts)
   (list 'label-name label-name 'instructions insts))
 (define (make-instruction text)
   (list text '() '()))
-(define (print-insts-and-labels insts labels)
+(define (print-insts-and-labels insts labels label)
   (newline)
   (display (list 'insts '= insts))
   (newline)
@@ -496,17 +498,18 @@
     controller-text
     print-insts-and-labels))
 (define (extract-labels text receive)
+  (define label? symbol?)
   (if (null? text)
-    (receive '() '())
+    (receive '() '() '())
     (extract-labels
       (cdr text)
-      (lambda (insts labels)
+      (lambda (insts labels prev-label)
         (let ((next-inst (car text)))
-          (if (symbol? next-inst)   ;; is a label?
-            (receive insts
-                     (cons (make-label-entry next-inst insts) labels))
-            (receive (cons (make-instruction next-inst) insts)
-                     labels)))))))
+          (if (label? next-inst)
+            (let ((label next-inst))
+              (receive insts (cons (make-label-entry next-inst insts) labels) label))
+            (let ((label '()))
+              (receive (cons (make-labelled-instruction next-inst prev-label) insts) labels label))))))))
 
 (define text
   '(label-1
