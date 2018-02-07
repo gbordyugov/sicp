@@ -480,8 +480,12 @@
 ;; some playing around
 ;;
 
-(load "machine-exercise-5.17.scm")
 
+
+(define (make-label-entry label-name insts)
+  (list 'label-name label-name 'instructions insts))
+(define (make-instruction text)
+  (list text '() '()))
 (define (print-insts-and-labels insts labels)
   (newline)
   (display (list 'insts '= insts))
