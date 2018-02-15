@@ -492,7 +492,7 @@
 
 
 
-(define (make-labelled-instruction text label)
+(define (make-instruction-with-label text label)
   (list text label '()))
 (define (make-label-entry label-name insts)
   (list 'label-name label-name 'instructions insts))
@@ -520,7 +520,7 @@
             (let ((label next-inst))
               (receive insts (cons (make-label-entry next-inst insts) labels) label))
             (let ((label '()))
-              (receive (cons (make-labelled-instruction next-inst prev-label) insts) labels label))))))))
+              (receive (cons (make-instruction-with-label next-inst prev-label) insts) labels label))))))))
 
 ;;
 ;; new version without this tricky recursion
