@@ -498,6 +498,7 @@
   (list 'label-name label-name 'instructions insts))
 (define (make-instruction text)
   (list text '() '()))
+
 (define (print-insts-and-labels insts labels label)
   (newline)
   (display (list 'insts '= insts))
@@ -521,10 +522,39 @@
             (let ((label '()))
               (receive (cons (make-labelled-instruction next-inst prev-label) insts) labels label))))))))
 
+;;
+;; new version without this tricky recursion
+;; now extract-labels-new returns a cons with car beingin the labels
+;; and cdr being the instructions
+;;
+
+(define (assemble-new controller-text machine)
+  (let* ((res (extract-labels-new controller-text))
+         (insts  (car res))
+         (labels (cdr res)))
+    (update-insts! insts labels machine)
+    insts))
+
+(define (extract-labels-new text)
+  (if (null? text)
+    (cons '() '())
+    (let* ((result (extract-labels-new (cdr text)))
+           (insts     (car result))
+           (labels    (cdr result))
+           (next-inst (car text)))
+      (if (symbol? next-inst)
+        (cons insts
+              (cons (make-label-entry next-inst insts)
+                    labels))
+        (cons (cons (make-instruction next-inst) insts)
+              labels)))))
+
 (define text
   '(label-1
      (assign bla (op +) (reg b) (reg c))
      label-2
      (assign blu (op /) (reg d) (reg e))))
+
+(extract-labels-new text)
 
 (check-extractor text)
