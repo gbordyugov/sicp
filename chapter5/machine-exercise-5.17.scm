@@ -244,12 +244,27 @@
 ;; the machine
 ;;
 
+;;
+;; that's the old version of the assembler
+;;
+
+;; (define (assemble controller-text machine)
+;;   (extract-labels
+;;     controller-text
+;;     (lambda (insts labels)
+;;       (update-insts! insts labels machine)
+;;       insts)))
+
+;;
+;; that's the new assembler
+;;
 (define (assemble controller-text machine)
-  (extract-labels
-    controller-text
-    (lambda (insts labels)
-      (update-insts! insts labels machine)
-      insts)))
+  (let* ((res (extract-labels controller-text))
+         (insts  (car res))
+         (labels (cdr res)))
+    (update-insts! insts labels machine)
+    insts))
+
 
 ;;
 ;; extract-labels takes as argument the text of the controller plus
@@ -262,20 +277,51 @@
 ;; TODO: make extract labels call make-labelled-instruction
 ;; when appropriate
 ;;
-(define (extract-labels text receive)
+;;
+;; the old version of the extractor
+;;
+;; (define (extract-labels text receive)
+;;   (if (null? text)
+;;     (receive '() '())
+;;     (extract-labels
+;;       (cdr text)
+;;       ;; we "update" receive by wrapping it in a lambda that updates
+;;       ;; the lists of instructions and labels depending on (car text)
+;;       (lambda (insts labels)
+;;         (let ((next-inst (car text)))
+;;           (if (symbol? next-inst)   ;; is a label?
+;;             (receive insts
+;;                      (cons (make-label-entry next-inst insts) labels))
+;;             (receive (cons (make-instruction next-inst) insts)
+;;                      labels)))))))
+
+;;
+;; new version of label extractor
+;;
+(define (extract-labels text)
   (if (null? text)
-    (receive '() '())
-    (extract-labels
-      (cdr text)
-      ;; we "update" receive by wrapping it in a lambda that updates
-      ;; the lists of instructions and labels depending on (car text)
-      (lambda (insts labels)
-        (let ((next-inst (car text)))
-          (if (symbol? next-inst)   ;; is a label?
-            (receive insts
-                     (cons (make-label-entry next-inst insts) labels))
-            (receive (cons (make-instruction next-inst) insts)
-                     labels)))))))
+    (cons '() '())
+    (let* ((result (extract-labels (cdr text)))
+           (insts     (car result))
+           (labels    (cdr result))
+           (next-inst (car text)))
+      (if (symbol? next-inst) ;; is it a label?
+        ;; extend labels list
+        (let* ((instruction (if (null? insts)
+                              '()
+                              ;; take instruction text (car) of the
+                              ;; first instruction
+                              (car (car insts))))
+               (rest-insts  (cdr insts))
+               (label        next-inst)
+               (instruction-with-label
+                 (make-instruction-with-label instruction label)))
+          (cons (cons instruction-with-label rest-insts)
+                (cons (make-label-entry next-inst insts)
+                      labels)))
+        ;; extend instruction list
+        (cons (cons (make-instruction next-inst) insts)
+              labels)))))
 
 ;;
 ;; update-insts!
@@ -316,7 +362,7 @@
 (define (make-instruction text)
   (list text '() '()))
 
-(define (make-labelled-instruction text label)
+(define (make-instruction-with-label text label)
   (list text label '()))
 
 (define (instruction-text inst)
