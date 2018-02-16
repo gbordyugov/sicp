@@ -542,10 +542,12 @@
            (insts     (car result))
            (labels    (cdr result))
            (next-inst (car text)))
-      (if (symbol? next-inst)
+      (if (symbol? next-inst) ;; is it a label?
+        ;; extend labels list
         (cons insts
               (cons (make-label-entry next-inst insts)
                     labels))
+        ;; extend instruction list
         (cons (cons (make-instruction next-inst) insts)
               labels)))))
 
