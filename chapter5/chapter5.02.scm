@@ -524,21 +524,21 @@
 
 ;;
 ;; new version without this tricky recursion
-;; now extract-labels-new returns a cons with car beingin the labels
+;; now extract-labels returns a cons with car beingin the labels
 ;; and cdr being the instructions
 ;;
 
-(define (assemble-new controller-text machine)
-  (let* ((res (extract-labels-new controller-text))
+(define (assemble controller-text machine)
+  (let* ((res (extract-labels controller-text))
          (insts  (car res))
          (labels (cdr res)))
     (update-insts! insts labels machine)
     insts))
 
-(define (extract-labels-new text)
+(define (extract-labels text)
   (if (null? text)
     (cons '() '())
-    (let* ((result (extract-labels-new (cdr text)))
+    (let* ((result (extract-labels (cdr text)))
            (insts     (car result))
            (labels    (cdr result))
            (next-inst (car text)))
@@ -555,6 +555,6 @@
      label-2
      (assign blu (op /) (reg d) (reg e))))
 
-(extract-labels-new text)
+(extract-labels text)
 
 (check-extractor text)
