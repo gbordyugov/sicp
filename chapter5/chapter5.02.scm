@@ -551,11 +551,41 @@
         (cons (cons (make-instruction next-inst) insts)
               labels)))))
 
+;;
+;; this one puts labels in instructions
+;;
+(define (extract-labels text)
+  (if (null? text)
+    (cons '() '())
+    (let* ((result (extract-labels (cdr text)))
+           (insts     (car result))
+           (labels    (cdr result))
+           (next-inst (car text)))
+      (if (symbol? next-inst) ;; is it a label?
+        ;; extend labels list
+        (let* ((instruction (if (null? insts)
+                              '()
+                              ;; take instruction text (car) of the
+                              ;; first instruction
+                              (car (car insts))))
+               (rest-insts  (cdr insts))
+               (label        next-inst)
+               (instruction-with-label
+                 (make-instruction-with-label instruction label)))
+          (cons (cons instruction-with-label rest-insts)
+                (cons (make-label-entry next-inst insts)
+                      labels)))
+        ;; extend instruction list
+        (cons (cons (make-instruction next-inst) insts)
+              labels)))))
+
 (define text
-  '(label-1
-     (assign bla (op +) (reg b) (reg c))
-     label-2
-     (assign blu (op /) (reg d) (reg e))))
+  '((nothing)
+    label-1
+    (what?)
+    (assign bla (op +) (reg b) (reg c))
+    label-2
+    (assign blu (op /) (reg d) (reg e))))
 
 (extract-labels text)
 
