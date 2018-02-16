@@ -590,3 +590,38 @@
 (extract-labels text)
 
 (check-extractor text)
+
+
+;;
+;; exercise 5.18
+;;
+
+(define (make-register name)
+  (let ((contents '*unassigned*)
+        (trace-on #f))
+    (define (dispatch message)
+      (cond ((eq? message 'get) contents)
+            ((eq? message 'trace-on)  (set! trace-on #t))
+            ((eq? message 'trace-off) (set! trace-on #f))
+            ((eq? message 'set)
+             (lambda (value)
+               (if trace-on
+                 (newline)
+                 (display 'old-value contents 'new-value value))
+               (set! contents value)))
+            (else
+              (error "Unknown request: REGISTER" message))))
+  dispatch))
+
+(define (get-contents register)
+  (register 'get))
+(define (set-contents! register value)
+  ((register 'set) value))
+(define (register-trace-on register)
+  (register 'trace-on))
+(define (register-trace-off register)
+  (register 'trace-off))
+
+;;
+;; extending the interface of the machine is trivial
+;;
