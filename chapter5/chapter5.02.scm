@@ -625,3 +625,8 @@
 ;;
 ;; extending the interface of the machine is trivial
 ;;
+
+
+;;
+;; exercise 5.19
+;;
