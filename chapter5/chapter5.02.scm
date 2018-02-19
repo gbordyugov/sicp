@@ -552,7 +552,32 @@
               labels)))))
 
 ;;
-;; this one puts labels in instructions
+;; those ones are needed to keep the information about labeling
+;;
+(define (make-instruction text)
+  (list text '() '()))
+
+(define (make-instruction-with-label text label)
+  (list text label '()))
+
+(define (instruction-text inst)
+  (car inst))
+
+(define (instruction-label inst)
+  (cadr inst))
+
+(define (instruction-execution-proc inst)
+  (caddr inst))
+
+(define (set-instruction-label! inst label)
+  (set-car! (cdr inst) proc))
+
+(define (set-instruction-execution-proc! inst proc)
+  (set-car! (cddr inst) proc))
+
+;;
+;; this one puts labels in instructions relying on the data structures
+;; above
 ;;
 (define (extract-labels text)
   (if (null? text)
