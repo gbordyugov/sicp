@@ -630,3 +630,36 @@
 ;;
 ;; exercise 5.19
 ;;
+
+;;
+;; first off, changes in the instruction structure:
+;;
+;; instruction now is:
+;; - instruction text
+;; - name of the last label before the instruction
+;; - execution procedure
+;; - offset of the instruction to the last label
+
+;;
+;; still work in progress!
+;;
+(define (make-instruction text)
+  (list text '() '() 0))
+
+(define (make-instruction-with-label text label offset)
+  (list text label '() offset))
+
+(define (instruction-text inst)
+  (car inst))
+
+(define (instruction-label inst)
+  (cadr inst))
+
+(define (instruction-execution-proc inst)
+  (caddr inst))
+
+(define (set-instruction-label! inst label)
+  (set-car! (cdr inst) proc))
+
+(define (set-instruction-execution-proc! inst proc)
+  (set-car! (cddr inst) proc))
