@@ -661,30 +661,23 @@
 ;;
 ;; instruction now is:
 ;; - instruction text
-;; - name of the last label before the instruction
 ;; - execution procedure
-;; - offset of the instruction to the last label
+;; - label context
 
 ;;
-;; still work in progress!
+;; constructor
 ;;
 (define (make-instruction text)
-  (list text '() '() 0))
-
-(define (make-instruction-with-label text label offset)
-  (list text label '() offset))
+  (list text '() '()))
 
 (define (instruction-text inst)
   (car inst))
 
-(define (instruction-label inst)
+(define (instruction-execution-proc inst)
   (cadr inst))
 
-(define (instruction-execution-proc inst)
+(define (instruction-label-context inst)
   (caddr inst))
 
-(define (set-instruction-label! inst label)
-  (set-car! (cdr inst) proc))
-
 (define (set-instruction-execution-proc! inst proc)
-  (set-car! (cddr inst) proc))
+  (set-car! (cdr inst) proc))
