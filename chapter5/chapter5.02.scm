@@ -455,7 +455,7 @@
 (start fact-machine)
 (get-register-contents fact-machine 'val)
 
-((fact-machine 'stack) 'print-statistics))
+((fact-machine 'stack) 'print-statistics)
 
 ;;
 ;; exercise 5.15
@@ -612,9 +612,9 @@
     label-2
     (assign blu (op /) (reg d) (reg e))))
 
-(extract-labels text)
+;; (extract-labels text)
 
-(check-extractor text)
+;; (check-extractor text)
 
 
 ;;
