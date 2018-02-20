@@ -668,7 +668,7 @@
 ;; constructor
 ;;
 (define (make-instruction text)
-  (list text '() '()))
+  (list text '() (make-label-context)))
 
 (define (instruction-text inst)
   (car inst))
