@@ -713,3 +713,20 @@
 (label-context-inc-all-label-offsets label-context)
 
 (hash-table->alist label-context)
+
+;;
+;; home-grown hash tables, basically from Chapter 3.3.3 Representing
+;; Table
+;;
+
+(define (make-label-context)
+  (cons '*label-context* '()))
+(define (lc-put-label-with-offset context label offset)
+  (let* ((table (cdr context))
+         (value (assoc label table)))
+    (if value
+      (set-car! (cdr value) offset)
+      (set-cdr! context (cons (list label offset) table)))))
+
+(define context (make-label-context))
+(lc-put-label-with-offset context 'a 3)
