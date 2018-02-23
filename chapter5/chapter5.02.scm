@@ -683,38 +683,6 @@
   (set-car! (cdr inst) proc))
 
 ;;
-;; a label context is a hash table with labels as keys and offset from
-;; those labels as values
-;;
-
-(define (make-label-context)
-  (make-equal-hash-table))
-
-(define (label-context-put-label-offset label-context label offset)
-  (hash-table/put! label-context label offset))
-
-(define (label-context-get-label-offset label-context label)
-  (hash-table/get label-context label #f))
-
-(define (label-context-inc-label-offset label-context label)
-  (let ((value (hash-table/get label-context label 0)))
-    (hash-table/put! label-context label (+ 1 value))))
-
-(define (label-context-inc-all-label-offsets label-context)
-  (let ((labels (hash-table/key-list label-context)))
-    (for-each (lambda (label)
-                (label-context-inc-label-offset label-context label))
-              labels)))
-
-(define label-context (make-label-context))
-(label-context-put-label-offset label-context 'label-1 1)
-(label-context-put-label-offset label-context 'label-2 2)
-
-(label-context-inc-all-label-offsets label-context)
-
-(hash-table->alist label-context)
-
-;;
 ;; home-grown hash tables, basically from Chapter 3.3.3 Representing
 ;; Table
 ;;
@@ -730,11 +698,3 @@
 (define (lc-get-offset context label)
   (let ((table (cdr context)))
     (cdr (assoc label table))))
-
-(define context (make-label-context))
-(lc-put-label-with-offset context 'a 3)
-(lc-put-label-with-offset context 'b 3)
-(lc-put-label-with-offset context 'a 5)
-(lc-get-offset            context 'b)
-(lc-get-offset            context 'a)
-context
