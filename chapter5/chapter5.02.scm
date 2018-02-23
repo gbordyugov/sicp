@@ -725,8 +725,16 @@
   (let* ((table (cdr context))
          (value (assoc label table)))
     (if value
-      (set-car! (cdr value) offset)
-      (set-cdr! context (cons (list label offset) table)))))
+      (set-cdr! value offset)
+      (set-cdr! context (cons (cons label offset) table)))))
+(define (lc-get-offset context label)
+  (let ((table (cdr context)))
+    (cdr (assoc label table))))
 
 (define context (make-label-context))
 (lc-put-label-with-offset context 'a 3)
+(lc-put-label-with-offset context 'b 3)
+(lc-put-label-with-offset context 'a 5)
+(lc-get-offset            context 'b)
+(lc-get-offset            context 'a)
+context
