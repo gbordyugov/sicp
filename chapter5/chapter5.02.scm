@@ -690,7 +690,7 @@
 (define (make-label-context)
   (cons '*label-context* '()))
 
-(define (lc-put-label-with-offset context label offset)
+(define (lc-put-label-with-offset! context label offset)
   (let* ((table (cdr context))
          (value (assoc label table)))
     (if value
