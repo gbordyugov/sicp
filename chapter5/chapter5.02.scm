@@ -689,15 +689,26 @@
 
 (define (make-label-context)
   (cons '*label-context* '()))
+
 (define (lc-put-label-with-offset context label offset)
   (let* ((table (cdr context))
          (value (assoc label table)))
     (if value
       (set-cdr! value offset)
       (set-cdr! context (cons (cons label offset) table)))))
+
 (define (lc-get-offset context label)
   (let ((table (cdr context)))
     (cdr (assoc label table))))
+
+(define (lc-inc-all-offsets! context)
+  (define (inc pair)
+    (let ((label (car pair))
+          (offst (cdr pair)))
+      (set-cdr! pair (+ 1 offst))))
+  (for-each inc (cdr context)))
+
+
 
 ;;
 ;; old version of extract-labels
