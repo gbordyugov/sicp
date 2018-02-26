@@ -698,3 +698,22 @@
 (define (lc-get-offset context label)
   (let ((table (cdr context)))
     (cdr (assoc label table))))
+
+;;
+;; old version of extract-labels
+;;
+(define (extract-labels text)
+  (if (null? text)
+    (cons '() '())
+    (let* ((result (extract-labels (cdr text)))
+           (insts     (car result))
+           (labels    (cdr result))
+           (next-inst (car text)))
+      (if (symbol? next-inst) ;; is it a label?
+        ;; extend labels list
+        (cons insts
+              (cons (make-label-entry next-inst insts)
+                    labels))
+        ;; extend instruction list
+        (cons (cons (make-instruction next-inst) insts)
+              labels)))))
