@@ -728,3 +728,11 @@
         ;; extend instruction list
         (cons (cons (make-instruction next-inst) insts)
               labels)))))
+
+;;
+;; old version of extract-labels, with label-context
+;;
+(define (extract-labels text label-context)
+  (if (null? text)
+    (cons '() '())
+    (let* ((result (extract-labels ??? hmmmm
