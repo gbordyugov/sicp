@@ -708,6 +708,42 @@
       (set-cdr! pair (+ 1 offst))))
   (for-each inc (cdr context)))
 
+;;
+;; on the other hand, we might need immutable lookup tables
+;;
+
+(define (attach-lc-head table)
+  (cons '*label-context* table))
+
+(define (make-label-context)
+  (attach-lc-head '()))
+
+(define (lc-put-label-with-offset context label offset)
+  (define (replace pair)
+    (let ((this-label (car pair))
+          (this-offst (cdr pair)))
+      (if (eq? label this-label)
+        (cons label offset)
+        pair)))
+  (let* ((table (cdr context))
+         (value (assoc label table)))
+    (if value
+      (attach-lc-head (map replace table))
+      (let ((new-cell (cons label offset)))
+        (attach-lc-head (cons new-cell table))))))
+
+(define (lc-get-offset-by-label context label)
+  (assoc label (cdr context)))
+
+(define (lc-inc-all-offsets context)
+  (define (inc pair)
+    (let ((first (car pair))
+          (secnd (cdr pair)))
+      (cons first (+ 1 secnd))))
+  (let* ((old-table (cdr context))
+         (new-table (map inc old-table)))
+    (attach-lc-head new-table)))
+
 
 
 ;;
