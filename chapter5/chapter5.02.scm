@@ -718,6 +718,12 @@
 (define (make-label-context)
   (attach-lc-head '()))
 
+;;
+;; if the label is already in the table, make a new table with the
+;; updated version of the offset
+;; otherwise just make a new table with the new (label offset) pair
+;; attached to the old data
+;;
 (define (lc-put-label-with-offset context label offset)
   (define (replace pair)
     (let ((this-label (car pair))
@@ -735,15 +741,21 @@
 (define (lc-get-offset-by-label context label)
   (assoc label (cdr context)))
 
+;;
+;; creates a new context based on the old one with all offsets
+;; incremented by one
+;;
 (define (lc-inc-all-offsets context)
   (define (inc pair)
-    (let ((first (car pair))
-          (secnd (cdr pair)))
-      (cons first (+ 1 secnd))))
+    (let ((label (car pair))
+          (offst (cdr pair)))
+      (cons label (+ 1 offst))))
   (let* ((old-table (cdr context))
          (new-table (map inc old-table)))
     (attach-lc-head new-table)))
 
+;; a little test
+;; (lc-inc-all-offsets (attach-lc-head '((a . 1) (b . 2))))
 
 
 ;;
