@@ -778,7 +778,7 @@
               labels)))))
 
 ;;
-;; old version of extract-labels, with label-context
+;; new version of extract-labels, with label-context
 ;;
 (define (extract-labels text label-context)
   (if (null? text)
