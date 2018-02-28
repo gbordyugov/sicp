@@ -783,4 +783,6 @@
 (define (extract-labels text label-context)
   (if (null? text)
     (cons '() '())
-    (let* ((result (extract-labels ??? hmmmm
+    (let ((next-inst (car text)))
+      (if (symbol? next-inst)
+        (let ((next-context (lc-put-label-with-offset next-inst 0)))
