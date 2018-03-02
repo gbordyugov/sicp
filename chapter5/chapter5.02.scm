@@ -785,9 +785,9 @@
 ;; example:
 '(a (b 3) c (d 4) (e 5))
 ;; should produce
-'(((b 3) (*label-context* (a . 0)))
-  ((d 4) (*label-context* (a . 1) (c . 0)))
-  ((e 5) (*label-context* (a . 2) (c . 1))))
+'(((b 3) *label-context* (a . 0))
+  ((d 4) *label-context* (a . 1) (c . 0))
+  ((e 5) *label-context* (a . 2) (c . 1)))
 
 (define (preppomat text context)
   (if (null? text)
