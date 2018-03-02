@@ -788,4 +788,15 @@
 '(((b 3) (*label-context* (a . 0)))
   ((d 4) (*label-context* (a . 1) (c . 0)))
   ((e 5) (*label-context* (a . 2) (c . 1))))
-;;
+
+(define (preppomat text label-context)
+  (if (null? text)
+    '()
+    (let ((item (car text)))
+      (if (symbol? item)
+        (let ((new-context (lc-put-label-with-offset label-context item 0)))
+          (preppomat (cdr text) new-context))
+        (let ((new-context (lc-inc-all-offsets label-context)))
+          (cons (cons item label-context)
+                (preppomat (cdr text) new-context)))))))
+(preppomat '(a (b 3) (d 3) c (f 4)) (make-label-context))
