@@ -778,11 +778,14 @@
               labels)))))
 
 ;;
-;; new version of extract-labels, with label-context
+;; this is a kind of preparational problem - I'm focusing on
+;; extracting instructions only, however, with the corresponding label
+;; context
 ;;
-(define (extract-labels text label-context)
-  (if (null? text)
-    (cons '() '())
-    (let ((next-inst (car text)))
-      (if (symbol? next-inst)
-        (let ((next-context (lc-put-label-with-offset next-inst 0)))
+;; example:
+'(a (b 3) c (d 4) (e 5))
+;; should produce
+'(((b 3) ((a . 0)))
+  ((d 4) ((a . 1) (c . 0)))
+  ((e 5) ((a . 2) (c . 1))))
+;;
