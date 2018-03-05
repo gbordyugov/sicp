@@ -798,4 +798,5 @@
           (preppomat (cdr text) new-context))
         (cons (cons item context)
               (preppomat (cdr text) (lc-inc-all-offsets context)))))))
-(preppomat '(a (b 3) (d 3) c (f 4)) (make-label-context))
+(preppomat '((x 4) a (b 3) (d 3) c (f 4)) (make-label-context))
+(preppomat '(      a (b 3) (d 3) c (f 4)) (make-label-context))
