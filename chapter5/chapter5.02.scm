@@ -800,3 +800,9 @@
               (preppomat (cdr text) (lc-inc-all-offsets context)))))))
 (preppomat '((x 4) a (b 3) (d 3) c (f 4)) (make-label-context))
 (preppomat '(      a (b 3) (d 3) c (f 4)) (make-label-context))
+
+;;
+;; is it possible to make the above tail-recursive?
+;;
+;; that's exactly the question! the ``super-problem'' so to say! :~)
+;;
