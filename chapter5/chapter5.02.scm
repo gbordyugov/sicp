@@ -806,3 +806,12 @@
 ;;
 ;; that's exactly the question! the ``super-problem'' so to say! :~)
 ;;
+
+;;
+;; ok, one thing that I just realized (after reading the footnote
+;; about extrac-labels) is that using the continuation passing style
+;; was about solving the problem of returning two values from a
+;; procedure. Instead of accepting two values, we rather pass along a
+;; procedure that consumes those two values
+;;
+
