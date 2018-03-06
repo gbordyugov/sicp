@@ -667,8 +667,8 @@
 ;;
 ;; constructor
 ;;
-(define (make-instruction text)
-  (list text '() (make-label-context)))
+(define (make-instruction-with-label-context text context)
+  (list text '() context))
 
 (define (instruction-text inst)
   (car inst))
@@ -802,6 +802,39 @@
 (preppomat '(      a (b 3) (d 3) c (f 4)) (make-label-context))
 
 ;;
+;; so the final solution for extract-labels:
+;;
+
+(define (extract-labels text context)
+  (if (null? text)
+    (cons '() '())
+    (let ((next-inst  (car text))
+          (rest-insts (cdr text)))
+      (if (symbol? next-inst)
+        (let* ((new-context (lc-put-label-with-offset context next-inst 0))
+               (result      (extract-labels rest-insts new-context))
+               (insts       (car result))
+               (labels      (cdr result)))
+          (cons insts
+                (cons (make-label-entry next-inst insts)
+                      labels)))
+        (let* ((new-context (lc-inc-all-offsets context))
+               (result      (extract-labels rest-insts new-context))
+               (insts       (car result))
+               (labels      (cdr result)))
+          (cons (cons (make-instruction-with-label-context next-inst context)
+                      insts)
+                labels))))))
+(extract-labels '((x 4) a (b 3) (d 3) c (f 4)) (make-label-context))
+(extract-labels '(      a (b 3) (d 3) c (f 4)) (make-label-context))
+
+;;
+;; here I consider exericse 5.19 as done
+;; the code for printing out the information is boring :~)
+;;
+
+
+;;
 ;; is it possible to make the above tail-recursive?
 ;;
 ;; that's exactly the question! the ``super-problem'' so to say! :~)
@@ -809,7 +842,7 @@
 
 ;;
 ;; ok, one thing that I just realized (after reading the footnote
-;; about extrac-labels) is that using the continuation passing style
+;; about extract-labels) is that using the continuation passing style
 ;; was about solving the problem of returning two values from a
 ;; procedure. Instead of accepting two values, we rather pass along a
 ;; procedure that consumes those two values
