@@ -815,3 +815,18 @@
 ;; procedure that consumes those two values
 ;;
 
+;;
+;; can we make preppomat tail-recursive?
+;;
+
+;;
+;; just a check that tail recursion with an accumulator reverses the
+;; order of the elements in the list
+;;
+(define (simple-tail-recursion list result)
+  (if (null? list)
+    result
+    (let ((head (car list))
+          (tail (cdr list)))
+    (simple-tail-recursion tail (cons head result)))))
+(simple-tail-recursion '(1 2 3) '())
