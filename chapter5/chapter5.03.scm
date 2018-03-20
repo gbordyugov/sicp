@@ -40,3 +40,9 @@
 ;;
 ;; Q: `an index into two vectors` - is it a pair of indices?
 ;;
+
+;;
+;; typed pointers include information on data type
+;;
+;; there can be pointers to pairs, and atoms
+;;
