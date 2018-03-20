@@ -46,3 +46,12 @@
 ;;
 ;; there can be pointers to pairs, and atoms
 ;;
+
+;;
+;; two data objects are considered to be the same (in the sense of
+;; eq?) if their pointers are identical.
+;;
+
+;;
+;; I don't really understand Figure 5.14 right now
+;;
