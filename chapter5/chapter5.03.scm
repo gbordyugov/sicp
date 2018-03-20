@@ -55,3 +55,13 @@
 ;;
 ;; I don't really understand Figure 5.14 right now
 ;;
+;; OK, what I start understanding now: the pointer to the list ((1 2)
+;; 3 4) is stored at index 1
+;;
+;; it's car is p5, i.e. pointer to a pair stored at location 5
+;; at location 5, we've got again a car, given by n1 (just a number)
+;; and a cdr given by p7, which in turn points at car=n2 and cdr=e0
+;;
+;; the cdr of the initial par points to p2, which in turn is a number
+;; 3 plus cdr pointing to p4, which is a car=n4 and cdr=e0
+;;
