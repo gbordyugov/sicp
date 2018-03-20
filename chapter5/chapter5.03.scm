@@ -39,6 +39,7 @@
 ;; to a pair is an index into the two vectors.
 ;;
 ;; Q: `an index into two vectors` - is it a pair of indices?
+;; A: one need just one index, since both vectors are `parallel'
 ;;
 
 ;;
