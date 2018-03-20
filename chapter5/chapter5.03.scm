@@ -117,3 +117,16 @@
 ;;
 ;; the eq? operation like in (op eq?) (reg <reg1>) (reg <reg2>) simply
 ;; tests the equality of all fields in the registers
+
+;;
+;; Implementing stacks
+;;
+;; (save <reg>)
+;; can be implemented as
+;; (assign the-stack (op cons) (reg <reg>) (reg the-stack))
+;;
+;; similarly, (restore <reg>) can be implemented as
+;; (assign <reg> (op car) <reg the-stack))
+;; (assign the-stack (op cdr) (reg the-stack))
+;; and (perform (op initialize-stack)) can be implemented as
+;; (assign the-stack (const ()))
