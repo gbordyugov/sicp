@@ -82,3 +82,38 @@
 ;; called `interning' symbols
 ;;
 
+;;
+;; Implementing the primitive list operations
+;;
+
+;; (assign <reg1> (op car) (reg <reg2>))
+;; is equivalent to
+;; (assign <reg1> (op vector-ref) (reg the-cars) (reg <reg2>))
+;; dito for cdr
+;;
+;; the instruction
+;; (perform (op set-car!) (reg <reg1>) (reg <reg2>))
+;; is equivalent to
+;; (perform (op vector-set!) (reg the-cars) (reg <reg1>) (reg <reg2>))
+;; dito for cdr
+
+;;
+;; cons is performed by allocating an unused index ant storing the
+;; arguments to cons in the-cars and the-cdrs at that indexed vector
+;; positions.
+;;
+;; A special register named `free` is assumed to to hold a pair
+;; pointer containing the next available index and we can increment
+;; the index part of that pointer to find the next free location.
+;;
+;; the instruction
+;; (assign <reg1> (op cons) (reg <reg2>) (reg <reg3>))
+;; is implemented as
+;; (perform (op vector-set!) (reg the-cars) (reg free) (reg <reg2>))
+;; (perform (op vector-set!) (reg the-cdrs) (reg free) (reg <reg3>))
+;; (assign <reg1> (reg free))
+;; (assign free (op +) (reg free) (const 1))
+
+;;
+;; the eq? operation like in (op eq?) (reg <reg1>) (reg <reg2>) simply
+;; tests the equality of all fields in the registers
