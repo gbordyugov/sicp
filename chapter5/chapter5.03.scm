@@ -27,3 +27,16 @@
 ;; (vector-ref <vector> <n>) - returns the n-th element
 ;; (vector-put! <vector> <n> <value>) sets the n-th element to value
 ;;
+
+;;
+;; Representin Lisp data
+;;
+
+;;
+;; the-cars and the-cdrs vectors
+;;
+;; Quotation: We will represent list structure as follows: A pointer
+;; to a pair is an index into the two vectors.
+;;
+;; Q: `an index into two vectors` - is it a pair of indices?
+;;
