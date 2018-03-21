@@ -228,4 +228,4 @@
 
   not-pair-label
   (assign val (const 1))
-  (got (reg continue)))
+  (goto (reg continue)))
