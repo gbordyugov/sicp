@@ -246,6 +246,29 @@
   (branch (label not-pair-label))
 
   default-case
+  (save tree)
+  (assign tree (op car) (reg tree))
+  (save continue)
+  (assign continue (label after-first-call))
+  (goto (label count-leaves-loop))
+
+  after-first-call
+  (assign n1 (reg val))
+  (restore continue)
+  (restore tree)
+  (save tree)
+  (assign tree (op cdr) (reg tree))
+  (save n)
+  (assign n (reg n1))
+  (save continue)
+  (assign continue (label after-second-call))
+  (goto (label count-leaves-loop))
+
+  after-second-call
+  (restore continue)
+  (restore n)
+  (restore tree)
+  (goto (reg continue))
 
   not-pair-label
   (assign val (op +) (reg n) (const 1))
