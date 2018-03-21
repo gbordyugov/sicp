@@ -131,3 +131,11 @@
 ;; (assign the-stack (op cdr) (reg the-stack))
 ;; and (perform (op initialize-stack)) can be implemented as
 ;; (assign the-stack (const ()))
+
+;;
+;; exercise 5.20
+;;
+
+;;
+;; I drew it, promised!
+;;
