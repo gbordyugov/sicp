@@ -139,3 +139,93 @@
 ;;
 ;; I drew it, promised!
 ;;
+
+;;
+;; exercise 5.21 (a)
+;;
+
+;;
+;; just a reminder how it worked
+;;
+(controller
+  (save continue)                    ;; from the previous context
+  (assign continue (label fib-done)) ;; where to return after we're done, is somewhere else
+  (goto (label fib-loop))            ;; call the function
+
+  fib-loop                           ;; entry point to the subroutine
+  (test (op <) (reg n) (const 2))
+  (branch (label immediate-answer))
+  ;; preparing to compute Fib(n-1)
+  (save continue)
+  (assign continue (label afterfib-n-1))
+  (save n)
+  (assign n (op -) (reg n) (const 1))
+  (goto (label fib-loop))   ;; perform recursive call
+
+  afterfib-n-1              ;; upon return, val contains Fib(n-1)
+  (restore n)
+  (restore continue)
+  ;; set up to compute Fib(n-2)
+  (assign n (op -) (reg n) (const 2))
+  (save continue)
+  (assign continue (label afterfib-n-2))
+  (save val)                ;; save Fib(n-1)
+  (goto (label fib-loop))   ;; perform recursive call
+
+  afterfib-n-2
+  (aassign n (reg val))     ;; n   <- Fib(n-2)
+  (restore val)             ;; val <- Fib(n-1)
+  (restore continue)
+  (assign val (op +) (reg val) (reg n))
+  (goto (reg continue))     ;; return to caller
+
+  immediate-answer
+  (assign val (reg n))      ;; base case Fib(n) = n
+  (goto (reg continue))
+  )
+
+;;
+;; the actual code
+;;
+
+(controller
+  count-leaves-loop
+  (test (op null?) (reg tree))
+  (branch (label null-label))
+  (test (op pair?) (reg tree))
+  (branch (label default-case))
+  (goto (label not-pair-label))
+
+  default-case
+  (save tree)
+  (assign tree (op car) (reg tree))
+  ;; this is a call
+  (save continue)
+  (assign continue (label after-count-leaves-car))
+  (goto (label count-leaves-loop))
+
+  after-count-leaves-car
+  (assign n1 (reg val))
+  (restore tree)
+  (restore continue)
+  (save tree)
+  (assign tree (op cdr) (reg tree))
+  ;; this is a call
+  (save continue)
+  (assign continue (label after-count-leaves-cdr))
+  (goto (label count-leaves-loop))
+
+  after-count-leaves-cdr
+  (assign n2 (reg val))
+  (restore tree)
+  (restore continue)
+  (assign val (op +) (reg n1) (reg n2))
+  (goto (reg continue))
+
+  null-label
+  (assign val (const 0))
+  (goto (reg continue))
+
+  not-pair-label
+  (assign val (const 1))
+  (got (reg continue)))
