@@ -229,3 +229,28 @@
   not-pair-label
   (assign val (const 1))
   (goto (reg continue)))
+
+;;
+;; exercise 5.21 (b)
+;;
+
+(controller
+  (assign n (const 0))
+
+  count-leaves-loop
+  (test (op null?) (reg tree))
+  (branch (label null-tree))
+
+  (test (op pair?) (reg tree))
+  (goto (label default-case))
+  (branch (label not-pair-label))
+
+  default-case
+
+  not-pair-label
+  (assign val (op +) (reg n) (const 1))
+  (goto (reg continue))
+
+  null-tree
+  (assign val (reg n))
+  (goto (reg continue)))
