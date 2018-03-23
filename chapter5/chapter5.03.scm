@@ -277,3 +277,40 @@
   null-tree
   (assign val (reg n))
   (goto (reg continue)))
+
+
+;;
+;; exercise 5.22 (a)
+;;
+
+(define (append x y)
+  (if (null? x)
+    y
+    (cons (car x) (append (cdr x) y))))
+
+(controller
+  ;; input: x, y
+  ;; returns val
+  append-main-loop
+  (test (op null?) (reg x))
+  (branch (label null-label))
+
+  recursion
+  (save x)
+  (assign x (op cdr) (reg x))
+  (save continue)
+  (assign continue (label after-recursion))
+  (goto (label append-main-loop))
+
+  after-recursion
+  ;; now val holds the result of (append (cdr x) y)
+  (restore continue)
+  (restore x)
+  (assign car-x (op car) (reg x))
+  (assign val (op cons) (reg car-x) (reg val))
+  (goto (reg continue)) ;; return
+
+
+  null-label
+  (assign val (reg y))
+  (goto (reg continue)))
