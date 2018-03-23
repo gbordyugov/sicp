@@ -314,3 +314,16 @@
   null-label
   (assign val (reg y))
   (goto (reg continue)))
+
+;;
+;; exercise 5.22 (b)
+;;
+
+(define (append! x y)
+  (set-cdr! (last-pair x) y)
+  x)
+
+(define (last-pair x)
+  (if (null? (cdr x))
+    x
+    (last-pair (cdr x))))
