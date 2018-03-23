@@ -327,3 +327,33 @@
   (if (null? (cdr x))
     x
     (last-pair (cdr x))))
+
+(controller
+  append!-entry
+  ;; input x y
+  ;; returns x
+  ;; uses val
+  (save continue)
+  (assign continue (after-last-pair-call))
+  (goto (label last-pair-loop))
+
+  after-last-pair-call
+  (restore continue)
+  (assign x (op set-cdr!) (reg val) (reg y))
+  (goto (reg continue)) ;; return
+
+  last-pair-loop
+  ;; input x
+  ;; returns val
+  ;; uses cdr-x
+  (assign cdr-x (op cdr) (reg x))
+  (test (op null?) (reg cdr-x))
+  (branch (label null-cdr-x))
+
+  (assign x (reg cdr-x))
+  ;; tail recursion -- look ma, no stack!
+  (goto (label last-pair-loop))
+
+  null-cdr-x
+  (assign val (reg x))
+  (goto (reg continue)))
