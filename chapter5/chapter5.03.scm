@@ -357,3 +357,7 @@
   null-cdr-x
   (assign val (reg x))
   (goto (reg continue)))
+
+;;
+;; 5.3.2 Maintaining the Illusion of Infinite Memory
+;;
