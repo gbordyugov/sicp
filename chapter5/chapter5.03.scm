@@ -361,3 +361,15 @@
 ;;
 ;; 5.3.2 Maintaining the Illusion of Infinite Memory
 ;;
+
+;;
+;; memory is taken up by ``consing'' -- building new pairs
+;;
+
+;;
+;; Observation: at any moment in a Lisp interpretation, the only
+;; objects that can affect the future of the computation are those
+;; that can be reached by some succession of car and cdr operations
+;; starting from the pointers that are currently in the machine
+;; registers
+;;
