@@ -377,3 +377,8 @@
 ;; The ``stop and copy'' strategy: We're having a meeting now..., to
 ;; be continued
 ;;
+;; ``working memory'' + ``free memory''
+;; all new conses are allocated in working memory. Once working memory
+;; is full, all used conses are carried over to free memory, which
+;; turns into working memory and the old working memory becomes free
+;; memory.
