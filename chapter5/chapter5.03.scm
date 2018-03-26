@@ -373,3 +373,7 @@
 ;; starting from the pointers that are currently in the machine
 ;; registers
 ;;
+
+;; The ``stop and copy'' strategy: We're having a meeting now..., to
+;; be continued
+;;
