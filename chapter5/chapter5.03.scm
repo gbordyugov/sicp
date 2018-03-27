@@ -382,3 +382,19 @@
 ;; is full, all used conses are carried over to free memory, which
 ;; turns into working memory and the old working memory becomes free
 ;; memory.
+
+;;
+;; Implementation of a stop-and-copy garbage collector
+;;
+
+;;
+;; a register called ``root'' that hold a pointer to a structure that
+;; eventually points at all accessible data. This can be arranged by
+;; storing the contents of all the machine registers in a
+;; pre-allocated list pointed at by ``root'' just before starting
+;; garbage collection (all registers except the GC/memory-relevant
+;; ones like ``root'', the-cars, the-cdrs, etc.).
+;;
+;; Working memory with the-cars and the-cdrs and free memory with
+;; free-cars and free-cdrs.
+;;
