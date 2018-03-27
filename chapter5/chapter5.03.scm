@@ -421,3 +421,26 @@
 ;; traditionally called a ``broken heart''). In the cdr position a
 ;; forwarding address is placed that points at the location to which
 ;; the object has been moved.
+;;
+;; The main loop begins: At each step, the scan pointer (initially
+;; pointing at the relocated root) points at a pair that has been
+;; moved to the new memory but whose car and cdr pointers still refer
+;; to objects in the old memory. These objects are each relocated
+;; (recursively, I guess -gb-), and the scan pointer is incremented.
+;;
+;; To relocate an object (for example, the object indicated by the car
+;; pointer of the pair we're scanning), we check to see if the object
+;; has already been moved, as indicated by the presence of a
+;; broken-heart tag in the car position of the object (the object can
+;; have been already moved if it was part of a previously considered
+;; object). If the object has not already been moved, we copy it to
+;; the place indicated by free, update free, set up a broken heart at
+;; the object's old location, and update the pointer to the object (in
+;; this example, the car pointer of the pair we are scanning) to point
+;; to the new location. If the object has already been moved, its
+;; forwarding address (found in the cdr position of the broken heart)
+;; is substituted for the pointer in the pair being scanned.
+;; Eventually, all accessible objects will have been moved and
+;; scanned, at which point the scan pointer will overtake the free
+;; pointer and the process will terminate.
+;;
