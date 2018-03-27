@@ -418,4 +418,6 @@
 ;; is marked to show that its contents have been moved. The marking is
 ;; done as follows: In the car position, we place a special tag that
 ;; signals that this is an already-moved object. (Such an object is
-;; traditionally called a ``broken heart'').
+;; traditionally called a ``broken heart''). In the cdr position a
+;; forwarding address is placed that points at the location to which
+;; the object has been moved.
