@@ -398,3 +398,24 @@
 ;; Working memory with the-cars and the-cdrs and free memory with
 ;; free-cars and free-cdrs.
 ;;
+;; GC is triggered when a cons operation attempts to increment the
+;; free pointer beyond the end of the memory vector.
+;;
+;; When a GC run is done, root point into the new memory and all
+;; objects accessible from the root will have been moved into the new
+;; memory, and the free pointer will indicate the next place in the
+;; new memory where a new pair can be allocated. The roles of new and
+;; working memory will have been swapped.
+;;
+
+;;
+;; The state of the GC process is controlled by maintaining two
+;; pointers: free and scan. These are intialized to pint to the
+;; beginning of the new memory. First, we relocate the pair pointed at
+;; by root to the beginning of the new memory. The pair is copied, the
+;; root pointer is adjusted to point to the new location and the free
+;; pointer is incremented. Additionally, the old location of the pair
+;; is marked to show that its contents have been moved. The marking is
+;; done as follows: In the car position, we place a special tag that
+;; signals that this is an already-moved object. (Such an object is
+;; traditionally called a ``broken heart'').
