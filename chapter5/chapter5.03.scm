@@ -444,3 +444,15 @@
 ;; scanned, at which point the scan pointer will overtake the free
 ;; pointer and the process will terminate.
 ;;
+
+begin-garbage-collection
+  (assign free (const 0))
+  (assign scan (const 0))
+  (assign old  (reg root))
+  (assign relocate-continue (label reassign-root))
+  (goto (label relocate-old-result-in-new))
+
+reassign-root
+  (assign root (reg new))
+  (got (label gc-loop))
+  
