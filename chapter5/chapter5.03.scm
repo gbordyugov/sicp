@@ -452,6 +452,12 @@ begin-garbage-collection
   (assign relocate-continue (label reassign-root))
   (goto (label relocate-old-result-in-new))
 
+;;
+;; relocate-old-result-in-new is the main functionality unit here: it
+;; accepts the address of the old object in register ``old'' and
+;; relocates it, updates the pointer, and returns to the point
+;; specified in the register relocate-continue
+
 reassign-root
   (assign root (reg new))
   (got (label gc-loop))
