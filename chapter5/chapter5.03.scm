@@ -537,3 +537,16 @@ pair
 already moved
   (assign new (op vector-ref) (reg the-cdrs) (reg old))
   (goto (reg relocate-continue))
+
+
+;;
+;; flip the registers
+;;
+
+gc-flip
+  (assign temp (reg the-cdrs))
+  (assign the-cdrs (reg new-cdrs))
+  (assign new-cdrs (reg temp))
+  (assign temp (reg the-cars))
+  (assign the-cars (reg new-cars))
+  (assign new-cars (reg temp))
