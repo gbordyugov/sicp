@@ -461,4 +461,36 @@ begin-garbage-collection
 reassign-root
   (assign root (reg new))
   (got (label gc-loop))
-  
+
+;;
+;; main GC loop
+;; continue until the scan pointer coincides with the free pointer
+;; if it's the case, jump to gc-flip, which cleans things up so the
+;; computations can be continued
+;;
+
+gc-loop
+  (test (op =) (reg scan) (reg free))
+  (branch (label gc-flip))
+  ;; prepare call
+  (assign old (op vector-ref) (reg new-cars) (reg scan))
+  (assign relocate-continue (label update-car))
+  (goto (label relocate-old-result-in-new))
+
+update-car
+  (perform (op vector-set!)
+           (reg new-cars)
+           (reg scan)
+           (reg newe))
+  ;; prepare call
+  (assign old (op vector-ref) (reg new-cdrs) (reg scan))
+  (assign relocate-continue (label update-cdr))
+  (goto (label relocate-old-result-in-new))
+
+update-cdr
+  (perform (op vector-set!)
+           (reg new-cdrs)
+           (reg scan)
+           (reg new))
+  (assign scan (op +) (reg scan) (const 1))
+  (goto (label gc-loop))
