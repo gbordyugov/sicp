@@ -494,3 +494,46 @@ update-cdr
            (reg new))
   (assign scan (op +) (reg scan) (const 1))
   (goto (label gc-loop))
+
+
+;;
+;; the main worker of GC
+;;
+relocate-old-result-in-new
+  ;; do not relocate non-pairs
+  (test (op pointer-to-pair?) (reg old))
+  (branch (label pair))
+  (assign new (reg old))
+  (goto (reg relocate-continue))
+
+pair
+  (assign oldcr (op vector-ref) (reg the-cars) (reg old))
+  (test (op broken-heeart?) (reg oldcr))
+  (branch (label already-moved))
+  (assign new (reg free))
+  ;; update free pointer
+  (assign free (op +) (reg free) (const 1))
+  ;; copy the car and cdr to new memory
+  (peform (op vector-set!)
+          (reg new-cars)
+          (reg new)
+          (reg oldcr))
+  (assign oldcr (op vector-ref) (reg the-cdrs) (reg old))
+  (perform (op vector-set!)
+           (reg new-cdrs)
+           (reg new)
+           (reg oldcr))
+  ;; construct the broken heart
+  (perform (op vector-set!)
+           (reg the-cars)
+           (reg old)
+           (const broken-heart))
+  (perform (op vector-set!)
+           (reg the-cdrs)
+           (reg old)
+           (reg new))
+  (goto (reg relocate-continue))
+
+already moved
+  (assign new (op vector-ref) (reg the-cdrs) (reg old))
+  (goto (reg relocate-continue))
