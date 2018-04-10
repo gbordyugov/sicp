@@ -47,3 +47,30 @@ eval-dispatch
   (test (op application?) (reg exp))
   (branch (label ev-application))
   (goto (label unknown-expression-type))
+
+
+;;
+;; Evaluating simple expressions
+;;
+
+ev-self-eval
+  (assign val (reg exp))
+  (goto (reg continue))
+
+ev-variable
+  (assign val (op lookup-variable-value) (reg exp) (reg env))
+  (goto (reg continue))
+
+ev-quoted
+  (assign val (op text-of-quotation) (reg exp))
+  (goto (reg continue))
+
+ev-lambda
+  (assign unev (op lambda-parameters) (reg exp))
+  (assign exp (op lambda-body) (reg exp))
+  (assign val (op make-procedure) (reg unev) (reg exp) (reg env))
+  (goto (reg continue))
+
+;; observe that unev and exp hold the parameters and the body of the
+;; lambda expression so that they can be passed to make-procedure,
+;; along with the environment in env
