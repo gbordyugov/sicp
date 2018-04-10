@@ -74,3 +74,11 @@ ev-lambda
 ;; observe that unev and exp hold the parameters and the body of the
 ;; lambda expression so that they can be passed to make-procedure,
 ;; along with the environment in env
+
+;;
+;; Evaluating procedure application
+;;
+
+;;
+;; the explicit-control evaluator first evaluates the arguments of the
+;; procedure by calling itself in a recursive manner.
