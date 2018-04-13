@@ -82,3 +82,26 @@ ev-lambda
 ;;
 ;; the explicit-control evaluator first evaluates the arguments of the
 ;; procedure by calling itself in a recursive manner.
+;;
+;; we begin the evaluation of an application by evaluating the
+;; operator to produce a procedure, which will later be applied to the
+;; evaluated operands. To evaluate the operator, we move it to the exp
+;; register and go to eval-dispatch. The environment in the env
+;; register is already the correct one in which to evaluate the
+;; operator. We however save en because we will need it later to
+;; evaluate the operands. We also extract the operands into unev and
+;; save this on the stack. The register continue is set up in the way
+;; that eval-dispatch will resume at ev-appl-did-operator after the
+;; operator has been evaluated. First, however, we save the old value
+;; of continue, which tells the controller where to go after the
+;; application
+;;
+
+ev-application
+  (save continue)
+  (save env)
+  (assign unev (op operands) (reg exp))
+  (save unev)
+  (assign exp (op operator) (reg exp))
+  (assign continue (label ev-appl-did-operator))
+  (goto (label eval-dispatch))
