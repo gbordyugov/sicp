@@ -105,3 +105,74 @@ ev-application
   (assign exp (op operator) (reg exp))
   (assign continue (label ev-appl-did-operator))
   (goto (label eval-dispatch))
+
+ev-appl-did-operator
+  (restore unev)
+  (restore env)
+  (assign arg1 (op empty-arglist))
+  (assign proc (reg val)) ;; this one was returned from eval-dispatch
+  (test (op no-operands?) (reg unev))
+  (branch (label apply-dispatch))
+  (save proc) ;; go into the loop from here, see below
+
+;;
+;; here comes the loop: we evaluate an operand from the list in unev
+;; and accumulate the result into arg1. The evaluation is done by
+;; placing it in the exp register and calling eval-dispatch, after
+;; setting continue so that the execution will resume with the
+;; argument-accumulation phase. But first we save the arguments
+;; accumulated so far (held in arg1), the environment (held in env),
+;; and the remaining operand to be evaluated (held in unev). A special
+;; case is made for the evaluation of the last operand, which is
+;; handled at ev-appl-last-arg.
+;;
+
+ev-appl-operand-loop
+  (save arg1)
+  (assign exp (op first-operand) (reg unev))
+  (test (op last-operand?) (reg unev))
+  (branch (label ev-appl-last-arg))
+  (save env)
+  (save unev)
+  (assign continue (label av-appl-accumulate-arg))
+  (goto (label eval-dispatch))
+
+;;
+;; When an operand has been evaluated, the value is accumulated into
+;; the list held in arg1. The operand is then removed from the list of
+;; unevaluated operands in unev, and the argument-evaluation
+;; continues.
+;;
+
+ev-appl-accumulate-arg
+  (restore unev)
+  (restore env)
+  (restore arg1)
+  (assign arg1 (op adjoin-arg) (reg val) (reg arg1))
+  (assign unev (op rest-operands) (reg unev))
+  (goto (label ev-appl-operand-loop))
+
+;;
+;; Evaluation of the last argument is handled differently. There is no
+;; need to save the environmen t or the list of unevaluated operands
+;; before going to eval-dispatch, since they will not be required
+;; after the last operand is evaluated. Thus we return from the
+;; evaluation to a special entry point `ev-appl-accum-last-arg`, which
+;; restores the argument list, accumulates the new argument, restores
+;; the saved procedure, and goes off to perform the application
+;;
+
+ev-appl-last-arg
+  (assign continue (label ev-appl-accum-last-arg))
+  (goto (label eval-dispatch))
+
+ev-appl-accum-last-arg
+  (restore arg1)
+  (assign arg1 (op adjoin-arg) (reg val) (reg arg1))
+  (restore proc)
+  (goto (label apply-dispatch))
+
+;;
+;; a couple of notes on the order, in which the argument list is
+;; evaluated
+;;
