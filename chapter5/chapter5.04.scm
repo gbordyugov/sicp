@@ -195,3 +195,24 @@ ev-appl-accum-last-arg
 ;; Either the procedure to be applied is a primitive or it is a
 ;; compound procedure.
 ;;
+
+apply-dispatch
+  (test (op primitive-procedure?) (reg proc))
+  (branch (label primitive-apply))
+  (test (op compound-procedure?) (reg proce))
+  (branch (label compound apply))
+  (goto (label unknown-procedure-type))
+
+;;
+;; we assume that both primitives `primitive-procedure?` and
+;; `compound-procedure?` exist or implemented in the system
+;;
+
+primitive-apply
+  (assing val (op apply-primitve-procedure)
+          (reg proc)
+          (reg arg1))
+  (restore continue)
+  (goto (reg continue))
+
+
