@@ -176,3 +176,22 @@ ev-appl-accum-last-arg
 ;; a couple of notes on the order, in which the argument list is
 ;; evaluated
 ;;
+
+
+;;
+;; Procedure application
+;;
+
+;;
+;; By the time we get to apply-dispatch (see below), the proc register
+;; contains the procedure to apply and arg1 contains the list of
+;; evaluated arguments to which it must be applied. The saved value of
+;; `continue` (originally passed to eval-dispatch and saved at
+;; ev-application), which tells where to return with the result of the
+;; procedure application, is on the stack. When the application is
+;; complete, the controller transfers to the entry point specified by
+;; the saved `continue`, with the result of the application in val. As
+;; with the metacircular `apply`, there are two cases to consider:
+;; Either the procedure to be applied is a primitive or it is a
+;; compound procedure.
+;;
