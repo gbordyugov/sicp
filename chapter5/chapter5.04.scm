@@ -215,4 +215,28 @@ primitive-apply
   (restore continue)
   (goto (reg continue))
 
+;;
+;; to apply a compound procedure, we proceed just as with the
+;; metacircular evaluator. We construct a frame that binds the
+;; procedure's parameters to the arguments, use this fram to extend
+;; the environment carried by the procedure, and evaluate in this
+;; extended environment the sequence of expressions that forms the
+;; body of the procedure. `ev-sequence`, described later on, handles
+;; the evaluation of the sequence.
+;;
 
+compound-apply
+  (assign unev (op procedure-parameters) (reg proc))
+  (assign env (op procedure-environment) (reg proc))
+  (assign env (op extend-environment)
+          (reg unev) (reg arg1) (reg env))
+  (assign unev (op precedure-body) (reg proc))
+  (goto (label ev-sequence))
+
+;;
+;; `compound-apply` is the only place in the interpreter where the
+;; `env` register is ever assigned a new value. Just as in the
+;; metacircular evaluator, the new environment is constructed from the
+;; environment carried by the procedure, together with the argument
+;; list and the corresponding list of variables to be bound.
+;;
