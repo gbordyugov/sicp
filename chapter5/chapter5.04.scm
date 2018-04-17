@@ -240,3 +240,7 @@ compound-apply
 ;; environment carried by the procedure, together with the argument
 ;; list and the corresponding list of variables to be bound.
 ;;
+
+;;
+;; 5.4.2 Sequence Evaluation and Tail Recursion
+;;
