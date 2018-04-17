@@ -244,3 +244,50 @@ compound-apply
 ;;
 ;; 5.4.2 Sequence Evaluation and Tail Recursion
 ;;
+
+;;
+;; The portion of the explicit-control evaluator at `ev-sequence` is
+;; analogous to the metacircular evaluator's eval-sequence procedure.
+;; It handles sequences of expressions in procedure bodies or in
+;; explicit `begin` expressions.
+;;
+;; Explicit `begin` expressions are evaluated by placing the sequence
+;; of expressions to be evaluated in `unev`, saving `continue` on the
+;; stack, and jumping to ev-sequence
+;;
+
+ev-begin
+  (assign unev (op begin-actions) (reg exp))
+  (save continue)
+  (goto (label ev-sequence))
+
+;;
+;; The implicit sequences in procedure bodies are handled by jumping
+;; to `ev-sequence` from `compound-apply`, at which point `continue is
+;; already on the stack, having been saved at `ev-application`.
+;;
+;; The entries at `ev-sequence` and `ev-sequence-continue` form a loop
+;; that successively evaluates each expression in a sequence. The list
+;; of unevaluated expressions is kept in `unev`. Before evaluating
+;; each expression, we check to see if there are additional
+;; expressions to be evaluated in the sequence. If so, we save the
+;; rest of the unevaluated expressions (hed in `unev`) and the
+;; environment in which these must be evaluated (held in `env`) and
+;; call eval-dispatch to evaluate the expression. The two saved
+;; registers are restored upon the return from this evaluation, at
+;; `ev-sequence-continue`.
+;;
+;; The final expression in the sequence is handled differently, at the
+;; entry point `ev-sequence-last-exp`. Since there are no more
+;; expressions to be evaluated after this one, we need not save `unev`
+;; or `env` before going to `eval-dispatch`. The value of the whole
+;; sequence is the value of the last expression, so after the
+;; evaluation of the last expression there is nothing left to do
+;; excpet contineue at the entry point currently held on the stack
+;; (which was saved by `ev-application` or `ev-begin`). Rather than
+;; setting up `continue` to arrange for `eval-dispatch` to return here
+;; and the restoring `continue` from the stack and continuing at the
+;; entry point, we restore `continue` from the stack before going to
+;; `eval-dispatch`, so that `eval-dispatch` will continue at that
+;; entry point after evaluating the expression.
+;;
