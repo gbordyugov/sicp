@@ -310,3 +310,24 @@ ev-sequence-continue
 ev-sequence-last-exp
   (restore continue)
   (goto (label eval-dispatch))
+
+;;
+;; Tail recursion
+;;
+
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+    guess
+    (sqrt-iter (improve guess x) x)))
+
+;;
+;; this is an iterative process. Even though the procedure is
+;; syntactically recursive (defined in termsof itself), it is not
+;; logically necessary for an evaluator to save information in passing
+;; from one call to `sqrt-iter` to the next. An evaluator that can
+;; execute a procedure such as `sqrt-iter` without requiring
+;; increasing storage (stack) as the procedure continues to call
+;; itself is called a tail-recursive evaluator. The metacircular
+;; interpretator inherited the tail recursive property of the
+;; underlying Scheme implementation.
+;;
