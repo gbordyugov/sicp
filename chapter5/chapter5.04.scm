@@ -331,3 +331,26 @@ ev-sequence-last-exp
 ;; interpretator inherited the tail recursive property of the
 ;; underlying Scheme implementation.
 ;;
+
+;;
+;; a non-tail-recursive version of ev-sequence
+;;
+
+ev-sequence
+  (test (op no-more-exps?) (reg unev))
+  (branch (label ev-sequence-end))
+  (assign exp (op first-exp) (reg unev))
+  (save unev)
+  (save env)
+  (assign continue (label ev-sequence-continue))
+  (goto (label eval-dispatch))
+
+ev-sequence-continue
+  (restore env)
+  (restore unev)
+  (assign unev (op rest-exps) (reg unev))
+  (goto (label ev-sequence))
+
+ev-sequence-end
+  (restore continue)
+  (goto (reg continue))
