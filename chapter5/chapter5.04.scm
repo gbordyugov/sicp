@@ -354,3 +354,7 @@ ev-sequence-continue
 ev-sequence-end
   (restore continue)
   (goto (reg continue))
+
+;;
+;; this implementation grows the stack on every recursive call
+;;
