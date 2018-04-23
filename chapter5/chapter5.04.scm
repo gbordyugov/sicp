@@ -398,3 +398,27 @@ ev-if
   (assign continue (label ev-if-decide))
   (assign exp (of if-predicate) (reg exp))
   (goto (label eval-dispatch))
+
+;;
+;; When we return from evaluating the predicate, we test whether it
+;; was true or false and, depending on the result, place either the
+;; consequent or the alternative in exp before going to eval-dispatch.
+;; Notice that restoring env and continue here sets up eval-dispatch
+;; to have the correct environment and to continue at the right place
+;; to receive the value of the if expression.
+;;
+
+ev-if-decide
+  (restore continue)
+  (restore env)
+  (restore exp)
+  (test (op true?) (reg val))
+  (branch (label ev-if-consequent))
+
+ev-if-alternative
+  (assign exp (op if-alternative) (reg exp))
+  (goto (label eval-dispatch))
+
+ev-if-consequent
+  (assign exp (op if-consequent) (reg exp))
+  (goto (label eval-dispatch))
