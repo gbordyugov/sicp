@@ -371,3 +371,30 @@ ev-sequence-end
 ;;
 ;; this implementation grows the stack on every recursive call
 ;;
+
+;;
+;; 5.4.3 Conditionals, Assignments, and Definitions
+;;
+
+;;
+;; Special forms are handled by selectively evaluating fragments of
+;; the expression (contrarily to function calls, where all arguments
+;; are always evaluated).
+;;
+
+;;
+;; Before evaluating the predicate, we save the if expression itself
+;; so that we can later extract the consequent or alternative. We also
+;; save the environment, which we will need later in order to evaluate
+;; the consequent or the alternative, and we save continue, which we
+;; will need later in order to return to the evaluation of the
+;; expression that is waiting for the value of the if.
+;;
+
+ev-if
+  (save exp)
+  (save env)
+  (save continue)
+  (assign continue (label ev-if-decide))
+  (assign exp (of if-predicate) (reg exp))
+  (goto (label eval-dispatch))
