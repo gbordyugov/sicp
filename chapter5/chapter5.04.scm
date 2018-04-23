@@ -307,6 +307,19 @@ ev-sequence-continue
   (assign unev (op rest-exps) (reg unev))
   (goto (label ev-sequence))
 
+;;
+;; the last expression is handled differently. There are no more
+;; expression to be evaluated after this one, we thus need not save
+;; unev or env before going to eval-dispatch. The value of the
+;; sequence will be the value of the last expression, so after the
+;; evaluation of the last expression there is nothing left to do
+;; except to continue at the entry point currently held on the stack.
+;; Rather than setting up continue to arrange for eval-dispatch to
+;; return here and then restoring continue from the stack and
+;; continuing at that entry point, we restore continue from the stack
+;; before going to eval-dispatch, so that eval-dispatch will continue
+;; at that entry point after evaluating the (last) expresssion.
+;;
 ev-sequence-last-exp
   (restore continue)
   (goto (label eval-dispatch))
