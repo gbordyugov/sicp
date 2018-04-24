@@ -444,3 +444,24 @@ ev-assignment-1
   (perform (op set-variable-value!) (reg unev) (reg val) (reg env))
   (assign val (const ok))
   (goto (reg continue))
+
+;;
+;; Definitions
+;;
+
+ev-definition
+  (assign unev (op definition-variable) (reg exp))
+  (save unev)
+  (assign exp (op definition-value) (reg exp))
+  (save env)
+  (save continue)
+  (assign continue (label ev-definition-1))
+  (goto (label eval-dispatch)) ;; evaluation the definition value
+
+ev-definition-1
+  (restore continue)
+  (restore env)
+  (restore unev)
+  (perform (op define-variable!) (reg unev) (reg val) (reg env))
+  (assign (val const ok))
+  (goto (reg continue))
