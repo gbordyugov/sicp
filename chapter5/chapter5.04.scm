@@ -465,3 +465,7 @@ ev-definition-1
   (perform (op define-variable!) (reg unev) (reg val) (reg env))
   (assign (val const ok))
   (goto (reg continue))
+
+;;
+;; Exercise 5.23-5.25 skipped
+;;
