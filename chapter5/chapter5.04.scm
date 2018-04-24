@@ -435,6 +435,7 @@ ev-assignment
   (save env)
   (save continue)
   (assign continue (label ev-assignment-1))
+  (goto (label eval-dispatch))
 
 ev-assignment-1
   (restore continue)
