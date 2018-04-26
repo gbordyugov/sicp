@@ -98,17 +98,27 @@ ev-lambda
 ;;
 
 ev-application
+  ;; prepare to call eval to evaluate the operator
+  ;;
+  ;; this is the old return point
   (save continue)
+  ;; we save env `as we'll need it later`
   (save env)
+  ;; extract operands, store them in unev and on stack
   (assign unev (op operands) (reg exp))
   (save unev)
+  ;; operator to be evaluated is stored in exp
   (assign exp (op operator) (reg exp))
   (assign continue (label ev-appl-did-operator))
   (goto (label eval-dispatch))
 
+  ;; proceeding to evaluate the operands
 ev-appl-did-operator
+  ;; unev holds now the operands
   (restore unev)
+  ;; env holds the enviroment
   (restore env)
+  ;; arg1 is going to accumulate the evaluated operands
   (assign arg1 (op empty-arglist))
   (assign proc (reg val)) ;; this one was returned from eval-dispatch
   (test (op no-operands?) (reg unev))
@@ -129,12 +139,14 @@ ev-appl-did-operator
 
 ev-appl-operand-loop
   (save arg1)
+  ;; first-operand picks the first operand from unev
   (assign exp (op first-operand) (reg unev))
   (test (op last-operand?) (reg unev))
   (branch (label ev-appl-last-arg))
   (save env)
   (save unev)
   (assign continue (label av-appl-accumulate-arg))
+  ;; evaluate the first operand, which is now in exp
   (goto (label eval-dispatch))
 
 ;;
@@ -145,16 +157,19 @@ ev-appl-operand-loop
 ;;
 
 ev-appl-accumulate-arg
+  ;; val now holds the result of evaluating the first operand
   (restore unev)
   (restore env)
   (restore arg1)
+  ;; adjoin-arg is a primitive
   (assign arg1 (op adjoin-arg) (reg val) (reg arg1))
+  ;; this rest-operands is also a primitive
   (assign unev (op rest-operands) (reg unev))
   (goto (label ev-appl-operand-loop))
 
 ;;
 ;; Evaluation of the last argument is handled differently. There is no
-;; need to save the environmen t or the list of unevaluated operands
+;; need to save the environment or the list of unevaluated operands
 ;; before going to eval-dispatch, since they will not be required
 ;; after the last operand is evaluated. Thus we return from the
 ;; evaluation to a special entry point `ev-appl-accum-last-arg`, which
@@ -163,11 +178,15 @@ ev-appl-accumulate-arg
 ;;
 
 ev-appl-last-arg
+  ;; no need to save any registers since we're not going to use them
+  ;; again - it's the last operand, dude!
   (assign continue (label ev-appl-accum-last-arg))
   (goto (label eval-dispatch))
 
 ev-appl-accum-last-arg
+  ;; now val contains the result of evaluation of the last operand
   (restore arg1)
+  ;; complete the list of operands
   (assign arg1 (op adjoin-arg) (reg val) (reg arg1))
   (restore proc)
   (goto (label apply-dispatch))
