@@ -101,6 +101,8 @@ ev-application
   ;; prepare to call eval to evaluate the operator
   ;;
   ;; this is the old return point
+  ;; note that it is restored only at the very end of the application
+  ;; evaluation business, i.e. in primitive-apply
   (save continue)
   ;; we save env `as we'll need it later`
   (save env)
@@ -250,6 +252,8 @@ compound-apply
   (assign env (op extend-environment)
           (reg unev) (reg arg1) (reg env))
   (assign unev (op precedure-body) (reg proc))
+  ;; ev-sequence does the actual application, by evaluating the
+  ;; sequence of the procedure body expressions in the extended frame
   (goto (label ev-sequence))
 
 ;;
