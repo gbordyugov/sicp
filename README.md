@@ -25,6 +25,6 @@ Fri Apr 27 10:14:20 CEST 2018
 
 I feel that working with the explicit-control evaluator and the
 compiler becomes too involving, so I'm just reading the rest of the
-book, starting from the end of Chapter 5.4. A total of 12+4+29 = 30
-out of 356 exercises skipped, which means that more than 90% of
+book, starting from the end of Chapter 5.4. A total of 12+4+29 = 45
+out of 356 exercises skipped, which means that more than 87% of
 exercises have been completed.
