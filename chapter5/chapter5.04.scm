@@ -514,3 +514,7 @@ ev-definition-1
 ;; explicit-control evaluator, we can simulate it and monitor its
 ;; performance.
 ;;
+
+;;
+;; Exercises 5.26 - ... I'll skipping them
+;;
