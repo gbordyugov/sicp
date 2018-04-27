@@ -1,7 +1,7 @@
 My read through Structure and Interpretation of Computer Programs
 =================================================================
 
-Open/skipped exercises
+Open/skipped exercises:
  - 1.28
  - 2.16
  - comparison of time complexitity of the fast and the slow
@@ -18,3 +18,13 @@ Open/skipped exercises
  - 4.69 needs to be revisited after Section 4.4.4 is done
  - 4.76-4.79 - I think I've spent enough time with the query language
  - 5.23-5.52 from here on, I'm skipping the rest of the exercises
+
+
+Fri Apr 27 10:14:20 CEST 2018
+-----------------------------
+
+I feel that working with the explicit-control evaluator and the
+compiler becomes too involving, so I'm just reading the rest of the
+book, starting from the end of Chapter 5.4. A total of 12+4+29 = _30
+out of 356 exercises skipped_, which means 90+% exercises have been
+completed.
