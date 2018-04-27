@@ -492,3 +492,25 @@ ev-definition-1
 ;;
 ;; Exercise 5.23-5.25 skipped
 ;;
+
+;;
+;; 5.4.4 Running the Evaluator
+;;
+
+;;
+;; The implementation of the explicit-control evaluator we come to the
+;; end of a development, begun in Chapter 1, in which we have explored
+;; successively more precise models of the evaluation process (not
+;; bad! -gb-)
+;;
+;; We started with a substitutional model, than in Chapter 3 we
+;; extended it to the environmental model, which allowed for state and
+;; change. Chapter 4: the metacircular evaluator. Now, with register
+;; machines, we have taken a close look at the evaluator's mechanisms
+;; for storage management, argument passing, and control. At each
+;; level of abstraction we have had to raise issues and resolve
+;; ambiguities that were not apparent at the previous, less precise
+;; treatment of evaluation. To understand the behavious of the
+;; explicit-control evaluator, we can simulate it and monitor its
+;; performance.
+;;
