@@ -165,7 +165,8 @@
 ;;
 ;; (a) not fewer than log_3 (12.15/0.1) ;-)
 ;;
-;; (b) order of growth is linear - just one recursive call at most
+;; (b) order of growth is logarithmic - if we increase a number by a factor
+;; of 3 we need to make one more recursive call
 ;;
 
 
